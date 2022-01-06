@@ -6,6 +6,7 @@
 
 #include "BasicCard.hpp"
 #include "Enchantment.hpp"
+#include "Cost"
 
 class Creature : public virtual BasicCard{
 
@@ -19,12 +20,15 @@ class Creature : public virtual BasicCard{
         int m_toughness_current;
         std::vector<int> m_abilities;
         std::vector<int> m_types;
+        Cost m_cost;
 
     public:
-        Creature(std::string, int, bool, bool, int, int, std::vector<int>, std::vector<int>);
+        Creature(std::string, int, bool, bool, int, int, std::vector<int>, std::vector<int>, Cost);
         ~Creature();
 
         void print() const;
+
+        //void engage_lands(std::vector<Land>);
 
 };
 
