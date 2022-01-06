@@ -11,7 +11,7 @@ class BasicCard : public virtual Card{
 
     private:
         bool m_engaged;
-        bool m_is_first_turn;
+        bool m_is_first_turn; // TODO : Land n'en a pas besoin, transférer pour Creature
         std::vector<Enchantment> m_enchantments;
 
     public:

@@ -6,7 +6,7 @@
 
 #include "BasicCard.hpp"
 #include "Enchantment.hpp"
-#include "Cost"
+#include "Cost.hpp"
 
 class Creature : public virtual BasicCard{
 
