@@ -10,11 +10,10 @@ class Card {
         int m_token;
 
     public:
-
         Card(std::string, int);
-        ~Card();
+        virtual ~Card() = 0;
 
-        virtual void print() const;
+        virtual void print() = 0;
 
 };
 
