@@ -3,7 +3,7 @@
 
 #include "SpecialCard.hpp"
 
-class Enchantment : public SpecialCard{
+class Enchantment : public virtual SpecialCard{
 
     private:
 

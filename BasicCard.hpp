@@ -7,7 +7,7 @@
 #include "Card.hpp"
 #include "Enchantment.hpp"
 
-class BasicCard : public Card{
+class BasicCard : public virtual Card{
 
     private:
         bool m_engaged;

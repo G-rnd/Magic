@@ -6,7 +6,7 @@
 
 #include "Card.hpp"
 
-class SpecialCard : public Card{
+class SpecialCard : public virtual Card{
 
     private:
         int m_id;
