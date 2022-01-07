@@ -7,13 +7,11 @@
 #include "BasicCard.hpp"
 #include "Enchantment.hpp"
 #include "Cost.hpp"
+#include "Land.hpp"
 
 class Creature : public virtual BasicCard{
 
     private:
-        bool m_engaged;
-        bool m_is_first_turn;
-        std::vector<Enchantment> m_enchantments;
         int m_power;
         int m_toughness;
         int m_power_current;
@@ -26,9 +24,26 @@ class Creature : public virtual BasicCard{
         Creature(std::string, int, bool, bool, int, int, std::vector<int>, std::vector<int>, Cost);
         ~Creature();
 
+        int get_power() const;
+        int get_toughness() const;
+        int get_power_current() const;
+        int get_toughness_current() const;
+        std::vector<int> get_abilities() const;
+        std::vector<int> get_types() const;
+        Cost get_cost() const;
+
+        void set_power(int);
+        void set_toughness(int);
+        void set_power_current(int);
+        void set_toughness_current(int);
+
+        void add_ability(int);
+        void add_type(int);
+
         void print() const;
 
-        //void engage_lands(std::vector<Land>);
+        void engage_lands(std::vector<Land>) const;
+        // disengage useless ?
 
 };
 

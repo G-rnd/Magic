@@ -20,6 +20,20 @@ class Cost{
         Cost(int, int, int, int, int, int);
         ~Cost();
 
+        int get_any() const;
+        int get_white() const;
+        int get_black() const;
+        int get_red() const;
+        int get_green() const;
+        int get_blue() const;
+
+        int set_any(int);
+        int set_white(int);
+        int set_black(int);
+        int set_red(int);
+        int set_green(int);
+        int set_blue(int);
+
         void print() const;
 };
 

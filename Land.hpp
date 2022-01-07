@@ -11,20 +11,17 @@
 class Land : public virtual BasicCard{
 
     private:
-        bool m_engaged;
-        bool m_is_first_turn;
-        std::vector<Enchantment> m_enchantments;
         int m_value;
 
     public:
         Land(std::string, int, bool, bool, int);
         ~Land();
 
+        int get_value() const;
+
+        void set_value(int);
+
         void print() const;
-
-        void engage_lands(std::vector<Land>);
-        // disengage useless ?
-
 };
 
 #endif

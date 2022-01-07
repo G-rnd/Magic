@@ -12,3 +12,11 @@ BasicCard(name, token, engaged, is_first_turn), m_value(value){}
 
 Land::~Land(){}
 
+int Land::get_value() const{
+    return this->m_value;
+}
+
+void Land::set_value(int value){
+    this->m_value = value;
+}
+
