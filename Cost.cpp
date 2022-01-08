@@ -3,7 +3,6 @@
 #include <vector>
 
 #include "Cost.hpp"
-#include "Cards/BasicCards/Creature.hpp"
 
 Cost::Cost(int any, int white, int black, int red, int green, int blue): 
 m_any(any), m_white(white), m_black(black), m_red(red), m_green(green), m_blue(blue){}
@@ -34,26 +33,26 @@ int Cost::get_blue() const{
     return this->m_blue;
 }
 
-int Cost::set_any(int any){
+void Cost::set_any(int any){
     this->m_any = any;
 }
 
-int Cost::set_white(int white){
+void Cost::set_white(int white){
     this->m_white = white;
 }
 
-int Cost::set_black(int black){
+void Cost::set_black(int black){
     this->m_black = black;
 }
 
-int Cost::set_red(int red){
+void Cost::set_red(int red){
     this->m_red = red;
 }
 
-int Cost::set_green(int green){
+void Cost::set_green(int green){
     this->m_green = green;
 }
 
-int Cost::set_blue(int blue){
+void Cost::set_blue(int blue){
     this->m_blue = blue;
 }

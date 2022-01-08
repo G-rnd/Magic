@@ -1,7 +1,7 @@
 #ifndef ENCHANTMENT_HPP
 #define ENCHANTMENT_HPP
 
-#include "Cards/SpecialCards/SpecialCard.hpp"
+#include "../SpecialCards/SpecialCard.hpp"
 
 class Enchantment : public virtual SpecialCard{
 

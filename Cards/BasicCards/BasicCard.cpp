@@ -3,8 +3,8 @@
 #include <vector>
 
 #include "BasicCard.hpp"
-#include "Cards/Card.hpp"
-#include "Cards/SpecialCards/Enchantment.hpp"
+#include "../Card.hpp"
+#include "../SpecialCards/Enchantment.hpp"
 
 BasicCard::BasicCard(std::string name, int token, bool engaged, bool is_first_turn): 
 Card(name, token), m_engaged(engaged), m_is_first_turn(is_first_turn){}
@@ -19,7 +19,7 @@ bool BasicCard::get_is_first_turn() const{
     return this->m_is_first_turn;
 }
 
-std::vector<Enchantment> BasicCard::get_enchantments() const{
+std::vector<Enchantment*> BasicCard::get_enchantments() const{
     return this->m_enchantments;
 }
 
@@ -32,5 +32,5 @@ void BasicCard::set_is_first_turn(bool is_first_turn){
 }
 
 void BasicCard::add_enchantment(Enchantment* e){
-    this->m_enchantments.push_back(*e);
+    this->m_enchantments.push_back(e);
 }

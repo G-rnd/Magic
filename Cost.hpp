@@ -4,8 +4,6 @@
 #include <string>
 #include <vector>
 
-#include "Cards/BasicCards/Creature.hpp"
-
 class Cost{
 
     private:
@@ -27,12 +25,12 @@ class Cost{
         int  get_green() const;
         int  get_blue() const;
  
-        int  set_any(int);
-        int  set_white(int);
-        int  set_black(int);
-        int  set_red(int);
-        int  set_green(int);
-        int  set_blue(int);
+        void  set_any(int);
+        void  set_white(int);
+        void  set_black(int);
+        void  set_red(int);
+        void  set_green(int);
+        void  set_blue(int);
 
         void print() const;
 };

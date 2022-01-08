@@ -4,12 +4,12 @@
 #include <algorithm>
 
 #include "Creature.hpp"
-#include "Cards/BasicCards/BasicCard.hpp"
-#include "Cards/SpecialCards/Enchantment.hpp"
-#include "Cards/BasicCards/Land.hpp"
-#include "Cost.hpp"
+#include "BasicCard.hpp"
+#include "../SpecialCards/Enchantment.hpp"
+#include "Land.hpp"
+#include "../../Cost.hpp"
 
-Creature::Creature(std::string name, int token, bool engaged, bool is_first_turn, int power, int toughness, std::vector<int> abilities, std::vector<int> types, Cost cost): 
+Creature::Creature(std::string name, int token, bool engaged, bool is_first_turn, int power, int toughness, std::vector<int> abilities, std::vector<int> types, Cost* cost): 
 BasicCard(name, token, engaged, is_first_turn), m_power(power), m_toughness(toughness), m_power_current(power), m_toughness_current(toughness), m_abilities(abilities), m_types(types), m_cost(cost){}
 
 Creature::~Creature(){}
@@ -38,7 +38,7 @@ std::vector<int> Creature::get_types() const{
     return this->m_types;
 }
 
-Cost Creature::get_cost() const{
+Cost* Creature::get_cost() const{
     return this->m_cost;
 }
 
@@ -70,8 +70,8 @@ void Creature::add_type(int type){
     }
 }
 
-void Creature::engage_lands(std::vector<Land> lands) const{
-    for (auto &land : lands){
-        land.set_engaged(true);
+void Creature::engage_lands(std::vector<Land*> lands) const{
+    for (auto land : lands){
+        land->set_engaged(true);
     }   
 }

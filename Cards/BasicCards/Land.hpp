@@ -4,8 +4,8 @@
 #include <string>
 #include <vector>
 
-#include "Cards/BasicCards/BasicCard.hpp"
-#include "Cards/SpecialCards/Enchantment.hpp"
+#include "BasicCard.hpp"
+#include "../SpecialCards/Enchantment.hpp"
 
 class Land : public virtual BasicCard{
 

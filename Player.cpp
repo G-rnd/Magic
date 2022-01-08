@@ -28,16 +28,16 @@ bool Player::get_played_land() const {
 Battlefield Player::get_battlefield() const {
     return m_battlefield;
 }
-std::vector<Card> Player::get_deck() const {
+std::vector<Card*> Player::get_deck() const {
     return m_deck;
 }
-std::vector<Card> Player::get_graveyard() const {
+std::vector<Card*> Player::get_graveyard() const {
     return m_graveyard;
 }
-std::vector<Card> Player::get_library() const {
+std::vector<Card*> Player::get_library() const {
     return m_library;
 }
-std::vector<Card> Player::get_hand() const {
+std::vector<Card*> Player::get_hand() const {
     return m_hand;
 }
 
