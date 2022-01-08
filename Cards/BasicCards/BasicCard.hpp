@@ -4,8 +4,8 @@
 #include <string>
 #include <vector>
 
-#include "Card.hpp"
-#include "Enchantment.hpp"
+#include "Cards/Card.hpp"
+#include "Cards/SpecialCards/Enchantment.hpp"
 
 class BasicCard : public virtual Card{
 
@@ -24,7 +24,7 @@ class BasicCard : public virtual Card{
 
         virtual void                     set_engaged(bool);
         virtual void                     set_is_first_turn(bool);
-        virtual void                     add_enchantment(Enchantment);
+        virtual void                     add_enchantment(Enchantment*);
             
         virtual void                     print() = 0;
 

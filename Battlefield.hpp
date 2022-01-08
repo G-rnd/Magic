@@ -3,10 +3,10 @@
 
 #include <vector>
 
-#include "BasicCard.hpp"
-#include "Creature.hpp"
-#include "Land.hpp"
-#include "Enchantment.hpp"
+#include "Cards/BasicCards/BasicCard.hpp"
+#include "Cards/BasicCards/Creature.hpp"
+#include "Cards/BasicCards/Land.hpp"
+#include "Cards/SpecialCards/Enchantment.hpp"
 
 
 class Battlefield {
@@ -18,12 +18,12 @@ class Battlefield {
         Battlefield();
         ~Battlefield();
         
-        std::vector<BasicCard>      get_basic_cards();
-        std::vector<Enchantment>    get_enchantments();
+        std::vector<BasicCard>      get_basic_cards() const;
+        std::vector<Enchantment>    get_enchantments() const;
 
-        std::vector<Creature>       get_engaged_creatures();
-        std::vector<Creature>       get_available_creatures();
-        std::vector<Land>           get_available_lands();
+        std::vector<Creature>       get_engaged_creatures() const;
+        std::vector<Creature>       get_available_creatures() const;
+        std::vector<Land>           get_available_lands() const;
 
         void                        print();
 

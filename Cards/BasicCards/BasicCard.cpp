@@ -3,8 +3,8 @@
 #include <vector>
 
 #include "BasicCard.hpp"
-#include "Card.hpp"
-#include "Enchantment.hpp"
+#include "Cards/Card.hpp"
+#include "Cards/SpecialCards/Enchantment.hpp"
 
 BasicCard::BasicCard(std::string name, int token, bool engaged, bool is_first_turn): 
 Card(name, token), m_engaged(engaged), m_is_first_turn(is_first_turn){}
@@ -31,6 +31,6 @@ void BasicCard::set_is_first_turn(bool is_first_turn){
     this->m_is_first_turn = is_first_turn;
 }
 
-void BasicCard::add_enchantment(Enchantment e){
-    this->m_enchantments.push_back(e);
+void BasicCard::add_enchantment(Enchantment* e){
+    this->m_enchantments.push_back(*e);
 }

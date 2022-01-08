@@ -3,9 +3,9 @@
 #include <vector>
 
 #include "Player.hpp"
-#include "Card.hpp"
-#include "BasicCard.hpp"
-#include "Creature.hpp"
+#include "Cards/Card.hpp"
+#include "Cards/BasicCards/BasicCard.hpp"
+#include "Cards/BasicCards/Creature.hpp"
 #include "Battlefield.hpp"
 
 Player::Player() {
@@ -41,13 +41,15 @@ std::vector<Card> Player::get_hand() const {
     return m_hand;
 }
 
-Player::set_name(std::string s) {
+void Player::set_name(std::string s) {
     m_name = s;
 }
-Player::set_ph(int i) {
+
+void Player::set_ph(int i) {
     m_hp = i;
 }
-Player::set_played_land(bool b) {
+
+void Player::set_played_land(bool b) {
     m_played_land = b;
 }
 
@@ -55,7 +57,7 @@ void Player::draw_card() {
     
 }
 
-void Player::discard_card(Card c) {
+void Player::discard_card(Card* c) {
     
 }
 
@@ -63,31 +65,31 @@ void Player::shuffle_library() {
     
 }
 
-void Player::play_card(Card c) {
+void Player::play_card(Card* c) {
     
 }
 
-void Player::engage_card(BasicCard bc) {
+void Player::engage_card(BasicCard* bc) {
     
 }
 
-void Player::disengage_card(BasicCard bc) {
+void Player::disengage_card(BasicCard* bc) {
     
 }
 
-void Player::attack(Creature c) {
+void Player::attack(Creature* c) {
     
 }
 
-void Player::deflect_attack(Creature opponent, std::vector<Creature> defenders) {
+void Player::deflect_attack(Creature* opponent, std::vector<Creature> defenders) {
     
 }
 
-void Player::battle_creature(Creature opponent, Creature defender) {
+void Player::battle_creature(Creature* opponent, Creature* defender) {
     
 }
 
-void Player::destroy_card(Card c) {
+void Player::destroy_card(Card* c) {
     
 }
 

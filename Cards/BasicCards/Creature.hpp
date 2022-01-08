@@ -5,9 +5,10 @@
 #include <vector>
 
 #include "BasicCard.hpp"
-#include "Enchantment.hpp"
+#include "Cards/BasicCards/BasicCard.hpp"
+#include "Cards/SpecialCards/Enchantment.hpp"
 #include "Cost.hpp"
-#include "Land.hpp"
+#include "Cards/BasicCards/Land.hpp"
 
 class Creature : public virtual BasicCard{
 

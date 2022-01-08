@@ -1,8 +1,8 @@
 #include <iostream>
 #include <string>
 
-#include "Card.hpp"
-#include "SpecialCard.hpp"
+#include "Cards/Card.hpp"
+#include "Cards/SpecialCards/SpecialCard.hpp"
 #include "Ritual.hpp"
 
 Ritual::Ritual(std::string name, int token, int id, std::string info): 

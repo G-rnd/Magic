@@ -4,8 +4,9 @@
 #include <algorithm>
 
 #include "Creature.hpp"
-#include "BasicCard.hpp"
-#include "Enchantment.hpp"
+#include "Cards/BasicCards/BasicCard.hpp"
+#include "Cards/SpecialCards/Enchantment.hpp"
+#include "Cards/BasicCards/Land.hpp"
 #include "Cost.hpp"
 
 Creature::Creature(std::string name, int token, bool engaged, bool is_first_turn, int power, int toughness, std::vector<int> abilities, std::vector<int> types, Cost cost): 

@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 
-#include "Creature.hpp"
+#include "Cards/BasicCards/Creature.hpp"
 
 class Cost{
 
