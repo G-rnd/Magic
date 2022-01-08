@@ -1,17 +1,33 @@
 CXX=g++
 CXXFLAGS=-Wall -Wextra
 
-%.o: %.cpp
-	$(CXX) $(CXXFLAGS) $< -c -o $@
+EXEC = magic
 
-main: main.o Game.o Player.o Battlefield.o
-	$(CXX) $^ -o $@
+SRCDIR = sources
+OBJDIR = obj
+HPPDIR = includes
+BIN = bin
+
+SRC = $(wildcard $(SRCDIR)/*.cpp)
+OBJ = $(SRC:.cpp =$(OBJDIR)/*.o)
+INCLUDES = $(wildcard $(HPPDIR)/*.hpp)
+EXEPATH = $(BIN)/$(EXEC)
+
+all: $(EXEPATH)
+
+$(OBJDIR)/%.o: $(SRCDIR)/%.cpp
+	$(CXX) $(CXXFLAGS) $< -c -o $@ -I ./$(HPPDIR)/
+
+$(EXEPATH): $(OBJ)
+#	mkdir bin
+#	mkdir obj
+	$(CXX) $^ -o $@ -I ./$(HPPDIR)/
 
 .PHONY: run clean
 
-run: main
+run: $(EXEPATH)
+	cls
 	./$<
 
 clean:
 	rm -f *.o *~ *.core
-
