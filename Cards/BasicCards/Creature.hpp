@@ -21,7 +21,7 @@ class Creature : public virtual BasicCard{
         Cost*             m_cost;
 
     public:
-        Creature(std::string, int, bool, bool, int, int, std::vector<int>, std::vector<int>, Cost*);
+        Creature(std::string, int, int, int, std::vector<int>, std::vector<int>, Cost*);
         ~Creature();
 
         int               get_power() const;
@@ -40,7 +40,7 @@ class Creature : public virtual BasicCard{
         void              add_ability(int);
         void              add_type(int);
               
-        void              print() const;
+        virtual void      print();
               
         void              engage_lands(std::vector<Land*>) const;
         // disengage useless ?

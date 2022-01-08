@@ -1,12 +1,17 @@
 #include <iostream>
+
 #include <string>
 #include <vector>
+#include <algorithm>
 
 #include "Player.hpp"
 #include "Cards/Card.hpp"
 #include "Cards/BasicCards/BasicCard.hpp"
 #include "Cards/BasicCards/Creature.hpp"
+#include "Cards/SpecialCards/Enchantment.hpp"
+#include "Cards/SpecialCards/Ritual.hpp"
 #include "Battlefield.hpp"
+#include "FonctionsAux.cpp"
 
 Player::Player() {
     std::cout << "[Player] : Construction de " << this << std::endl;
@@ -25,7 +30,7 @@ int Player::get_hp() const {
 bool Player::get_played_land() const {
     return m_played_land;
 }
-Battlefield Player::get_battlefield() const {
+Battlefield* Player::get_battlefield() const {
     return m_battlefield;
 }
 std::vector<Card*> Player::get_deck() const {
@@ -66,6 +71,32 @@ void Player::shuffle_library() {
 }
 
 void Player::play_card(Card* c) {
+
+    if(std::find(m_hand.begin(), m_hand.end(), c) != m_hand.end()){
+        if(instanceof<Land>(c)){
+
+            if(m_played_land){
+                //TODO : send a message : "a land has already been played"
+            } else{
+                m_battlefield->add_basic_card(dynamic_cast<BasicCard*> (c));
+
+                auto pos = std::find(m_hand.begin(), m_hand.end(), c);
+                m_hand.erase(pos);
+
+                this->set_played_land(true);
+            }
+
+        } else if(instanceof<Creature>(c)){
+
+        } else if(instanceof<Enchantment>(c)){
+            //TODO : play an enchantment card
+        } else if(instanceof<Ritual>(c)){
+            //TODO : play a ritual card
+        }
+    }
+    else{
+        //TODO : send the message : "this card is not in your hand"
+    }
     
 }
 

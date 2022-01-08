@@ -33,6 +33,14 @@ std::vector<Land*> Battlefield::get_available_lands() const{
     return std::vector<Land*> ();
 }
 
+void Battlefield::add_basic_card(BasicCard* bc){
+    m_basic_cards.push_back(bc);
+}
+
+void Battlefield::add_enchantment(Enchantment* e){
+    m_enchantments.push_back(e);
+}
+
 void Battlefield::print() {
 
 }

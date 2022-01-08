@@ -11,6 +11,8 @@ class Ritual : public virtual SpecialCard{
         Ritual(std::string, int, int, std::string);
         ~Ritual();
 
+        virtual void print();
+
 };
 
 #endif

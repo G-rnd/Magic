@@ -13,14 +13,14 @@ class Land : public virtual BasicCard{
         int  m_value;
 
     public:
-        Land(std::string, int, bool, bool, int);
+        Land(std::string, int, int);
         ~Land();
 
         int  get_value() const;
 
         void set_value(int);
 
-        void print() const;
+        virtual void print();
 };
 
 #endif

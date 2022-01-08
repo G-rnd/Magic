@@ -25,6 +25,9 @@ class Battlefield {
         std::vector<Creature*>       get_available_creatures() const;
         std::vector<Land*>           get_available_lands() const;
 
+        void                         add_basic_card(BasicCard* bc);
+        void                         add_enchantment(Enchantment* e);
+
         void                         print();
 
 };

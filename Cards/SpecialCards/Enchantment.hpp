@@ -11,7 +11,7 @@ class Enchantment : public virtual SpecialCard{
         Enchantment(std::string, int, int, std::string);
         ~Enchantment();
 
-        void print();
+        virtual void print();
 
 };
 

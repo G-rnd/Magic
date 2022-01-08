@@ -10,12 +10,12 @@
 class BasicCard : public virtual Card{
 
     private:
-        bool                              m_engaged = false;
-        bool                              m_is_first_turn = false; // TODO : Land n'en a pas besoin, transférer pour Creature
+        bool                              m_engaged;
+        bool                              m_is_first_turn; // TODO : Land n'en a pas besoin, transférer pour Creature
         std::vector<Enchantment*>         m_enchantments;
 
     public:
-        BasicCard(std::string, int, bool, bool);
+        BasicCard(std::string, int);
         virtual ~BasicCard() = 0;
 
         virtual bool                      get_engaged() const;
