@@ -11,13 +11,13 @@
 class Land : public virtual BasicCard{
 
     private:
-        int m_value;
+        int  m_value;
 
     public:
         Land(std::string, int, bool, bool, int);
         ~Land();
 
-        int get_value() const;
+        int  get_value() const;
 
         void set_value(int);
 
