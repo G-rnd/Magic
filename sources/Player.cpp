@@ -110,7 +110,8 @@ void Player::battle_creature(Creature opponent, Creature defender) {
 }
 
 void Player::destroy_card(Card* c) {
-    // TODO
+    m_battlefield.remove_basic_card(dynamic_cast<BasicCard*>(c));
+    m_graveyard.push_back(c);
 }
 
 void Player::loose() {

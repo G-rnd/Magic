@@ -17,8 +17,10 @@ class Battlefield {
         Battlefield();
         ~Battlefield();
         
-        std::vector<BasicCard*>  get_basic_cards();
-        std::vector<Enchantment> get_enchantments();
+        std::vector<BasicCard*>  get_basic_cards() const;
+        std::vector<Enchantment> get_enchantments() const;
+
+        void                     remove_basic_card(BasicCard* bc);
         
         std::vector<Creature>    get_engaged_creatures();
         std::vector<Creature>    get_available_creatures();

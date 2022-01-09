@@ -1,4 +1,5 @@
 #include <iostream>
+#include <algorithm>
 #include <string>
 
 #include "../includes/Battlefield.hpp"
@@ -17,12 +18,20 @@ Battlefield::~Battlefield() {
     std::cout << "[Battlefield] : Destruction de " << this << std::endl;
 }
 
-std::vector<BasicCard*> Battlefield::get_basic_cards() {
+std::vector<BasicCard*> Battlefield::get_basic_cards() const{
     return m_basic_cards;
 }
 
-std::vector<Enchantment> Battlefield::get_enchantments() {
+std::vector<Enchantment> Battlefield::get_enchantments() const{
     return m_enchantments;
+}
+
+void Battlefield::remove_basic_card(BasicCard* bc){
+    /*
+    auto pos = std::find(m_basic_cards.begin(), m_basic_cards.end(), bc);
+    m_basic_cards.erase(pos);
+    */
+    m_basic_cards.erase(element_position(bc, m_basic_cards));
 }
 
 std::vector<Creature> Battlefield::get_engaged_creatures() {
