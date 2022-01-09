@@ -5,9 +5,14 @@
 #include "Cost.hpp"
 
 Cost::Cost(int any, int white, int black, int red, int green, int blue): 
-m_any(any), m_white(white), m_black(black), m_red(red), m_green(green), m_blue(blue){}
+m_any(any), m_white(white), m_black(black), m_red(red), m_green(green), m_blue(blue){
+    std::cout << "[Cost] : Création de " << this << std::endl;
+}
 
-Cost::~Cost(){}
+Cost::~Cost(){
+    std::cout << "[Cost] : Destruction de " << this << std::endl;
+
+}
 
 int Cost::get_any() const{
     return this->m_any;

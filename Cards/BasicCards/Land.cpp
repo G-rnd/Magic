@@ -7,9 +7,13 @@
 #include "../SpecialCards/Enchantment.hpp"
 
 Land::Land(std::string name, int token, int value): 
-Card(name, token), BasicCard(name, token), m_value(value){}
+Card(name, token), BasicCard(name, token), m_value(value){
+    std::cout << "[Land] : Création de " << this << std::endl;
+}
 
-Land::~Land(){}
+Land::~Land(){
+    std::cout << "[Land] : Destruction de " << this << std::endl;
+}
 
 int Land::get_value() const{
     return this->m_value;

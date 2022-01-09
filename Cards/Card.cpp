@@ -3,9 +3,14 @@
 
 #include "Card.hpp"
 
-Card::Card(std::string name, int token): m_name(name), m_token(token){}
+Card::Card(std::string name, int token): m_name(name), m_token(token){
+    std::cout << "[Card] : Création de " << this << std::endl;
+}
 
-Card::~Card(){}
+Card::~Card(){
+    std::cout << "[Card] : Destruction de " << this << std::endl;
+
+}
 
 std::string Card::get_name() const{
     return this->m_name;
