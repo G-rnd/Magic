@@ -68,7 +68,8 @@ void Player::draw_card() {
 }
 
 void Player::discard_card(Card* c) {
-    // TODO
+    m_hand.erase(element_position(c, m_graveyard));
+    m_graveyard.push_back(c);
 }
 
 void Player::shuffle_library() {
