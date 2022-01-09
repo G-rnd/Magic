@@ -8,7 +8,6 @@
 #include "Enchantment.hpp"
 #include "Land.hpp"
 #include "Cost.hpp"
-#include "Vector.hpp"
 
 class Creature : public virtual BasicCard{
 
@@ -48,7 +47,7 @@ class Creature : public virtual BasicCard{
               
         virtual void      print();
               
-        void              engage_lands(Vector<Land> lands) const;
+        void              engage_lands(std::vector<Land> lands) const;
 };
 
 #endif

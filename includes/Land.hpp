@@ -5,7 +5,6 @@
 
 #include "BasicCard.hpp"
 #include "Enchantment.hpp"
-#include "Vector.hpp"
 
 class Land : public virtual BasicCard{
 

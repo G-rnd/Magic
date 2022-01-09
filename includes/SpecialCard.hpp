@@ -4,7 +4,6 @@
 #include <string>
 
 #include "Card.hpp"
-#include "Vector.hpp"
 
 class SpecialCard : public virtual Card{
 

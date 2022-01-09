@@ -6,10 +6,9 @@
 #include "../includes/BasicCard.hpp"
 #include "../includes/Creature.hpp"
 #include "../includes/Battlefield.hpp"
-#include "../includes/Vector.hpp"
 
 Player::Player() {
-    std::cout << "[Player] : Construction de " << this << std::endl;
+    std::cout << "[Player] : Création de " << this << std::endl;
 }
 
 Player::~Player() {
@@ -19,25 +18,32 @@ Player::~Player() {
 std::string Player::get_name() const {
     return m_name;
 }
+
 int Player::get_hp() const {
     return m_hp;
 }
+
 bool Player::get_played_land() const {
     return m_played_land;
 }
+
 Battlefield Player::get_battlefield() const {
     return m_battlefield;
 }
-Vector<Card> Player::get_deck() const {
+
+std::vector<Card*> Player::get_deck() const {
     return m_deck;
 }
-Vector<Card> Player::get_graveyard() const {
+
+std::vector<Card*> Player::get_graveyard() const {
     return m_graveyard;
 }
-Vector<Card> Player::get_library() const {
+
+std::vector<Card*> Player::get_library() const {
     return m_library;
 }
-Vector<Card> Player::get_hand() const {
+
+std::vector<Card*> Player::get_hand() const {
     return m_hand;
 }
 
@@ -77,15 +83,15 @@ void Player::disengage_card(BasicCard* bc) {
     
 }
 
-void Player::attack(Creature* c) {
+void Player::attack(Creature c) {
     
 }
 
-void Player::deflect_attack(Creature* opponent, Vector<Creature> defenders) {
+void Player::deflect_attack(Creature opponent, std::vector<Creature> defenders) {
     
 }
 
-void Player::battle_creature(Creature* opponent, Creature* defender) {
+void Player::battle_creature(Creature opponent, Creature defender) {
     
 }
 

@@ -3,8 +3,6 @@
 
 #include <string>
 
-#include "Vector.hpp"
-
 class Cost{
 
     private:

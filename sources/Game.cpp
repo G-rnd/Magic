@@ -5,7 +5,7 @@
 #include "../includes/Player.hpp"
 
 Game::Game() {
-    std::cout << "[Game] : Construction de " << this << std::endl;
+    std::cout << "[Game] : Création de " << this << std::endl;
 }
 
 Game::~Game() {
@@ -62,7 +62,7 @@ void Game::start() {
     
 }
 
-void Game::choose_name(Player* p, std::string name) {
+void Game::choose_name(Player p, std::string name) {
     
 }
 
@@ -86,6 +86,6 @@ void Game::exit() {
     
 }
 
-void Game::victory(Player* p) {
+void Game::victory(Player p) {
     
 }
