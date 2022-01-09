@@ -4,7 +4,6 @@
 #include <vector>
 #include <string>
 
-#include "Game.hpp"
 #include "Card.hpp"
 #include "BasicCard.hpp"
 #include "Creature.hpp"
@@ -12,7 +11,6 @@
 
 class Player {
     private:
-        Game*                 m_game;                   
         std::string           m_name;
         int                   m_hp;
         bool                  m_played_land;
@@ -23,7 +21,7 @@ class Player {
         std::vector<Card*>    m_hand;
 
     public:
-        Player(Game* g, std::string s);
+        Player(std::string s);
         ~Player();
 
         std::string           get_name() const;
