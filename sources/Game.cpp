@@ -1,8 +1,8 @@
 #include <iostream>
 #include <vector>
 
-#include "Game.hpp"
-#include "Player.hpp"
+#include "../includes/Game.hpp"
+#include "../includes/Player.hpp"
 
 Game::Game() {
     std::cout << "[Game] : Construction de " << this << std::endl;
@@ -21,10 +21,6 @@ void Game::set_player_turn(bool b) {
 
 void Game::next_player_turn() {
     m_player_turn != m_player_turn;
-}
-
-std::vector<Player> Game::get_players() const {
-    return m_players;
 }
 
 std::vector<Player> Game::get_players() const {
@@ -66,7 +62,7 @@ void Game::start() {
     
 }
 
-void Game::choose_name(Player p, std::string name) {
+void Game::choose_name(Player* p, std::string name) {
     
 }
 
@@ -90,6 +86,6 @@ void Game::exit() {
     
 }
 
-void Game::victory(Player p) {
+void Game::victory(Player* p) {
     
 }

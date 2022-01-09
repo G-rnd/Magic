@@ -1,10 +1,10 @@
 #include <iostream>
 #include <string>
 
-#include "BasicCard.hpp"
-#include "Card.hpp"
-#include "Enchantment.hpp"
-#include "Vector.hpp"
+#include "../includes/BasicCard.hpp"
+#include "../includes/Card.hpp"
+#include "../includes/Enchantment.hpp"
+#include "../includes/Vector.hpp"
 
 BasicCard::BasicCard(std::string name, int token): 
 Card(name, token){
@@ -28,7 +28,7 @@ void BasicCard::set_engaged(bool engaged){
     m_engaged = engaged;
 }
 
-void BasicCard::add_enchantment(Enchantment &e){
+void BasicCard::add_enchantment(Enchantment* e){
     m_enchantments.push_back(e);
 }
 

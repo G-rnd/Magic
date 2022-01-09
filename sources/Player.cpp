@@ -1,12 +1,12 @@
 #include <iostream>
 #include <string>
 
-#include "Player.hpp"
-#include "Card.hpp"
-#include "BasicCard.hpp"
-#include "Creature.hpp"
-#include "Battlefield.hpp"
-#include "Vector.hpp"
+#include "../includes/Player.hpp"
+#include "../includes/Card.hpp"
+#include "../includes/BasicCard.hpp"
+#include "../includes/Creature.hpp"
+#include "../includes/Battlefield.hpp"
+#include "../includes/Vector.hpp"
 
 Player::Player() {
     std::cout << "[Player] : Construction de " << this << std::endl;
@@ -77,15 +77,15 @@ void Player::disengage_card(BasicCard* bc) {
     
 }
 
-void Player::attack(Creature c) {
+void Player::attack(Creature* c) {
     
 }
 
-void Player::deflect_attack(Creature opponent, Vector<Creature> defenders) {
+void Player::deflect_attack(Creature* opponent, Vector<Creature> defenders) {
     
 }
 
-void Player::battle_creature(Creature opponent, Creature defender) {
+void Player::battle_creature(Creature* opponent, Creature* defender) {
     
 }
 

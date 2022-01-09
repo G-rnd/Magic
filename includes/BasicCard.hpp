@@ -20,8 +20,8 @@ class BasicCard : public virtual Card{
         virtual bool                    get_engaged() const;
         virtual Vector<Enchantment>     get_enchantments() const;
 
-        virtual void                    set_engaged(bool);
-        virtual void                    add_enchantment(Enchantment &e);
+        virtual void                    set_engaged(bool b);
+        virtual void                    add_enchantment(Enchantment* e);
             
         virtual void                    print() = 0;
 

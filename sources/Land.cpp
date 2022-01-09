@@ -2,9 +2,9 @@
 #include <string>
 #include <vector>
 
-#include "Land.hpp"
-#include "BasicCard.hpp"
-#include "Enchantment.hpp"
+#include "../includes/Land.hpp"
+#include "../includes/BasicCard.hpp"
+#include "../includes/Enchantment.hpp"
 
 Land::Land(std::string name, int token, int value): 
 Card(name, token), BasicCard(name, token), m_value(value){

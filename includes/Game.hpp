@@ -25,13 +25,13 @@ class Game {
         Player              get_current_player() const;
 
         void                start();
-        void                choose_name(Player p, std::string name);
+        void                choose_name(Player* p, std::string name);
         void                choose_deck();
         void                save();
         void                choose_save();
         void                load(std::string filename);
         void                exit();
-        void                victory(Player p);
+        void                victory(Player* p);
 
 
 };

@@ -1,9 +1,9 @@
 #include <iostream>
 #include <string>
 
-#include "Card.hpp"
-#include "SpecialCard.hpp"
-#include "Enchantment.hpp"
+#include "../includes/Card.hpp"
+#include "../includes/SpecialCard.hpp"
+#include "../includes/Enchantment.hpp"
 
 Enchantment::Enchantment(std::string name, int token, int id, std::string info): 
 Card(name, token), SpecialCard(name, token, id, info){

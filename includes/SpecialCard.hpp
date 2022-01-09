@@ -19,8 +19,8 @@ class SpecialCard : public virtual Card{
         virtual int         get_id() const;
         virtual std::string get_info() const;
 
-        virtual void        set_id(int);
-        virtual void        set_info(std::string);
+        virtual void        set_id(int i);
+        virtual void        set_info(std::string s);
 
         virtual void        print() = 0;
 

@@ -18,7 +18,7 @@ class Land : public virtual BasicCard{
 
         int             get_value() const;
 
-        void            set_value(int);
+        void            set_value(int i);
 
         virtual void    print();
 };

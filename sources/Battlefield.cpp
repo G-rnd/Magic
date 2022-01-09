@@ -1,12 +1,12 @@
 #include <iostream>
 #include <string>
 
-#include "Battlefield.hpp"
-#include "BasicCard.hpp"
-#include "Creature.hpp"
-#include "Land.hpp"
-#include "Enchantment.hpp"
-#include "Vector.hpp"
+#include "../includes/Battlefield.hpp"
+#include "../includes/BasicCard.hpp"
+#include "../includes/Creature.hpp"
+#include "../includes/Land.hpp"
+#include "../includes/Enchantment.hpp"
+#include "../includes/Vector.hpp"
 
 #include "FonctionsAux.cpp"
 

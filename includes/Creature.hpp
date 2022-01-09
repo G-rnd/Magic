@@ -31,20 +31,20 @@ class Creature : public virtual BasicCard{
         int               get_toughness() const;
         int               get_power_current() const;
         int               get_toughness_current() const;
-        std::vector<int>       get_abilities() const;
-        std::vector<int>       get_types() const;
+        std::vector<int>  get_abilities() const;
+        std::vector<int>  get_types() const;
         Cost*             get_cost() const;
         virtual bool      get_is_first_turn() const;
 
 
-        void              set_power(int);
-        void              set_toughness(int);
-        void              set_power_current(int);
-        void              set_toughness_current(int);
-        virtual void      set_is_first_turn(bool);
+        void              set_power(int i);
+        void              set_toughness(int i);
+        void              set_power_current(int i);
+        void              set_toughness_current(int i);
+        virtual void      set_is_first_turn(bool b);
               
-        void              add_ability(int);
-        void              add_type(int);
+        void              add_ability(int i);
+        void              add_type(int i);
               
         virtual void      print();
               

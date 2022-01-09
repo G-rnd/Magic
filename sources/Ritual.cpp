@@ -1,9 +1,9 @@
 #include <iostream>
 #include <string>
 
-#include "Card.hpp"
-#include "SpecialCard.hpp"
-#include "Ritual.hpp"
+#include "../includes/Card.hpp"
+#include "../includes/SpecialCard.hpp"
+#include "../includes/Ritual.hpp"
 
 Ritual::Ritual(std::string name, int token, int id, std::string info): 
 Card(name, token), SpecialCard(name, token, id, info){

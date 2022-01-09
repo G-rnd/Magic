@@ -3,11 +3,11 @@
 #include <vector>
 #include <algorithm>
 
-#include "Creature.hpp"
-#include "BasicCard.hpp"
-#include "Enchantment.hpp"
-#include "Land.hpp"
-#include "Cost.hpp"
+#include "../includes/Creature.hpp"
+#include "../includes/BasicCard.hpp"
+#include "../includes/Enchantment.hpp"
+#include "../includes/Land.hpp"
+#include "../includes/Cost.hpp"
 
 Creature::Creature(std::string name, int token, int power, int toughness, std::vector<int> abilities, std::vector<int> types, Cost* cost): 
 Card(name, token), BasicCard(name, token), m_power(power), m_toughness(toughness), m_power_current(power), m_toughness_current(toughness), m_abilities(abilities), m_types(types), m_cost(cost){
@@ -73,13 +73,13 @@ void Creature::set_is_first_turn(bool is_first_turn){
 
 void Creature::add_ability(int ability){
     if(std::find(this->m_abilities.begin(), this->m_abilities.end(), ability) == this->m_abilities.end()){
-        this->m_abilities.push_back(ability);
+        m_abilities.push_back(ability);
     }
 }
 
 void Creature::add_type(int type){
     if(std::find(this->m_types.begin(), this->m_types.end(), type) == this->m_types.end()){
-        this->m_types.push_back(type);
+        m_types.push_back(type);
     }
 }
 

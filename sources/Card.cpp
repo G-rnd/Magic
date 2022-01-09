@@ -1,7 +1,7 @@
 #include <iostream>
 #include <string>
 
-#include "Card.hpp"
+#include "../includes/Card.hpp"
 
 Card::Card(std::string name, int token): m_name(name), m_token(token){
     std::cout << "[Card] : Création de " << this << std::endl;
