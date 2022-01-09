@@ -27,44 +27,46 @@ std::vector<Enchantment> Battlefield::get_enchantments() {
 
 std::vector<Creature> Battlefield::get_engaged_creatures() {
     std::vector<Creature> v = {};
-    /*
-    
-    for (int i = 0; i < m_basic_cards.size(); i++) {
-        if(instanceof<Creature>(m_basic_cards[i]) && m_basic_cards[i].get_engaged()) {
-            v.push_back(m_basic_cards[i]);
+
+    for (auto card : m_basic_cards) {
+        if(instanceof<Creature>(card) && card->get_engaged()) {
+            v.push_back(*dynamic_cast<Creature*>(card));
         }
     }
-    */
+    
     return v;
 }
 
 std::vector<Creature> Battlefield::get_available_creatures() {
     std::vector<Creature> v = {};
-    /*
-    
-    for (int i = 0; i < m_basic_cards.size(); i++) {
-        if(instanceof<Creature>(m_basic_cards[i]) && !m_basic_cards[i].get_engaged()){
-            Creature c = m_basic_cards[i];
+
+    for (auto card : m_basic_cards) {
+        if(instanceof<Creature>(card) && !card->get_engaged()){
+            Creature c = *dynamic_cast<Creature*>(card);
             if(!c.get_is_first_turn()){
                 v.push_back(c);
             }
         }
     }
-    */
+
     return v;
 }
 std::vector<Land> Battlefield::get_available_lands() {
     std::vector<Land> v = {};
-    /*
-    for (int i = 0; i < m_basic_cards.size(); i++) {
-        if(instanceof<Land>(m_basic_cards[i]) && !m_basic_cards[i].get_engaged()){
-            v.push_back(m_basic_cards[i]);
+    
+    for (auto card : m_basic_cards) {
+        if(instanceof<Land>(card) && !card->get_engaged()){
+            v.push_back(*dynamic_cast<Land*>(card));
         }
     }
-    */
-   return v;
+    
+    return v;
+}
+
+void Battlefield::disengage_card(BasicCard* bc){
+    bc->set_engaged(false);
 }
 
 void Battlefield::print() {
-
+    //TODO : print
 }

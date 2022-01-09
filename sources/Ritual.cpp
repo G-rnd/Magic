@@ -14,4 +14,6 @@ Ritual::~Ritual(){
     std::cout << "[Ritual] : Destruction de " << this << std::endl;
 }
 
-void Ritual::print(){}
+void Ritual::print(){
+    // TODO : print
+}

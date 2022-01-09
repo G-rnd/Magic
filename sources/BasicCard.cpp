@@ -30,6 +30,3 @@ void BasicCard::set_engaged(bool engaged){
 void BasicCard::add_enchantment(Enchantment e){
     m_enchantments.push_back(e);
 }
-
-void BasicCard::print(){
-}

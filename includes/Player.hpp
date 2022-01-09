@@ -49,6 +49,8 @@ class Player {
         void                destroy_card(Card* c);
         void                loose();
 
+        void                print() const;
+
 };
 
 #endif

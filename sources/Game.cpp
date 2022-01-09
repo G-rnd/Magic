@@ -60,32 +60,34 @@ void Game::start() {
     m_players.push_back(p1);
     m_players.push_back(p2);
     
+    // TODO : à compléter game::start()
+
 }
 
 void Game::choose_name(Player p, std::string name) {
-    
+    // TODO
 }
 
 void Game::choose_deck() {
-    
+    // TODO
 }
 
 void Game::save() {
-    
+    // TODO
 }
 
 void Game::choose_save() {
-    
+    // TODO
 }
 
 void Game::load(std::string filename) {
-    
+    // TODO
 }
 
 void Game::exit() {
-    
+    // TODO
 }
 
 void Game::victory(Player p) {
-    
+    // TODO
 }

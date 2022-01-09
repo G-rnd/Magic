@@ -6,6 +6,10 @@
 #include "../includes/BasicCard.hpp"
 #include "../includes/Creature.hpp"
 #include "../includes/Battlefield.hpp"
+#include "../includes/Ritual.hpp"
+#include "../includes/Enchantment.hpp"
+
+#include "FonctionsAux.cpp"
 
 Player::Player() {
     std::cout << "[Player] : Création de " << this << std::endl;
@@ -60,19 +64,29 @@ void Player::set_played_land(bool b) {
 }
 
 void Player::draw_card() {
-    
+    // TODO
 }
 
 void Player::discard_card(Card* c) {
-    
+    // TODO
 }
 
 void Player::shuffle_library() {
-    
+    // TODO
 }
 
 void Player::play_card(Card* c) {
-    
+    // TODO : à compléter player::play_card()
+
+    if(instanceof<Creature>(c)){
+        
+    } else if(instanceof<Land>(c)){
+
+    } else if(instanceof<Ritual>(c)){
+
+    } else if(instanceof<Enchantment>(c)){
+
+    }
 }
 
 void Player::engage_card(BasicCard* bc) {
@@ -80,25 +94,29 @@ void Player::engage_card(BasicCard* bc) {
 }
 
 void Player::disengage_card(BasicCard* bc) {
-    
+    // TODO
 }
 
 void Player::attack(Creature c) {
-    
+    // TODO
 }
 
 void Player::deflect_attack(Creature opponent, std::vector<Creature> defenders) {
-    
+    // TODO
 }
 
 void Player::battle_creature(Creature opponent, Creature defender) {
-    
+    // TODO
 }
 
 void Player::destroy_card(Card* c) {
-    
+    // TODO
 }
 
 void Player::loose() {
-    
+    // TODO
+}
+
+void Player::print() const{
+    // TODO : print
 }

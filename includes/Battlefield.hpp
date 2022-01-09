@@ -24,6 +24,8 @@ class Battlefield {
         std::vector<Creature>    get_available_creatures();
         std::vector<Land>        get_available_lands();
 
+        void                     disengage_card(BasicCard* bc);
+
         void                     print();
 
 };

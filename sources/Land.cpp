@@ -16,14 +16,14 @@ Land::~Land(){
 }
 
 int Land::get_value() const{
-    return this->m_value;
+    return m_value;
 }
 
 void Land::set_value(int value){
-    this->m_value = value;
+    m_value = value;
 }
 
 void Land::print(){
-
+    // TODO : print
 }
 
