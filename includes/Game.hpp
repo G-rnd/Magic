@@ -31,7 +31,7 @@ class Game {
         void                choose_save();
         void                load(std::string filename);
         void                exit();
-        void                victory(Player p);
+        void                end(Player looser);
 
 
 };

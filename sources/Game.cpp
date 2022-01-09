@@ -47,11 +47,11 @@ void Game::start() {
 
     std::cout<< "Le nom du premier joueur : "<<std::endl;
     std::cin>> p_name_1;
-    Player p1(p_name_1);
+    Player p1(this, p_name_1);
 
     std::cout<< "Le nom du second joueur : "<<std::endl;
     std::cin>> p_name_2;
-    Player p2(p_name_2);
+    Player p2(this, p_name_2);
 
     m_players.push_back(p1);
     m_players.push_back(p2);
@@ -84,6 +84,14 @@ void Game::exit() {
     // TODO
 }
 
-void Game::victory(Player p) {
-    // TODO
+void Game::end(Player looser) {
+    
+    if(looser.get_name() == m_players[0].get_name()){
+        std::cout<< m_players[1].get_name() << " est victorieux ! "<<std::endl;
+    } else {
+        std::cout<< m_players[0].get_name() << " est victorieux ! "<<std::endl;
+    }
+
+    // TODO : fin du jeu
+    
 }

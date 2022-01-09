@@ -11,7 +11,7 @@
 
 #include "FonctionsAux.cpp"
 
-Player::Player(std::string name): m_name(name) {
+Player::Player(Game* game, std::string name): m_game(game), m_name(name) {
     std::cout << "[Player] : Création de " << this << std::endl;
     m_hp = 20;
 }
@@ -65,8 +65,14 @@ void Player::set_played_land(bool b) {
 }
 
 void Player::draw_card() {
-    m_hand.push_back(*m_library.begin());
-    m_library.erase(element_position(*m_library.begin(), m_library));
+
+    if(m_library.empty()){
+        this->loose();
+    } else{
+        m_hand.push_back(*m_library.begin());
+        m_library.erase(element_position(*m_library.begin(), m_library));
+    }
+
 }
 
 void Player::discard_card(Card* c) {
@@ -78,7 +84,7 @@ void Player::shuffle_library() {
 
     std::vector<Card*> m_library_copy = m_library;
     int i_lib = 0;
-    while(m_library_copy.size() != 0){
+    while(!m_library_copy.empty()){
         int j = rand() % m_library_copy.size();
         m_library[i_lib] = m_library_copy[j];
         m_library_copy.erase(m_library_copy.begin() + j);
@@ -167,7 +173,7 @@ void Player::destroy_card(Card* c) {
 }
 
 void Player::loose() {
-    // TODO
+    m_game->end(*this);
 }
 
 void Player::print() const{
