@@ -22,6 +22,8 @@ class BasicCard : public virtual Card{
 
         virtual void                     set_engaged(bool b);
         virtual void                     add_enchantment(Enchantment e);
+
+        std::vector<BasicCard*>          remove(std::vector<BasicCard*> cards);
              
         virtual void                     print() = 0;
 

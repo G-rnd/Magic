@@ -1,9 +1,12 @@
 #include <iostream>
+#include <vector>
 #include <string>
 
 #include "../includes/BasicCard.hpp"
 #include "../includes/Card.hpp"
 #include "../includes/Enchantment.hpp"
+
+#include "FonctionsAux.cpp"
 
 BasicCard::BasicCard(std::string name, int token): 
 Card(name, token){
@@ -29,4 +32,9 @@ void BasicCard::set_engaged(bool engaged){
 
 void BasicCard::add_enchantment(Enchantment e){
     m_enchantments.push_back(e);
+}
+
+std::vector<BasicCard*> BasicCard::remove(std::vector<BasicCard*> cards){
+    cards.erase(element_position(this, cards));
+    return cards;
 }

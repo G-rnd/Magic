@@ -1,6 +1,7 @@
 #ifndef CARD_HPP
 #define CARD_HPP
 
+#include <vector>
 #include <string>
 
 class Card {
@@ -18,6 +19,8 @@ class Card {
 
         virtual void        set_name(std::string s);
         virtual void        set_token(int i);
+
+        std::vector<Card*>  remove(std::vector<Card*> cards);
 
         virtual void        print() = 0;
 

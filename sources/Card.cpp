@@ -1,7 +1,10 @@
 #include <iostream>
+#include <vector>
 #include <string>
 
 #include "../includes/Card.hpp"
+
+#include "FonctionsAux.cpp"
 
 Card::Card(std::string name, int token): m_name(name), m_token(token){
     std::cout << "[Card] : Création de " << this << std::endl;
@@ -26,5 +29,10 @@ void Card::set_name(std::string name){
 
 void Card::set_token(int token){
     m_token = token;
+}
+
+std::vector<Card*> Card::remove(std::vector<Card*> cards){
+    cards.erase(element_position(this, cards));
+    return cards;
 }
 

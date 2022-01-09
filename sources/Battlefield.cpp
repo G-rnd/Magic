@@ -26,12 +26,14 @@ std::vector<Enchantment> Battlefield::get_enchantments() const{
     return m_enchantments;
 }
 
-void Battlefield::remove_basic_card(BasicCard* bc){
-    /*
-    auto pos = std::find(m_basic_cards.begin(), m_basic_cards.end(), bc);
-    m_basic_cards.erase(pos);
-    */
-    m_basic_cards.erase(element_position(bc, m_basic_cards));
+void Battlefield::set_basic_cards(std::vector<BasicCard*> bc){
+    // TODO : à verifier que ça fonctionne
+    m_basic_cards = bc;
+}
+
+void Battlefield::set_enchantments(std::vector<Enchantment> e){
+    // TODO : à verifier que ça fonctionne
+    m_enchantments = e;
 }
 
 std::vector<Creature> Battlefield::get_engaged_creatures() {

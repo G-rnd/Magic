@@ -19,8 +19,9 @@ class Battlefield {
         
         std::vector<BasicCard*>  get_basic_cards() const;
         std::vector<Enchantment> get_enchantments() const;
-
-        void                     remove_basic_card(BasicCard* bc);
+        
+        void                     set_basic_cards(std::vector<BasicCard*> bc);
+        void                     set_enchantments(std::vector<Enchantment> e);
         
         std::vector<Creature>    get_engaged_creatures();
         std::vector<Creature>    get_available_creatures();

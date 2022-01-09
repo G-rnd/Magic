@@ -11,8 +11,9 @@
 
 #include "FonctionsAux.cpp"
 
-Player::Player() {
+Player::Player(std::string name): m_name(name) {
     std::cout << "[Player] : Création de " << this << std::endl;
+    m_hp = 20;
 }
 
 Player::~Player() {
@@ -64,9 +65,8 @@ void Player::set_played_land(bool b) {
 }
 
 void Player::draw_card() {
-    // TODO
-    Card *c = *(m_library.begin());
-
+    m_hand.push_back(*m_library.begin());
+    m_library.erase(element_position(*m_library.begin(), m_library));
 }
 
 void Player::discard_card(Card* c) {
@@ -75,7 +75,16 @@ void Player::discard_card(Card* c) {
 }
 
 void Player::shuffle_library() {
-    // TODO
+
+    std::vector<Card*> m_library_copy = m_library;
+    int i_lib = 0;
+    while(m_library_copy.size() != 0){
+        int j = rand() % m_library_copy.size();
+        m_library[i_lib] = m_library_copy[j];
+        m_library_copy.erase(m_library_copy.begin() + j);
+        i_lib++;
+    }
+
 }
 
 void Player::play_card(Card* c) {
@@ -97,24 +106,64 @@ void Player::engage_card(BasicCard* bc) {
 }
 
 void Player::disengage_card(BasicCard* bc) {
-    // TODO
+    bc->set_engaged(false);
 }
 
-void Player::attack(Creature c) {
-    // TODO
+void Player::attack(std::vector<Creature> c) {
+
+    for (auto card : c){
+        if(!(card.get_engaged() && card.get_is_first_turn())){
+            card.set_engaged(true);
+        } else {
+            // TODO : erreur
+        }
+    }
+
 }
 
+// TODO : /!\ entrer dans defenders les creature dans l'ordre choisi par celui qui attaque
 void Player::deflect_attack(Creature opponent, std::vector<Creature> defenders) {
-    // TODO
+
+    for (int i = 0; i <= defenders.size(); i++){
+        // Check if the opponent is already dead
+        if(contain(dynamic_cast<BasicCard*>(&opponent), m_battlefield.get_basic_cards())){
+            battle_creature(opponent, defenders[i]);
+        }
+    }
+
 }
 
 void Player::battle_creature(Creature opponent, Creature defender) {
-    // TODO
+
+    // Count the damages
+    opponent.set_toughness_current(opponent.get_toughness_current() - defender.get_power_current());
+    defender.set_toughness_current(defender.get_toughness_current() - opponent.get_power_current());
+
+    // If the creatures are dead, deplace them into the graveyard
+    if(opponent.get_toughness_current() <= 0){
+        destroy_card(dynamic_cast<Card*>(&opponent));
+    }
+    if(defender.get_toughness_current() <= 0){
+        destroy_card(dynamic_cast<Card*>(&defender));
+    }
 }
 
 void Player::destroy_card(Card* c) {
-    m_battlefield.remove_basic_card(dynamic_cast<BasicCard*>(c));
-    m_graveyard.push_back(c);
+
+    // If c is a BasicCard, we deplace it into the graveyard
+    if(instanceof<BasicCard*>(c)){
+        m_battlefield.set_basic_cards(dynamic_cast<BasicCard*>(c)->remove(m_battlefield.get_basic_cards()));
+        m_graveyard.push_back(c);
+        // We also deplace the enchantments associated to c
+        for (auto e : (dynamic_cast<BasicCard*>(c))->get_enchantments()){
+            m_graveyard.push_back(&e);
+        }
+    } 
+    // If c is a Ritual, we place it into the graveyard
+    else if(instanceof<Ritual>(c)){
+        m_graveyard.push_back(c);
+    }
+
 }
 
 void Player::loose() {

@@ -28,3 +28,11 @@ template<typename T>
 auto element_position(const T* elem, std::vector<T*> vec){
     return std::find(vec.begin(), vec.end(), elem);
 }
+
+template<typename T>
+bool contain(const T* elem, std::vector<T*> vec){
+    if(std::find(vec.begin(), vec.end(), elem) != vec.end()){
+        return true;
+    }
+    return false;
+}
