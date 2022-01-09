@@ -38,14 +38,14 @@ class Player {
         void                 set_played_land(bool b);
  
         void                 draw_card();
-        void                 discard_card(Card &c);
+        void                 discard_card(Card *c);
         void                 shuffle_library();
-        void                 play_card(Card &c);
-        void                 engage_card(BasicCard &bc);
-        void                 attack(Creature &c);
-        void                 deflect_attack(Creature &opponent, std::vector<Creature> defenders);
-        void                 battle_creature(Creature &opponent, Creature &defender);
-        void                 destroy_card(Card &c);
+        void                 play_card(Card *c);
+        void                 engage_card(BasicCard *bc);
+        void                 attack(Creature *c);
+        void                 deflect_attack(Creature *opponent, std::vector<Creature> defenders);
+        void                 battle_creature(Creature *opponent, Creature *defender);
+        void                 destroy_card(Card *c);
         void                 loose();
 
 };

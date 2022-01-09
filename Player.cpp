@@ -62,7 +62,7 @@ void Player::draw_card() {
     
 }
 
-void Player::discard_card(Card &c) {
+void Player::discard_card(Card *c) {
     
 }
 
@@ -70,8 +70,8 @@ void Player::shuffle_library() {
     
 }
 
-void Player::play_card(Card &c) {
-
+void Player::play_card(Card *c) {
+/*
     if(std::find(m_hand.begin(), m_hand.end(), c) != m_hand.end()){
         if(instanceof<Land>(&c)){
 
@@ -98,26 +98,26 @@ void Player::play_card(Card &c) {
     else{
         //TODO : send the message : "this card is not in your hand"
     }
+    */
+}
+
+void Player::engage_card(BasicCard *bc) {
+    bc->set_engaged(true);
+}
+
+void Player::attack(Creature *c) {
     
 }
 
-void Player::engage_card(BasicCard &bc) {
-    bc.set_engaged(true);
-}
-
-void Player::attack(Creature &c) {
+void Player::deflect_attack(Creature *opponent, std::vector<Creature> defenders) {
     
 }
 
-void Player::deflect_attack(Creature &opponent, std::vector<Creature> defenders) {
+void Player::battle_creature(Creature *opponent, Creature *defender) {
     
 }
 
-void Player::battle_creature(Creature &opponent, Creature &defender) {
-    
-}
-
-void Player::destroy_card(Card &c) {
+void Player::destroy_card(Card *c) {
     
 }
 
