@@ -65,6 +65,8 @@ void Player::set_played_land(bool b) {
 
 void Player::draw_card() {
     // TODO
+    Card *c = *(m_library.begin());
+
 }
 
 void Player::discard_card(Card* c) {
