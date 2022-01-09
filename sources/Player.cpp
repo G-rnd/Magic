@@ -1,12 +1,12 @@
 #include <iostream>
 #include <string>
-#include <vector>
 
 #include "Player.hpp"
 #include "Card.hpp"
 #include "BasicCard.hpp"
 #include "Creature.hpp"
 #include "Battlefield.hpp"
+#include "Vector.hpp"
 
 Player::Player() {
     std::cout << "[Player] : Construction de " << this << std::endl;
@@ -28,16 +28,16 @@ bool Player::get_played_land() const {
 Battlefield Player::get_battlefield() const {
     return m_battlefield;
 }
-std::vector<Card> Player::get_deck() const {
+Vector<Card> Player::get_deck() const {
     return m_deck;
 }
-std::vector<Card> Player::get_graveyard() const {
+Vector<Card> Player::get_graveyard() const {
     return m_graveyard;
 }
-std::vector<Card> Player::get_library() const {
+Vector<Card> Player::get_library() const {
     return m_library;
 }
-std::vector<Card> Player::get_hand() const {
+Vector<Card> Player::get_hand() const {
     return m_hand;
 }
 
@@ -79,7 +79,7 @@ void Player::attack(Creature c) {
     
 }
 
-void Player::deflect_attack(Creature opponent, std::vector<Creature> defenders) {
+void Player::deflect_attack(Creature opponent, Vector<Creature> defenders) {
     
 }
 

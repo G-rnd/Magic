@@ -1,15 +1,15 @@
 #ifndef GAME_HPP
 #define GAME_HPP
 
-#include <vector>
 #include <string>
 
 #include "Player.hpp"
+#include "Vector.hpp"
 
 class Game {
     private:
         bool                m_player_turn;
-        std::vector<Player> m_players;
+        Vector<Player> m_players;
         
     public:
         Game();
@@ -19,7 +19,7 @@ class Game {
         void                set_player_turn(bool b);
         void                next_player_turn();
 
-        std::vector<Player> get_players() const;
+        Vector<Player> get_players() const;
         Player              get_first_player() const;
         Player              get_second_player() const;
         Player              get_current_player() const;

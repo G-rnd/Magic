@@ -30,4 +30,4 @@ run: $(EXEPATH)
 	./$<
 
 clean:
-	rm -f *.o *~ *.core
+	rm -f $(OBJDIR)/*.o *~ *.core

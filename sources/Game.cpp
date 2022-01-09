@@ -2,6 +2,7 @@
 
 #include "Game.hpp"
 #include "Player.hpp"
+#include "Vector.hpp"
 
 Game::Game() {
     std::cout << "[Game] : Construction de " << this << std::endl;
@@ -22,11 +23,11 @@ void Game::next_player_turn() {
     m_player_turn != m_player_turn;
 }
 
-std::vector<Player> Game::get_players() const {
+Vector<Player> Game::get_players() const {
     return m_players;
 }
 
-std::vector<Player> Game::get_players() const {
+Vector<Player> Game::get_players() const {
     return m_players;
 }
 
