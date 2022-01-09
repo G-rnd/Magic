@@ -7,7 +7,7 @@ make.exe all --print-data-base --no-builtin-variables --no-builtin-rules --quest
 # There is NO WARRANTY, to the extent permitted by law.
  
 
-# Make data base, printed on Sun Jan 09 13:45:03 2022
+# Make data base, printed on Sun Jan 09 14:28:34 2022
 
 # Variables
 
@@ -65,7 +65,7 @@ PROGRAMW6432 = C:\Program Files
 # environment
 PROGRAMDATA = C:\ProgramData
 # environment
-VSCODE_IPC_HOOK_EXTHOST = \\.\pipe\vscode-ipc-f3a05ee1-29f6-49c2-8087-93a8394f8fdb-sock
+VSCODE_IPC_HOOK_EXTHOST = \\.\pipe\vscode-ipc-72582604-b068-4afa-b8bc-bb519a66f40c-sock
 # environment
 VSCODE_CWD = C:\Users\Gyro\AppData\Local\Programs\Microsoft VS Code
 # environment
@@ -138,7 +138,8 @@ INTELLIJ IDEA COMMUNITY EDITION = C:\Program Files\JetBrains\IntelliJ IDEA Commu
 MAKE = $(MAKE_COMMAND)
 # default
 MAKECMDGOALS := all
-# makefile (from 'makefile', line 4)
+# mak 
+efile (from 'makefile', line 4)
 EXEC = magic
 # default
 MAKE_VERSION := 3.82.90
@@ -225,7 +226,8 @@ PROCESSOR_LEVEL = 6
 # environment
 VSCODE_PID = 11600
 # environment
-USERDOMAIN_ROAMINGPROFILE = DESKTOP-E02KJJH
+USERDOMAIN_ROAMINGPROFILE 
+ = DESKTOP-E02KJJH
 # variable set hash-table stats:
 # Load=107/1024=10%, Rehash=0, Collisions=13/146=9%
 
@@ -237,16 +239,16 @@ USERDOMAIN_ROAMINGPROFILE = DESKTOP-E02KJJH
 
 # : could not be stat'd.
 # C:\Program Files\JetBrains\IntelliJ IDEA Community Edition 2021.2.2\bin (key C:/Program Files/JetBrains/IntelliJ IDEA Community Edition 2021.2.2/bin, mtime 1632508022): 31 files, no impossibilities.
-# C:\Program Files\Microsoft SQL Server\Client SDK\ODBC\110\Tools\Binn\ (key C:/Program Fi 
-les/Microsoft SQL Server/Client SDK/ODBC/110/Tools/Binn/, mtime 1632577635): 6 files, no impossibilities.
+# C:\Program Files\Microsoft SQL Server\Client SDK\ODBC\110\Tools\Binn\ (key C:/Program Files/Microsoft SQL Server/Client SDK/ODBC/110/Tools/Binn/, mtime 1632577635): 6 files, no impossibilities.
 # C:\Windows\System32\WindowsPowerShell\v1.0\ (key C:/Windows/System32/WindowsPowerShell/v1.0/, mtime 1639844476): 32 files, no impossibilities.
 # C:\WINDOWS\System32\Wbem (key C:/WINDOWS/System32/Wbem, mtime 1639846534): 155 files, no impossibilities.
-# . (key c:/Users/Gyro/Documents/POLYTECH/ET4/C++/Projet/Magic, mtime 1641732301): 10 files, no impossibilities.
-# sources (key c:/Users/Gyro/Documents/POLYTECH/ET4/C++/Projet/Magic/sources, mtime 1641659089): 6 files, no impossibilities.
+# . (key c:/Users/Gyro/Documents/POLYTECH/ET4/C++/Projet/Magic, mtime 1641733908): 11 files, no impossibilities.
+# sources (key c:/Users/Gyro/Documents/POLYTECH/ET4/C++/Projet/Magic/sources, mtime 1641732322): 7 files, no impossibilities.
 # C:\Program Files (x86)\Intel\Intel(R) Management Engine Components\iCLS\ (key C:/Program Files (x86)/Intel/Intel(R) Management Engine Components/iCLS/, mtime 1626003226): 8 files, no impossibilities.
 # C:\Python310\ (key C:/Python310/, mtime 1637096132): 18 files, no impossibilities.
 # C:\Program Files\Git\cmd (key C:/Program Files/Git/cmd, mtime 1637515632): 8 files, no impossibilities.
-# C:\Windows\System32\OpenSSH\: could not be stat'd.
+# C:\Windows\System32\OpenSSH\: c 
+ould not be stat'd.
 # C:\Program Files (x86)\Microsoft SQL Server\120\Tools\Binn\ (key C:/Program Files (x86)/Microsoft SQL Server/120/Tools/Binn/, mtime 1632577602): 12 files, no impossibilities.
 # C:\Python310\Scripts\ (key C:/Python310/Scripts/, mtime 1637096132): 5 files, no impossibilities.
 # C:\OCaml64\home\Gyro\.opam\4.12.0+mingw64c\bin (key C:/OCaml64/home/Gyro/.opam/4.12.0+mingw64c/bin, mtime 1639930341): 52 files, no impossibilities.
@@ -258,7 +260,6 @@ les/Microsoft SQL Server/Client SDK/ODBC/110/Tools/Binn/, mtime 1632577635): 6 f
 # C:\OCaml64\usr\local\bin (key C:/OCaml64/usr/local/bin, mtime 1639926397): 14 files, no impossibilities.
 # C:\Program Files\Intel\Intel(R) Management Engine Components\IPT (key C:/Program Files/Intel/Intel(R) Management Engine Components/IPT, mtime 1626003173): 5 files, no impossibilities.
 # C:\ProgramData\chocolatey\bin (key C:/ProgramData/chocolatey/bin, mtime 1637095781): 13 files, no impossibilities.
- 
 # C:\Windows (key C:/Windows, mtime 1639851693): 124 files, no impossibilities.
 # C:\Users\Gyro\AppData\Roaming\npm (key C:/Users/Gyro/AppData/Roaming/npm, mtime 1637161006): 6 files, no impossibilities.
 # C:\Windows\System32\Wbem (key C:/Windows/System32/Wbem, mtime 1639846534): 155 files, no impossibilities.
@@ -267,16 +268,16 @@ les/Microsoft SQL Server/Client SDK/ODBC/110/Tools/Binn/, mtime 1632577635): 6 f
 # C:\Program Files\nodejs\ (key C:/Program Files/nodejs/, mtime 1637095683): 13 files, no impossibilities.
 # C:\WINDOWS\System32\WindowsPowerShell\v1.0\ (key C:/WINDOWS/System32/WindowsPowerShell/v1.0/, mtime 1639844476): 32 files, no impossibilities.
 # C:\Windows\system32 (key C:/Windows/system32, mtime 1641453598): 3021 files, no impossibilities.
-# C:\Program Files\Intel\Intel(R) Management Engine Components\iCLS\ (key C:/Program Files/Intel/Intel(R) Management Engine Components/iCLS/, mtime 1626003173): 11 files, no impossibilities.
+# C:\Prog 
+ram Files\Intel\Intel(R) Management Engine Components\iCLS\ (key C:/Program Files/Intel/Intel(R) Management Engine Components/iCLS/, mtime 1626003173): 11 files, no impossibilities.
 # C:\Program Files (x86)\Intel\Intel(R) Management Engine Components\DAL (key C:/Program Files (x86)/Intel/Intel(R) Management Engine Components/DAL, mtime 1626003226): 10 files, no impossibilities.
-# C:\Program Files\Microsoft SQL Server\120\Tools\Binn\ (key C:/Program Files/Microsoft SQL Server/120/Tools/Binn/, mtime 163257760 
-3): 14 files, no impossibilities.
+# C:\Program Files\Microsoft SQL Server\120\Tools\Binn\ (key C:/Program Files/Microsoft SQL Server/120/Tools/Binn/, mtime 1632577603): 14 files, no impossibilities.
 # C:\Program Files (x86)\Intel\Intel(R) Management Engine Components\IPT (key C:/Program Files (x86)/Intel/Intel(R) Management Engine Components/IPT, mtime 1626003226): 6 files, no impossibilities.
 # C:\Users\Gyro\AppData\Local\Programs\Microsoft VS Code\bin (key C:/Users/Gyro/AppData/Local/Programs/Microsoft VS Code/bin, mtime 1639924489): 4 files, no impossibilities.
 # C:\WINDOWS\System32\OpenSSH\: could not be stat'd.
 # C:\WINDOWS\system32 (key C:/WINDOWS/system32, mtime 1641453598): 3021 files, no impossibilities.
 
-# 7220 files, no impossibilities in 37 directories.
+# 7222 files, no impossibilities in 37 directories.
 
 # Implicit Rules
 
@@ -291,13 +292,14 @@ obj/%.o: sources/%.cpp
 # Not a target:
 sources/main.cpp:
 #  Implicit rule search has been done.
-#  Last modified 2022-01-08 17:24:43
+#  Last modified 2022-01-09 13:52:31
 #  File has been updated.
 #  Successfully updated.
 
 all: bin/magic
 #  Command line target.
-#  Implicit rule search has been done.
+#  Implicit rule search 
+ has been done.
 #  File does not exist.
 #  File has been updated.
 #  Needs to be updated (-q is set).
@@ -318,7 +320,7 @@ all: bin/magic
 # Not a target:
 sources/Player.cpp:
 #  Implicit rule search has been done.
-#  Last modified 2022-01-08 17:24:49
+#  Last modified 2022-01-09 13:51:59
 #  File has been updated.
 #  Successfully updated.
 
@@ -339,8 +341,7 @@ run: bin/magic
 #  Phony target (prerequisite of .PHONY).
 #  Implicit rule search has not been done.
 #  File does not exist.
-# 
-  File has not been updated.
+#  File has not been updated.
 #  recipe to execute (from 'makefile', line 29):
 	cls
 	./$<
@@ -348,7 +349,7 @@ run: bin/magic
 # Not a target:
 sources/Battlefield.cpp:
 #  Implicit rule search has been done.
-#  Last modified 2022-01-08 17:24:30
+#  Last modified 2022-01-09 13:51:33
 #  File has been updated.
 #  Successfully updated.
 
@@ -360,7 +361,8 @@ clean:
 #  recipe to execute (from 'makefile', line 33):
 	rm -f $(OBJDIR)/*.o *~ *.core
 
-bin/magic: sources/main.cpp sources/Battlefield.cpp sources/Player.cpp sources/Game.cpp
+bin/magic: sources/Vector. 
+cpp sources/main.cpp sources/Battlefield.cpp sources/Player.cpp sources/Game.cpp
 #  Implicit rule search has not been done.
 #  Implicit/static pattern stem: ''
 #  File does not exist.
@@ -373,44 +375,51 @@ bin/magic: sources/main.cpp sources/Battlefield.cpp sources/Player.cpp sources/G
 # automatic
 # * := 
 # automatic
-# + := sources/main.cpp sources/Battlefield.cpp sources/Player.cpp sources/Game.cpp
+# + := sources/Vector.cpp sources/main.cpp sources/Battlefield.cpp sources/Player.cpp sources/Game.cpp
 # automatic
 # | := 
 # automatic
-# < := sources/main.cpp
+# < := sources/Vector.cpp
 # automatic
-# ^ := sources/main.cpp sources/Battlefield.cpp sources/Player.cpp sources/Game.cpp
+# ^ := sources/Vector.cpp sources/main.cpp sources/Battlefield.cpp sources/Player.cpp sources/Game.cpp
 # automatic
-# ? := sources/main.cpp sources/Battlefield.cpp sources/Player.cpp sources/Game.cpp
+# ? := sources/Vector.cpp sources/main.cpp sources/Battlefield.cpp sources/Player.cpp sources/Game.cpp
 # variable set hash-table stats:
 # Load=8/32=25%, Rehash=0, Collisions=1/15=7%
 #  recipe to execute (from 'makefile', line 24):
 	$(CXX) $^ -o $@ -I ./$(HPPDIR)/
 
 # Not a target:
+sources/Vector.cpp:
+#  Implicit rule search has been done.
+#  Last modified 2022-01-09 13:44:08
+#  File has been updated.
+#  Successfully updated.
+
+# Not a target:
 sources/Game.cpp:
 #  Implicit rule search has been done.
-#  Last modified 2022-01-08 17:24:37
+#  Last modified 2022-01-09 13:51:25
 #  File has been updated.
 #  Successfully updated.
 
 # files hash-table stats:
-# Load=12/1024=1%, Rehash=0, Colli 
-sions=0/35=0%
+# Load=13/1024=1%, Rehash=0, Collisions=0/37=0%
 # VPATH Search Paths
 
 # No 'vpath' search paths.
 
 # No general ('VPATH' variable) search path.
 
-# strcache buffers: 8 (6) / strings = 3835 / storage = 58169 B / avg = 15 B
-# current buf: size = 8174 B / used = 1024 B / count = 75 / avg = 13 B
-# other used: total = 49995 B / count = 3760 / avg = 13 B
-# other free: total = 73 B / max = 17 B / min = 4 B / avg = 10 B
+# strcache buffers: 8 (6) / strings = 3838 / storage = 58204 B / avg = 15 B
+# current buf: size = 8174 B / used = 1054 B / count = 77 / avg = 13 B
+# other used: 
+ total = 50030 B / count = 3761 / avg = 13 B
+# other free: total = 68 B / max = 17 B / min = 4 B / avg = 9 B
 
-# strcache performance: lookups = 7284 / hit rate = 47%
+# strcache performance: lookups = 7287 / hit rate = 47%
 # hash-table stats:
-# Load=3835/8192=47%, Rehash=0, Collisions=2533/7284=35%
-# Finished Make data base on Sun Jan 09 13:45:03 2022
+# Load=3838/8192=47%, Rehash=0, Collisions=2533/7287=35%
+# Finished Make data base on Sun Jan 09 14:28:34 2022
 
  

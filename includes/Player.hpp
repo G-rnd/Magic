@@ -15,10 +15,10 @@ class Player {
         int                 m_hp;
         bool                m_played_land;
         Battlefield         m_battlefield;
-        Vector<Card>   m_deck;
-        Vector<Card>   m_graveyard;
-        Vector<Card>   m_library;
-        Vector<Card>   m_hand;
+        Vector<Card>        m_deck;
+        Vector<Card>        m_graveyard;
+        Vector<Card>        m_library;
+        Vector<Card>        m_hand;
 
     public:
         Player();
@@ -28,10 +28,10 @@ class Player {
         int                 get_hp() const;
         bool                get_played_land() const;
         Battlefield         get_battlefield() const;
-        Vector<Card>   get_deck() const;
-        Vector<Card>   get_graveyard() const;
-        Vector<Card>   get_library() const;
-        Vector<Card>   get_hand() const;
+        Vector<Card>        get_deck() const;
+        Vector<Card>        get_graveyard() const;
+        Vector<Card>        get_library() const;
+        Vector<Card>        get_hand() const;
 
         void                set_name(std::string s);
         void                set_ph(int i);

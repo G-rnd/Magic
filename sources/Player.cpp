@@ -68,7 +68,7 @@ void Player::play_card(Card c) {
 }
 
 void Player::engage_card(BasicCard bc) {
-    
+    bc->set_engaged(true);
 }
 
 void Player::disengage_card(BasicCard bc) {

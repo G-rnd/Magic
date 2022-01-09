@@ -24,13 +24,34 @@ Vector<Enchantment> Battlefield::get_enchantments() {
 }
 
 Vector<Creature> Battlefield::get_engaged_creatures() {
-    return nullptr;
+    Vector<Creature> v{};
+    for (int i = 0; i < m_basic_cards.size(); i++) {
+        if(instanceof<Creature>(m_basic_cards[i]) && m_basic_cards[i].get_engaged()) {
+            v.push_back(m_basic_cards[i]);
+        }
+    }
+    return v;
 }
 Vector<Creature> Battlefield::get_available_creatures() {
-    return nullptr;
+    Vector<Creature> v{};
+    for (int i = 0; i < m_basic_cards.size(); i++) {
+        if(instanceof<Creature>(m_basic_cards[i]) && !m_basic_cards[i].get_engaged()){
+            Creature c = m_basic_cards[i];
+            if(!c.get_is_first_turn()){
+                v.push_back(c);
+            }
+        }
+    }
+    return v;
 }
 Vector<Land> Battlefield::get_available_lands() {
-    return nullptr;
+    Vector<Land> v{};
+    for (int i = 0; i < m_basic_cards.size(); i++) {
+        if(instanceof<Land>(m_basic_cards[i]) && !m_basic_cards[i].get_engaged()){
+            v.push_back(m_basic_cards[i]);
+        }
+    }
+    return v;
 }
 
 void Battlefield::print() {

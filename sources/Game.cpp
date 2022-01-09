@@ -44,6 +44,25 @@ Player Game::get_current_player() const {
 }
 
 void Game::start() {
+    std::string p_name_1;
+    std::string p_name_2;
+
+    std::cout<< "Bienvenue dans votre partie : "<<std::endl;
+
+    std::cout<< "Le nom du premier joueur : "<<std::endl;
+    std::cin>> p_name_1;
+    Player p1;
+    p1.set_name(p_name_1);
+    p1.set_ph(20);
+
+    std::cout<< "Le nom du second joueur : "<<std::endl;
+    std::cin>> p_name_2;
+    Player p2;
+    p2.set_name(p_name_2);
+    p2.set_ph(20);
+
+    m_players.push_back(p1);
+    m_players.push_back(p2);
     
 }
 

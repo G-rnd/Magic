@@ -1,5 +1,6 @@
 make.exe --dry-run --always-make --keep-going --print-directory
 make.exe: Entering directory 'c:/Users/Gyro/Documents/POLYTECH/ET4/C++/Projet/Magic'
-g++ sources/main.cpp sources/Battlefield.cpp sources/Player.cpp sources/Game.cpp -o bin/magic -I ./includes/
+g++ sources/Vector.cpp sources/main.cpp sources/Battlefield.cpp sources/Player.cpp sources/Game.cpp -o bin/magic -I ./includes/
+ 
 make.exe: Leaving directory 'c:/Users/Gyro/Documents/POLYTECH/ET4/C++/Projet/Magic'
  

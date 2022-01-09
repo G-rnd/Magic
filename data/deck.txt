@@ -1,0 +1,48 @@
+// Liste des cartes d'un deck
+
+// creature
+#BEGIN_CARD
+	#TYPE_CARD: Creature
+	#NAME: Ma super créature
+	#TOKEN: 1
+
+	#POWER: 2
+	#TOUGHNESS: 5
+	#ABILITIES: 1, 2, 3, 4
+	#TYPES: 1, 2, 3, 4
+	
+	#COST_ANY: 3
+	#COST_WHITE: 3
+	#COST_BLACK: 0
+	#COST_RED: 1
+	#COST_GREEN: 0
+	#COST_BLUE: 0
+#END_CARD
+
+// lang
+#BEGIN_CARD
+	#TYPE_CARD: Land
+	#NAME: Mon super terrain
+	#TOKEN: 1
+
+	#VALUE: 2
+#END_CARD
+
+// enchantment / ritual
+#BEGIN_CARD
+	#TYPE_CARD: Ritual
+	#NAME: Mon super rituel
+	#TOKEN: 1
+
+	#ID: 2
+	#INFO: Blabla rituel génial
+#END_CARD
+
+#BEGIN_CARD
+	#TYPE_CARD: Enchantment
+	#NAME: Mon super enchantement
+	#TOKEN: 1
+
+	#ID: 1
+	#INFO: Blabla enchantement génial
+#END_CARD
