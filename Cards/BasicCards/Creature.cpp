@@ -10,7 +10,9 @@
 #include "../../Cost.hpp"
 
 Creature::Creature(std::string name, int token, int power, int toughness, std::vector<int> abilities, std::vector<int> types, Cost* cost): 
-Card(name, token), BasicCard(name, token), m_power(power), m_toughness(toughness), m_power_current(power), m_toughness_current(toughness), m_abilities(abilities), m_types(types), m_cost(cost){}
+Card(name, token), BasicCard(name, token), m_power(power), m_toughness(toughness), m_power_current(power), m_toughness_current(toughness), m_abilities(abilities), m_types(types), m_cost(cost){
+    m_is_first_turn = false;
+}
 
 Creature::~Creature(){}
 
@@ -42,6 +44,10 @@ Cost* Creature::get_cost() const{
     return this->m_cost;
 }
 
+bool Creature::get_is_first_turn() const{
+    return m_is_first_turn;
+}
+
 void Creature::set_power(int power){
     this->m_power = power;
 }
@@ -58,6 +64,10 @@ void Creature::set_toughness_current(int toughness_c){
     this->m_toughness_current = toughness_c;
 }
 
+void Creature::set_is_first_turn(bool is_first_turn){
+    this->m_is_first_turn = is_first_turn;
+}
+
 void Creature::add_ability(int ability){
     if(std::find(this->m_abilities.begin(), this->m_abilities.end(), ability) == this->m_abilities.end()){
         this->m_abilities.push_back(ability);
@@ -70,9 +80,9 @@ void Creature::add_type(int type){
     }
 }
 
-void Creature::engage_lands(std::vector<Land*> lands) const{
+void Creature::engage_lands(std::vector<Land> lands) const{
     for (auto land : lands){
-        land->set_engaged(true);
+        land.set_engaged(true);
     }
 }
 

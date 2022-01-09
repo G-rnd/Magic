@@ -33,16 +33,16 @@ bool Player::get_played_land() const {
 Battlefield* Player::get_battlefield() const {
     return m_battlefield;
 }
-std::vector<Card*> Player::get_deck() const {
+std::vector<Card> Player::get_deck() const {
     return m_deck;
 }
-std::vector<Card*> Player::get_graveyard() const {
+std::vector<Card> Player::get_graveyard() const {
     return m_graveyard;
 }
-std::vector<Card*> Player::get_library() const {
+std::vector<Card> Player::get_library() const {
     return m_library;
 }
-std::vector<Card*> Player::get_hand() const {
+std::vector<Card> Player::get_hand() const {
     return m_hand;
 }
 
@@ -62,7 +62,7 @@ void Player::draw_card() {
     
 }
 
-void Player::discard_card(Card* c) {
+void Player::discard_card(Card &c) {
     
 }
 
@@ -70,15 +70,16 @@ void Player::shuffle_library() {
     
 }
 
-void Player::play_card(Card* c) {
+void Player::play_card(Card &c) {
 
     if(std::find(m_hand.begin(), m_hand.end(), c) != m_hand.end()){
-        if(instanceof<Land>(c)){
+        if(instanceof<Land>(&c)){
 
             if(m_played_land){
                 //TODO : send a message : "a land has already been played"
             } else{
-                m_battlefield->add_basic_card(dynamic_cast<BasicCard*> (c));
+                // TODO : pb à résoudre
+                //m_battlefield->add_basic_card(dynamic_cast<BasicCard*> (c));
 
                 auto pos = std::find(m_hand.begin(), m_hand.end(), c);
                 m_hand.erase(pos);
@@ -86,11 +87,11 @@ void Player::play_card(Card* c) {
                 this->set_played_land(true);
             }
 
-        } else if(instanceof<Creature>(c)){
+        } else if(instanceof<Creature>(&c)){
 
-        } else if(instanceof<Enchantment>(c)){
+        } else if(instanceof<Enchantment>(&c)){
             //TODO : play an enchantment card
-        } else if(instanceof<Ritual>(c)){
+        } else if(instanceof<Ritual>(&c)){
             //TODO : play a ritual card
         }
     }
@@ -100,27 +101,23 @@ void Player::play_card(Card* c) {
     
 }
 
-void Player::engage_card(BasicCard* bc) {
+void Player::engage_card(BasicCard &bc) {
+    bc.set_engaged(true);
+}
+
+void Player::attack(Creature &c) {
     
 }
 
-void Player::disengage_card(BasicCard* bc) {
+void Player::deflect_attack(Creature &opponent, std::vector<Creature> defenders) {
     
 }
 
-void Player::attack(Creature* c) {
+void Player::battle_creature(Creature &opponent, Creature &defender) {
     
 }
 
-void Player::deflect_attack(Creature* opponent, std::vector<Creature> defenders) {
-    
-}
-
-void Player::battle_creature(Creature* opponent, Creature* defender) {
-    
-}
-
-void Player::destroy_card(Card* c) {
+void Player::destroy_card(Card &c) {
     
 }
 
