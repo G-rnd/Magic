@@ -1,5 +1,5 @@
 CXX=g++
-CXXFLAGS=-Wall -Wextra
+CXXFLAGS=-Wall -Wextra -std=c++2a
 
 EXEC = magic
 
@@ -21,7 +21,7 @@ $(OBJDIR)/%.o: $(SRCDIR)/%.cpp
 $(EXEPATH): $(OBJ)
 #	mkdir bin
 #	mkdir obj
-	$(CXX) $^ -o $@ -I ./$(HPPDIR)/
+	$(CXX) $(CXXFLAGS) $^ -o $@ -I ./$(HPPDIR)/
 
 .PHONY: run clean
 
