@@ -34,7 +34,7 @@ class Player {
         std::vector<Card*>    get_hand() const;
   
         void                  set_name(std::string s);
-        void                  set_ph(int i);
+        void                  set_hp(int i);
         void                  set_played_land(bool b);
   
         void                  draw_card();
@@ -43,9 +43,10 @@ class Player {
         void                  play_card(Card* c);
         void                  engage_card(BasicCard* bc);
         void                  disengage_card(BasicCard* bc);
-        void                  attack(std::vector<Creature> c);
-        void                  deflect_attack(Creature opponent, std::vector<Creature> defenders);
-        void                  battle_creature(Creature opponent, Creature defender);
+        std::vector<Creature> attack();
+        void                  choose_defenders(std::vector<Creature> opponents, Player other_player);
+        void                  deflect_attack(Creature opponent, std::vector<Creature> defenders, Player other_player);
+        void                  battle_creature(Creature opponent, Creature defender, Player other_player);
         void                  destroy_card(Card* c);
         void                  loose();
   

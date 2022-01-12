@@ -3,6 +3,9 @@
 #include <iterator>
 #include <vector>
 
+enum Ability     {Flight, Scope, Vigilance, Touch_of_death, Defender, Initiative, Double_initiative, Haste, 
+                 Unblockable, Life_link, Menace, Trampling, Protection_against_color};
+
 /**
  * @brief return true T is an instance of Base, else false
  * syntax : instanceof<Base>(T);
