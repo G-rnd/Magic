@@ -4,7 +4,7 @@
 #include <vector>
 
 enum Ability     {Flight, Scope, Vigilance, Touch_of_death, Defender, Initiative, Double_initiative, Haste, 
-                 Unblockable, Life_link, Menace, Trampling, Protection_against_color};
+                 Unblockable, Life_link, Threat, Trampling, White_protection, Blue_protection, Black_protection, Red_protection, Green_protection};
 
 /**
  * @brief return true T is an instance of Base, else false
@@ -32,6 +32,15 @@ auto element_position(const T* elem, std::vector<T*> vec){
     return std::find(vec.begin(), vec.end(), elem);
 }
 
+/**
+ * @brief return true if T is an element of vec, else false
+ * 
+ * @tparam T 
+ * @param elem 
+ * @param vec 
+ * @return true 
+ * @return false 
+ */
 template<typename T>
 bool contain(const T* elem, std::vector<T*> vec){
     if(std::find(vec.begin(), vec.end(), elem) != vec.end()){

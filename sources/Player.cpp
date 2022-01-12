@@ -186,12 +186,15 @@ std::vector<Creature> Player::attack() {
 /*
 - Flight
 - Scope
+- Threat
 */
 // TODO : Unblockable creatures must be removed of the vector
 void Player::choose_defenders(std::vector<Creature> opponents, Player other_player){
 
-    std::cout<< "Taper -1 pour quitter la creature"<<std::endl;
-    std::cout<< "Attention ! Choisissez dans l'ordre vos defenseurs"<<std::endl;
+    std::cout<< "Taper -1 pour quitter la creature ; Tapez 0 pour reinitialiser vos choix"<<std::endl;
+    std::cout<< "Attention ! Choisissez vos defenseurs dans l'ordre souhaité"<<std::endl;
+
+    std::vector<Creature> availabled_creature = m_battlefield.get_available_creatures();
 
     for (auto opponent : opponents){
 
@@ -201,10 +204,12 @@ void Player::choose_defenders(std::vector<Creature> opponents, Player other_play
         std::vector<Creature> possible_defenders;
         std::vector<Creature> chosen_defenders;
 
+        bool threat_opponent = false;
+
         for (auto ability_opponent : opponent.get_abilities()){
 
             if(ability_opponent = Ability::Flight){
-                for (auto creature : m_battlefield.get_available_creatures()){
+                for (auto creature : availabled_creature){
                     for (auto ability_creature : creature.get_abilities()){
                         if((ability_creature = Ability::Flight) || (ability_creature = Ability::Scope)){
                             std::cout<< i <<" - "<< creature.get_name() <<std::endl;
@@ -213,25 +218,58 @@ void Player::choose_defenders(std::vector<Creature> opponents, Player other_play
                         }
                     }
                 }
-            } 
+            } else if(ability_opponent = Ability::Threat){
+                threat_opponent = true;
+            }
 
         }
 
         while(!quit){
             std::cin>> res;
             if(res == -1){
-                quit = true;
+                // Check Threat ability is respected
+                if(threat_opponent && (chosen_defenders.size() == 1)){
+                    std::cout<< opponent.get_name() << " vous Menace,choississez un autre defenseur : "<<std::endl;
+                } else{
+                    quit = true;
+                }
+            } else if(res == 0){
+                chosen_defenders = {};
+                std::cout<< "Pour le moment, aucune creature defend : " << opponent.get_name()<<std::endl;
             } else if(res > i){
                 std::cout<< " -!- Creature non disponible -!- "<<std::endl;
             } else{
                 chosen_defenders.push_back(possible_defenders[res-1]);
+                // Remove the chosen defender to the others opponents
+                availabled_creature.erase(std::find(availabled_creature.begin(), availabled_creature.end(), possible_defenders[res-1]));
             }
         }
 
+        if(threat_opponent && (chosen_defenders.size() == 1)){
+
+            std::string res_deflect;
+
+            std::cout<< opponent.get_name() << " a la capacité menace, vous devez la bloquer avec 2 creatures ou plus"<<std::endl;
+
+            if(availabled_creature.size() < 2){
+                std::cout<< "Vous ne pouvez pas bloquer cette créature"<<std::endl;
+            }
+
+            std::cout<< "Souhaitez-vous toujours bloquer cette creature ? Tapez \"oui\" ou \"non\" "<<std::endl;
+
+            std::cin>> res_deflect;
+
+            if(res_deflect == "non"){
+
+            }
+
+        } 
+        
         // Deflect attack for each opponent with the possible and chosen defender
         this->deflect_attack(opponent, chosen_defenders, other_player);
-        }
+    }
 }
+
 
 void Player::deflect_attack(Creature opponent, std::vector<Creature> defenders, Player other_player) {
 
@@ -249,6 +287,7 @@ void Player::deflect_attack(Creature opponent, std::vector<Creature> defenders, 
 - Touch_of_death
 - Initiative
 - Double initiative
+- Trampling
 */
 // other_player est le joueur ayant joué opponent
 void Player::battle_creature(Creature opponent, Creature defender, Player other_player) {
@@ -272,6 +311,8 @@ void Player::battle_creature(Creature opponent, Creature defender, Player other_
     bool life_link_defender = false;
     bool life_link_opponent = false;
 
+    bool trampling_opponent = false;
+
     for (auto ability_opponent : opponent.get_abilities()){
         if(ability_opponent = Ability::Initiative){
             initiative_opponent = true;
@@ -281,6 +322,8 @@ void Player::battle_creature(Creature opponent, Creature defender, Player other_
             double_initiative_opponent = true;
         } else if(ability_opponent = Ability::Life_link){
             life_link_opponent = true;
+        } else if(trampling_opponent){
+            trampling_opponent = true;
         }
     }
     for (auto ability_defender : defender.get_abilities()){
@@ -336,10 +379,10 @@ void Player::battle_creature(Creature opponent, Creature defender, Player other_
                 opponent.set_toughness_current(0);
             } else{
                 opponent.set_toughness_current(opponent.get_toughness_current() - defender.get_power_current());
-            }
-            // Check life_link ability
-            if(life_link_defender){
-                this->set_hp(this->get_hp() + (toughness_opponent - defender.get_power_current()));
+                // Check life_link ability
+                if(life_link_defender){
+                    this->set_hp(this->get_hp() + (toughness_opponent - defender.get_power_current()));
+                }
             }
         }
 
@@ -360,12 +403,20 @@ void Player::battle_creature(Creature opponent, Creature defender, Player other_
 
         // If the creatures are dead, deplace them into the graveyard
         if(opponent.get_toughness_current() <= 0){
+            opponent_dead = true;
             destroy_card(dynamic_cast<Card*>(&opponent));
         }
         if(defender.get_toughness_current() <= 0){
+            defender_dead = true;
             destroy_card(dynamic_cast<Card*>(&defender));
         }
     }
+
+    // Check Trampling ability
+    if(!opponent_dead && trampling_opponent){
+        this->set_hp(this->get_hp() - opponent.get_power_current());
+    }
+
 }
 
 void Player::destroy_card(Card* c) {
