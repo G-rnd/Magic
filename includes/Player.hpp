@@ -4,15 +4,16 @@
 #include <vector>
 #include <string>
 
-#include "Game.hpp"
+
 #include "Card.hpp"
 #include "BasicCard.hpp"
 #include "Creature.hpp"
 #include "Battlefield.hpp"
+#include "Ritual.hpp"
 
 class Player {
     private:
-        Game const&           m_game;
+        Player*               m_opponent;
         std::string           m_name;
         int                   m_hp;
         bool                  m_played_land;
@@ -23,10 +24,10 @@ class Player {
         std::vector<Card*>    m_hand;
 
     public:
-        Player(Game const& g, std::string s);
+        Player(std::string s);
         ~Player();
 
-        Game                  get_game() const;
+        Player*               get_opponent() const;
         std::string           get_name() const;
         int                   get_hp() const;
         bool                  get_played_land() const;
@@ -36,6 +37,7 @@ class Player {
         std::vector<Card*>    get_library() const;
         std::vector<Card*>    get_hand() const;
   
+        void                  set_opponent(Player* p);
         void                  set_name(std::string s);
         void                  set_hp(int i);
         void                  set_played_land(bool b);

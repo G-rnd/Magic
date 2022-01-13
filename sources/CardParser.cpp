@@ -25,6 +25,7 @@ const std::string CardParser::cost          = "#COST: ";
 const std::string CardParser::value         = "#VALUE: ";
 const std::string CardParser::id            = "#ID: ";
 const std::string CardParser::info          = "#INFO: ";
+const std::string CardParser::effects       = "#EFFECTS: ";
 const std::string CardParser::comment       = "//";
 const std::string CardParser::creature      = "Creature";
 const std::string CardParser::land          = "Land";
@@ -232,6 +233,8 @@ Enchantment* CardParser::parse_enchantment(const std::vector<std::string>& data)
     int token = 0;
     int id = 0;
     std::string info = "";
+    std::vector<int> cost {};
+    std::vector<int> effects {};
 
     for(auto& s : data) {
         if(s.find(CardParser::name) != std::string::npos) {
@@ -257,10 +260,25 @@ Enchantment* CardParser::parse_enchantment(const std::vector<std::string>& data)
             valid |= 1 << 3;
             continue;
         }
+
+        if(s.find(CardParser::cost) != std::string::npos) {
+            std::string s_list = s.substr(CardParser::cost.size());
+            cost = parse_int_list(s_list);
+            if (cost.size() == 6)
+                valid |= 1 << 4;
+        }
+
+        if(s.find(CardParser::effects) != std::string::npos) {
+            std::string s_list = s.substr(CardParser::effects.size());
+            effects = parse_int_list(s_list);
+            valid |= 1 << 5;
+            continue;
+        }
+
     }
 
     if (valid == 0b1111)
-        return new Enchantment(name, token, id, info);
+        return new Enchantment(name, token, id, info, new Cost(cost[0], cost[1], cost[2], cost[3], cost[4], cost[5]), effects);
 
     return nullptr;
 }
@@ -272,6 +290,8 @@ Ritual* CardParser::parse_ritual(const std::vector<std::string>& data) {
     int token = 0;
     int id = 0;
     std::string info = "";
+    std::vector<int> cost {};
+    std::vector<int> effects {};
 
     for(auto& s : data) {
         if(s.find(CardParser::name) != std::string::npos) {
@@ -297,10 +317,24 @@ Ritual* CardParser::parse_ritual(const std::vector<std::string>& data) {
             valid |= 1 << 3;
             continue;
         }
+
+        if(s.find(CardParser::cost) != std::string::npos) {
+            std::string s_list = s.substr(CardParser::cost.size());
+            cost = parse_int_list(s_list);
+            if (cost.size() == 6)
+                valid |= 1 << 4;
+        }
+
+        if(s.find(CardParser::effects) != std::string::npos) {
+            std::string s_list = s.substr(CardParser::effects.size());
+            effects = parse_int_list(s_list);
+            valid |= 1 << 5;
+            continue;
+        }
     }
 
     if (valid == 0b1111)
-        return new Ritual(name, token, id, info);
+        return new Ritual(name, token, id, info, new Cost(cost[0], cost[1], cost[2], cost[3], cost[4], cost[5]), effects);
 
     return nullptr;
 }

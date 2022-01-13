@@ -11,7 +11,7 @@
 
 #include "FonctionsAux.cpp"
 
-Player::Player(Game const& g, std::string name): m_game(g), m_name(name) {
+Player::Player(std::string name): m_name(name) {
     std::cout << "[Player] : Création de " << this << std::endl;
     m_hp = 20;
 }
@@ -20,8 +20,8 @@ Player::~Player() {
     std::cout << "[Player] : Denstruction de " << this << std::endl;
 }
 
-Game Player::get_game() const {
-    return m_game;
+Player* Player::get_opponent() const {
+    return m_opponent;
 }
 
 std::string Player::get_name() const {
@@ -54,6 +54,10 @@ std::vector<Card*> Player::get_library() const {
 
 std::vector<Card*> Player::get_hand() const {
     return m_hand;
+}
+
+void Player::set_opponent(Player* p){
+    m_opponent = p;
 }
 
 void Player::set_name(std::string s) {
@@ -485,7 +489,7 @@ void Player::play_ritual(Ritual r){
                         bool quit = false;
                         std::vector<Creature*> possible_creatures = {};
 
-                        for (auto bc : ((m_game.get_second_player()).get_battlefield()).get_basic_cards()){
+                        for (auto bc : (m_opponent->get_battlefield()).get_basic_cards()){
                             if(instanceof<Creature*>(bc)){
                                 Creature creature = *dynamic_cast<Creature*>(bc);
 
@@ -520,14 +524,14 @@ void Player::play_ritual(Ritual r){
                         std::vector<Enchantment*> possible_enchantments = {};
 
                         // Each enchantment on the battlefield of the opponent
-                        for (auto e : ((m_game.get_second_player()).get_battlefield()).get_enchantments()){
+                        for (auto e : (m_opponent->get_battlefield()).get_enchantments()){
                             
                             std::cout<< i << " - " << e.get_name() << " global " <<std::endl;
                             possible_enchantments.push_back(&e);
                             i++;
                         }
                         // Each enchantment of a basic card on the battlefield of the opponent
-                        for (auto bc : ((m_game.get_second_player()).get_battlefield()).get_basic_cards()){
+                        for (auto bc : (m_opponent->get_battlefield()).get_basic_cards()){
                             for (auto e : bc->get_enchantments()){
                                 
                                 std::cout<< i << " - " << e.get_name() << " : " << bc->get_name() <<std::endl;
@@ -576,7 +580,7 @@ void Player::play_ritual(Ritual r){
                 // 
                 case Blue_ritual_effects::Back_hand_creature :
 
-                    for (auto bc : ((m_game.get_second_player()).get_battlefield()).get_basic_cards()){
+                    for (auto bc : (m_opponent->get_battlefield()).get_basic_cards()){
                         
                     }
                     

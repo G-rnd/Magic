@@ -47,11 +47,14 @@ void Game::start() {
 
     std::cout<< "Le nom du premier joueur : "<<std::endl;
     std::cin>> p_name_1;
-    Player p1(*this, p_name_1);
+    Player p1(p_name_1);
 
     std::cout<< "Le nom du second joueur : "<<std::endl;
     std::cin>> p_name_2;
-    Player p2(*this, p_name_2);
+    Player p2(p_name_2);
+
+    p1.set_opponent(&p2);
+    p2.set_opponent(&p1);
 
     m_players.push_back(p1);
     m_players.push_back(p2);
