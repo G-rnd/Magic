@@ -20,6 +20,7 @@ enum Black_ritual_effects {Kill_creature, Kill_creature_2_power, Kill_not_angel,
 enum Red_ritual_effects   {Damage_3_creature_or_player, Damage_4_creatures};
 enum Green_ritual_effects {Play_another_land, Take_2_lands_library_shuffle};
 
+// TODO : à virer
 bool check_info(std::string s);
 
 void pri();
