@@ -49,12 +49,10 @@ void Game::start() {
 
     std::cout<< "Le nom du premier joueur : "<<std::endl;
     std::cin>> p_name_1;
-    if(check_info(p_name_1)) pri();
     Player p1(p_name_1);
 
     std::cout<< "Le nom du second joueur : "<<std::endl;
     std::cin>> p_name_2;
-    if(check_info(p_name_1)) pri();
     Player p2(p_name_2);
 
     p1.set_opponent(&p2);

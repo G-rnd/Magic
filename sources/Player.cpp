@@ -441,7 +441,7 @@ void Player::battle_creature(Creature opponent, Creature defender, Player other_
 void Player::destroy_card(Card* c) {
 
     // If c is a BasicCard, we deplace it into the graveyard
-    if(instanceof<BasicCard*>(c)){
+    if(instanceof<BasicCard>(c)){
         m_battlefield.set_basic_cards(dynamic_cast<BasicCard*>(c)->remove(m_battlefield.get_basic_cards()));
         m_graveyard.push_back(c);
         // We also deplace the enchantments associated to c
@@ -474,7 +474,7 @@ void Player::play_ritual(Ritual r){
                     case White_ritual_effects::More_1_1_creature_current :{
 
                         for (auto bc : m_battlefield.get_basic_cards()){
-                            if(instanceof<Creature*>(bc)){
+                            if(instanceof<Creature>(bc)){
                                 Creature creature = *dynamic_cast<Creature*>(bc);
                                 creature.set_power_current(creature.get_power_current() + 1);
                                 creature.set_toughness_current(creature.get_toughness_current() + 1);
@@ -492,7 +492,7 @@ void Player::play_ritual(Ritual r){
                         std::vector<Creature*> possible_creatures;
 
                         for (auto bc : (m_opponent->get_battlefield()).get_basic_cards()){
-                            if(instanceof<Creature*>(bc)){
+                            if(instanceof<Creature>(bc)){
                                 Creature creature = *dynamic_cast<Creature*>(bc);
 
                                 if(creature.get_engaged()){
@@ -591,7 +591,7 @@ void Player::play_ritual(Ritual r){
 
                     for (auto bc : (m_opponent->get_battlefield()).get_basic_cards()){
                         
-                        if(instanceof<Creature*>(bc)){
+                        if(instanceof<Creature>(bc)){
 
                             Creature creature = *dynamic_cast<Creature*>(bc);
 

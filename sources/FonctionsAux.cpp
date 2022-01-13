@@ -10,10 +10,6 @@ bool check_info(std::string s){
     return (s == "info");
 }
 
-void pri(){
-    std::cout<<"coucou"<<std::endl;
-}
-
 /**
  * @brief return true T is an instance of Base, else false
  * syntax : instanceof<Base>(T);
@@ -23,7 +19,7 @@ void pri(){
  * @return boolean
  */
 template<typename Base, typename T>
-inline bool instanceof(const T*){
+bool instanceof(const T*){
     return std::is_base_of<Base, T>::value;
 }
 
@@ -77,12 +73,25 @@ template bool instanceof<Card, Creature>          (const Creature*);
 template bool instanceof<Card, Land>              (const Land*);
 template bool instanceof<Card, Ritual>            (const Ritual*);
 template bool instanceof<Card, Enchantment>       (const Enchantment*);
+
+template bool instanceof<BasicCard, Card>         (const Card*);
+template bool instanceof<SpecialCard, Card>       (const Card*);
+template bool instanceof<Creature, Card>          (const Card*);
+template bool instanceof<Land, Card>              (const Card*);
+template bool instanceof<Ritual, Card>            (const Card*);
+template bool instanceof<Enchantment, Card>       (const Card*);
   
 template bool instanceof<BasicCard, Creature>     (const Creature*);
 template bool instanceof<BasicCard, Land>         (const Land*);
 
+template bool instanceof<Creature, BasicCard>     (const BasicCard*);
+template bool instanceof<Land, BasicCard>         (const BasicCard*);
+
 template bool instanceof<SpecialCard, Ritual>     (const Ritual*);
 template bool instanceof<SpecialCard, Enchantment>(const Enchantment*);
+
+template bool instanceof<Ritual, SpecialCard>     (const SpecialCard*);
+template bool instanceof<Enchantment, SpecialCard>(const SpecialCard*);
 
 
 template int element_position<Card>       (const Card*, std::vector<Card*>);

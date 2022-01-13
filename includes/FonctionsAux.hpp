@@ -30,13 +30,11 @@ enum Green_ritual_effects {Play_another_land, Take_2_lands_library_shuffle};
 // TODO : à virer
 bool check_info(std::string s);
 
-void pri();
-
 template<typename T>
 void print_card(T* c);
 
 template<typename Base, typename T>
-inline bool instanceof(const T*);
+bool instanceof(const T*);
 
 template<typename T>
 int element_position(const T* elem, std::vector<T*> vec);
