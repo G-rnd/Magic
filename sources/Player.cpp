@@ -125,9 +125,9 @@ std::vector<Creature> Player::attack() {
     int res;
     int i = 1;
     bool quit = false;
-    std::vector<Creature> possible_opponents;
+    std::vector<Creature*> possible_opponents;
     std::vector<Creature> chosen_opponents;
-    std::vector<Creature> availabled_creature = m_battlefield.get_available_creatures();
+    std::vector<Creature*> availabled_creature = vec_to_vec_pointer(m_battlefield.get_available_creatures());
     
     // List the available creatures
     for (auto creature : availabled_creature){
@@ -136,7 +136,7 @@ std::vector<Creature> Player::attack() {
         bool defender_creature = false;
         bool haste_creature = false;
 
-        for (auto ability_creature : creature.get_abilities()){
+        for (auto ability_creature : creature->get_abilities()){
             if(ability_creature == Ability::Defender){
                 defender_creature = true;
             } else if(ability_creature == Ability::Haste){
@@ -144,12 +144,12 @@ std::vector<Creature> Player::attack() {
             }
         }
 
-        if(!creature.get_engaged()){
+        if(!creature->get_engaged()){
             // Check haste ability
-            if(!creature.get_is_first_turn() || haste_creature){
+            if(!creature->get_is_first_turn() || haste_creature){
                 // Check defender ability
                 if(!defender_creature){
-                    std::cout<< i <<" - "<< creature.get_name() << " : " << creature.get_power_current() << "/" << creature.get_toughness_current() <<std::endl;
+                    std::cout<< i <<" - "<< creature->get_name() << " : " << creature->get_power_current() << "/" << creature->get_toughness_current() <<std::endl;
                     possible_opponents.push_back(creature);
                     i++;
                 }
@@ -171,8 +171,8 @@ std::vector<Creature> Player::attack() {
         } else if(res > i || res < -1){
             std::cout<< " -!- Creature non disponible -!- "<<std::endl;
         } else{
-            chosen_opponents.push_back(possible_opponents[res-1]);
-            availabled_creature.erase(std::find(availabled_creature.begin(), availabled_creature.end(), possible_opponents[res-1]));
+            chosen_opponents.push_back(*possible_opponents[res-1]);
+            availabled_creature.erase(element_position(possible_opponents[res-1], availabled_creature));
         }
     }
 
@@ -205,14 +205,14 @@ void Player::choose_defenders(std::vector<Creature> opponents, Player other_play
     std::cout<< "Taper -1 pour quitter la creature ; Tapez 0 pour reinitialiser vos choix"<<std::endl;
     std::cout<< "Attention ! Choisissez vos defenseurs dans l'ordre souhaité"<<std::endl;
 
-    std::vector<Creature> availabled_creature = m_battlefield.get_available_creatures();
+    std::vector<Creature*> availabled_creature = vec_to_vec_pointer(m_battlefield.get_available_creatures());
 
     for (auto opponent : opponents){
 
         int res;
         int i = 1;
         bool quit = false;
-        std::vector<Creature> possible_defenders;
+        std::vector<Creature*> possible_defenders;
         std::vector<Creature> chosen_defenders;
 
         // Etablish opponent abilities
@@ -234,7 +234,7 @@ void Player::choose_defenders(std::vector<Creature> opponents, Player other_play
             bool scope_creature = false;
             bool flight_creature = false;
 
-            for (auto ability_creature : creature.get_abilities()){
+            for (auto ability_creature : (*creature).get_abilities()){
                 if(ability_creature == Ability::Flight){
                     flight_creature = true;
                 } else if(ability_creature == Ability::Scope){
@@ -244,7 +244,7 @@ void Player::choose_defenders(std::vector<Creature> opponents, Player other_play
             
             // Check Flight ability
             if((flight_opponent && (flight_creature || scope_creature)) || !flight_opponent){
-                    std::cout<< i <<" - "<< creature.get_name() << " : " << creature.get_power_current() << "/" << creature.get_toughness_current() <<std::endl;
+                    std::cout<< i <<" - "<< creature->get_name() << " : " << creature->get_power_current() << "/" << creature->get_toughness_current() <<std::endl;
                     possible_defenders.push_back(creature);
                     i++;
             }
@@ -266,9 +266,9 @@ void Player::choose_defenders(std::vector<Creature> opponents, Player other_play
             } else if(res > i || res < -1){
                 std::cout<< " -!- Creature non disponible -!- "<<std::endl;
             } else{
-                chosen_defenders.push_back(possible_defenders[res-1]);
+                chosen_defenders.push_back(*possible_defenders[res-1]);
                 // Remove the chosen defender from the availabled defenders
-                availabled_creature.erase(std::find(availabled_creature.begin(), availabled_creature.end(), possible_defenders[res-1]));
+                availabled_creature.erase(element_position(possible_defenders[res-1], availabled_creature));
             }
         }
         
