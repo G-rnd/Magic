@@ -478,7 +478,7 @@ void Player::play_ritual(Ritual r){
                         break;
 
                     // The player destroy an engaged creature of its opponent
-                    case White_ritual_effects::Destroy_engaged_creature :
+                    case White_ritual_effects::Destroy_engaged_creature :{
 
                         int i = 1;
                         int res;
@@ -508,24 +508,89 @@ void Player::play_ritual(Ritual r){
                                 std::cout<< " -- Creature non disponible -- "<<std::endl;
                             }
                         }
-
+                    }
                         break;
 
                     // The player destroy an enchantment of its opponent
-                    case White_ritual_effects::Destroy_enchantment :
+                    case White_ritual_effects::Destroy_enchantment :{
 
+                        int i = 1;
+                        int res;
+                        bool quit = false;
+                        std::vector<Enchantment*> possible_enchantments = {};
+
+                        // Each enchantment on the battlefield of the opponent
+                        for (auto e : ((m_game.get_second_player()).get_battlefield()).get_enchantments()){
+                            
+                            std::cout<< i << " - " << e.get_name() << " global " <<std::endl;
+                            possible_enchantments.push_back(&e);
+                            i++;
+                        }
+                        // Each enchantment of a basic card on the battlefield of the opponent
+                        for (auto bc : ((m_game.get_second_player()).get_battlefield()).get_basic_cards()){
+                            for (auto e : bc->get_enchantments()){
+                                
+                                std::cout<< i << " - " << e.get_name() << " : " << bc->get_name() <<std::endl;
+                                possible_enchantments.push_back(&e);
+                                i++;
+
+                            }
+                        }
+
+                        while (!quit){
+                            std::cin>> res;
+                            if(res <= i || res >= 1){
+                                Enchantment* chosen_enchantment = possible_enchantments[res - 1];
+                                // TODO : tester si delete suppr des listes
+                                delete chosen_enchantment;
+                                quit = true;
+                            } else {
+                                std::cout<< " -- Enchantement non disponible -- "<<std::endl;
+                            }
+                        }
+
+                    }
                         break;
                     default :
                         // TODO error
                         break;
 
                 }
-
             }
-            break;
-            
+            break;   
 
         case Token::Blue  :
+
+            for (auto effect : r.get_effects()){
+                
+                switch (effect){
+                
+                // Draw 2 cards
+                case Blue_ritual_effects::Draw_2_cards :
+                    
+                    this->draw_card();
+                    this->draw_card();
+
+                    break;
+
+                // 
+                case Blue_ritual_effects::Back_hand_creature :
+
+                    for (auto bc : ((m_game.get_second_player()).get_battlefield()).get_basic_cards()){
+                        
+                    }
+                    
+
+                    break;
+                
+                default:
+                    break;
+                }
+
+            }
+            
+        
+            break;
 
         case Token::Black :
 
