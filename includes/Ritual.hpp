@@ -8,7 +8,7 @@ class Ritual : public virtual SpecialCard{
     private:
     
     public:
-        Ritual(std::string, int, int, std::string);
+        Ritual(std::string, int, int, std::string, Cost*);
         ~Ritual();
 
         virtual void print();

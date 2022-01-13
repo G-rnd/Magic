@@ -5,8 +5,8 @@
 #include "../includes/SpecialCard.hpp"
 #include "../includes/Enchantment.hpp"
 
-Enchantment::Enchantment(std::string name, int token, int id, std::string info): 
-Card(name, token), SpecialCard(name, token, id, info){
+Enchantment::Enchantment(std::string name, int token, int id, std::string info, Cost* cost): 
+Card(name, token), SpecialCard(name, token, id, info, cost){
     std::cout << "[Enchantment] : Création de " << this << std::endl;
 }
 

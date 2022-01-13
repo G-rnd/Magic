@@ -3,9 +3,10 @@
 
 #include "../includes/SpecialCard.hpp"
 #include "../includes/Card.hpp"
+#include "Cost.hpp"
 
-SpecialCard::SpecialCard(std::string name, int token, int id, std::string info): 
-Card(name, token), m_id(id), m_info(info){
+SpecialCard::SpecialCard(std::string name, int token, int id, std::string info, Cost* cost): 
+Card(name, token), m_id(id), m_info(info), m_cost(cost){
     std::cout << "[SpecialCard] : Création de " << this << std::endl;
 }
 
@@ -19,6 +20,10 @@ int SpecialCard::get_id() const{
 
 std::string SpecialCard::get_info() const{
     return m_info;
+}
+
+Cost* SpecialCard::get_cost() const{
+    return m_cost;
 }
 
 void SpecialCard::set_id(int id){
