@@ -14,11 +14,6 @@ void pri(){
     std::cout<<"coucou"<<std::endl;
 }
 
-template<typename T>
-void print_card(T* c){
-    c->print();
-}
-
 /**
  * @brief return true T is an instance of Base, else false
  * syntax : instanceof<Base>(T);
@@ -75,3 +70,39 @@ std::vector<T*> vec_to_vec_pointer(std::vector<T> vec){
     }
     return pointer_vec;
 }
+
+template bool instanceof<Card, BasicCard>         (const BasicCard*);
+template bool instanceof<Card, SpecialCard>       (const SpecialCard*);
+template bool instanceof<Card, Creature>          (const Creature*);
+template bool instanceof<Card, Land>              (const Land*);
+template bool instanceof<Card, Ritual>            (const Ritual*);
+template bool instanceof<Card, Enchantment>       (const Enchantment*);
+  
+template bool instanceof<BasicCard, Creature>     (const Creature*);
+template bool instanceof<BasicCard, Land>         (const Land*);
+
+template bool instanceof<SpecialCard, Ritual>     (const Ritual*);
+template bool instanceof<SpecialCard, Enchantment>(const Enchantment*);
+
+
+template int element_position<Card>       (const Card*, std::vector<Card*>);
+template int element_position<BasicCard>  (const BasicCard*, std::vector<BasicCard*>);
+template int element_position<SpecialCard>(const SpecialCard*, std::vector<SpecialCard*>);
+template int element_position<Creature>   (const Creature*, std::vector<Creature*>);
+template int element_position<Land>       (const Land*, std::vector<Land*>);
+template int element_position<Ritual>     (const Ritual*, std::vector<Ritual*>);
+template int element_position<Enchantment>(const Enchantment*, std::vector<Enchantment*>);
+
+
+template bool contain<Card>               (const Card*, std::vector<Card*>);
+template bool contain<BasicCard>          (const BasicCard*, std::vector<BasicCard*>);
+template bool contain<SpecialCard>        (const SpecialCard*, std::vector<SpecialCard*>);
+template bool contain<Creature>           (const Creature*, std::vector<Creature*>);
+template bool contain<Land>               (const Land*, std::vector<Land*>);
+template bool contain<Ritual>             (const Ritual*, std::vector<Ritual*>);
+template bool contain<Enchantment>        (const Enchantment*, std::vector<Enchantment*>);
+
+template std::vector<Creature*> vec_to_vec_pointer<Creature>(std::vector<Creature>);
+template std::vector<Land*> vec_to_vec_pointer<Land>(std::vector<Land>);
+template std::vector<Ritual*> vec_to_vec_pointer<Ritual>(std::vector<Ritual>);
+template std::vector<Enchantment*> vec_to_vec_pointer<Enchantment>(std::vector<Enchantment>);

@@ -1,11 +1,14 @@
 #include <iostream>
 
 #include "../includes/Game.hpp"
+#include "../includes/FonctionsAux.hpp"
 
 int main() {
+
+    pri();
     
     Game g{};
-    g.start();
+    //g.start();
 
     return 0;
 }
