@@ -48,3 +48,12 @@ bool contain(const T* elem, std::vector<T*> vec){
     }
     return false;
 }
+
+template<typename T>
+std::vector<T*> vec_to_vec_pointer(std::vector<T> vec){
+    std::vector<T*> pointer_vec;
+    for (auto c : vec){
+        pointer_vec.push_back(&c);
+    }
+    return pointer_vec;
+}
