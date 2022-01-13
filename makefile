@@ -9,25 +9,34 @@ HPPDIR = includes
 BIN = bin
 
 SRC = $(wildcard $(SRCDIR)/*.cpp)
-OBJ = $(SRC:.cpp =$(OBJDIR)/*.o)
+OBJ_ = $(SRC:$(SRCDIR)/%=$(OBJDIR)/%) 
+OBJ = $(OBJ_:%.cpp=%.o)
+
 INCLUDES = $(wildcard $(HPPDIR)/*.hpp)
 EXEPATH = $(BIN)/$(EXEC)
 
 all: $(EXEPATH)
 
 $(OBJDIR)/%.o: $(SRCDIR)/%.cpp
+	mkdir -p obj
 	$(CXX) $(CXXFLAGS) $< -c -o $@ -I ./$(HPPDIR)/
 
 $(EXEPATH): $(OBJ)
-#	mkdir bin
-#	mkdir obj
-	$(CXX) $(CXXFLAGS) $^ -o $@ -I ./$(HPPDIR)/
+	mkdir -p obj
+	mkdir -p bin
+	$(CXX) $^ -o $@ -I ./$(HPPDIR)/
+
 
 .PHONY: run clean
 
+print:
+	@echo $(SRC)
+	@echo $(OBJ)
+
 run: $(EXEPATH)
-	cls
+	clear
 	./$<
 
 clean:
-	rm -f $(OBJDIR)/*.o *~ *.core
+	rm -rf bin || true
+	rm -rf obj || true

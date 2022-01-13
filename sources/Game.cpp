@@ -20,7 +20,7 @@ void Game::set_player_turn(bool b) {
 }
 
 void Game::next_player_turn() {
-    m_player_turn != m_player_turn;
+    m_player_turn = !m_player_turn;
 }
 
 std::vector<Player> Game::get_players() const {
