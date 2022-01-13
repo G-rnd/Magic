@@ -40,10 +40,10 @@ inline bool instanceof(const T*);
 
 template<typename T>
 int element_position(const T* elem, std::vector<T*> vec);
-/*
+
 template<typename T>
 bool contain(const T* elem, std::vector<T*> vec);
-*/
+
 template<typename T>
 std::vector<T*> vec_to_vec_pointer(std::vector<T> vec);
 
