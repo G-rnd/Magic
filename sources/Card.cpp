@@ -4,7 +4,7 @@
 
 #include "../includes/Card.hpp"
 
-#include "FonctionsAux.cpp"
+#include "../includes/FonctionsAux.hpp"
 
 Card::Card(std::string name, int token): m_name(name), m_token(token){
     std::cout << "[Card] : Création de " << this << std::endl;
@@ -32,7 +32,7 @@ void Card::set_token(int token){
 }
 
 std::vector<Card*> Card::remove(std::vector<Card*> cards){
-    cards.erase(element_position(this, cards));
+    cards.erase(element_position(this, cards) + cards.begin());
     return cards;
 }
 

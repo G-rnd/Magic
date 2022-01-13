@@ -8,7 +8,7 @@
 #include "../includes/Land.hpp"
 #include "../includes/Enchantment.hpp"
 
-#include "FonctionsAux.cpp"
+#include "../includes/FonctionsAux.hpp"
 
 Battlefield::Battlefield() {
     std::cout << "[Battlefield] : Création de " << this << std::endl;

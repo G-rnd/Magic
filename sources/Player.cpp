@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <iterator>
 
 #include "../includes/Player.hpp"
 #include "../includes/Card.hpp"
@@ -9,7 +10,7 @@
 #include "../includes/Ritual.hpp"
 #include "../includes/Enchantment.hpp"
 
-#include "FonctionsAux.cpp"
+#include "../includes/FonctionsAux.hpp"
 
 Player::Player(std::string name): m_name(name) {
     std::cout << "[Player] : Création de " << this << std::endl;
@@ -74,11 +75,11 @@ void Player::set_played_land(bool b) {
 
 void Player::draw_card() {
     m_hand.push_back(*m_library.begin());
-    m_library.erase(element_position(*m_library.begin(), m_library));
+    m_library.erase(element_position(*m_library.begin(), m_library) + m_library.begin());
 }
 
 void Player::discard_card(Card* c) {
-    m_hand.erase(element_position(c, m_graveyard));
+    m_hand.erase(element_position(c, m_graveyard) + m_hand.begin());
     m_graveyard.push_back(c);
 }
 
@@ -176,7 +177,7 @@ std::vector<Creature> Player::attack() {
             std::cout<< " -!- Creature non disponible -!- "<<std::endl;
         } else{
             chosen_opponents.push_back(*possible_opponents[res-1]);
-            availabled_creature.erase(element_position(possible_opponents[res-1], availabled_creature));
+            availabled_creature.erase(element_position(possible_opponents[res-1], availabled_creature) + availabled_creature.begin());
         }
     }
 
@@ -272,7 +273,7 @@ void Player::choose_defenders(std::vector<Creature> opponents, Player other_play
             } else{
                 chosen_defenders.push_back(*possible_defenders[res-1]);
                 // Remove the chosen defender from the availabled defenders
-                availabled_creature.erase(element_position(possible_defenders[res-1], availabled_creature));
+                availabled_creature.erase(element_position(possible_defenders[res-1], availabled_creature) + availabled_creature.begin());
             }
         }
         
@@ -458,7 +459,7 @@ void Player::destroy_card(Card* c) {
 void Player::play_ritual(Ritual r){
 
     switch(r.get_token()){
-        case Token::White :
+        case Token::White :{
 
             for (auto effect : r.get_effects()){
 
@@ -467,10 +468,10 @@ void Player::play_ritual(Ritual r){
                     // Add 3 HP to the player
                     case White_ritual_effects::More_3_HP :
                         this->set_hp(this->get_hp() + 3);
-                        break;
+                    break;
 
                     // All the creatures of the player win 1 power and 1 toughness for the turn
-                    case White_ritual_effects::More_1_1_creature_current :
+                    case White_ritual_effects::More_1_1_creature_current :{
 
                         for (auto bc : m_battlefield.get_basic_cards()){
                             if(instanceof<Creature*>(bc)){
@@ -479,7 +480,8 @@ void Player::play_ritual(Ritual r){
                                 creature.set_toughness_current(creature.get_toughness_current() + 1);
                             }
                         }
-                        break;
+                    }
+                    break;
 
                     // The player destroy an engaged creature of its opponent
                     case White_ritual_effects::Destroy_engaged_creature :{
@@ -487,7 +489,7 @@ void Player::play_ritual(Ritual r){
                         int i = 1;
                         int res;
                         bool quit = false;
-                        std::vector<Creature*> possible_creatures = {};
+                        std::vector<Creature*> possible_creatures;
 
                         for (auto bc : (m_opponent->get_battlefield()).get_basic_cards()){
                             if(instanceof<Creature*>(bc)){
@@ -521,7 +523,7 @@ void Player::play_ritual(Ritual r){
                         int i = 1;
                         int res;
                         bool quit = false;
-                        std::vector<Enchantment*> possible_enchantments = {};
+                        std::vector<Enchantment*> possible_enchantments;
 
                         // Each enchantment on the battlefield of the opponent
                         for (auto e : (m_opponent->get_battlefield()).get_enchantments()){
@@ -554,14 +556,16 @@ void Player::play_ritual(Ritual r){
                         }
 
                     }
-                        break;
+                    break;
+
                     default :
                         // TODO error
-                        break;
+                    break;
 
                 }
             }
-            break;   
+        }
+        break;   
 
         case Token::Blue  :
 
@@ -575,24 +579,38 @@ void Player::play_ritual(Ritual r){
                     this->draw_card();
                     this->draw_card();
 
-                    break;
+                break;
 
-                // 
-                case Blue_ritual_effects::Back_hand_creature :
+                // Return an opponent creature to the hand of the opponent
+                case Blue_ritual_effects::Back_hand_creature :{
+
+                    int i = 1;
+                    int res;
+                    bool quit = false;
+                    std::vector<Creature*> possible_enchantments;
 
                     for (auto bc : (m_opponent->get_battlefield()).get_basic_cards()){
                         
+                        if(instanceof<Creature*>(bc)){
+
+                            Creature creature = *dynamic_cast<Creature*>(bc);
+
+                            std::cout<< i << " - " << creature.get_name() <<std::endl;
+                            possible_enchantments.push_back(&creature);
+                            i++;
+
+                        }
+
                     }
                     
-
-                    break;
+                }
+                break;
                 
                 default:
                     break;
                 }
 
             }
-            
         
             break;
 

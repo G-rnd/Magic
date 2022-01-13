@@ -6,7 +6,7 @@
 #include "../includes/Card.hpp"
 #include "../includes/Enchantment.hpp"
 
-#include "FonctionsAux.cpp"
+#include "../includes/FonctionsAux.hpp"
 
 BasicCard::BasicCard(std::string name, int token): 
 Card(name, token){
@@ -35,6 +35,6 @@ void BasicCard::add_enchantment(Enchantment e){
 }
 
 std::vector<BasicCard*> BasicCard::remove(std::vector<BasicCard*> cards){
-    cards.erase(element_position(this, cards));
+    cards.erase(element_position(this, cards) + cards.begin());
     return cards;
 }
