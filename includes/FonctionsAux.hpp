@@ -20,6 +20,8 @@ enum Token                {White, Blue, Black, Red, Green};
 enum Ability              {Flight, Scope, Vigilance, Touch_of_death, Defender, Initiative, Double_initiative, Haste, 
                            Unblockable, Life_link, Threat, Trampling, White_protection, Blue_protection, Black_protection, Red_protection, Green_protection};
 
+enum Type                 {Angel};
+
 // TODO : Destroy détruit complètement la carte : delete
 enum White_ritual_effects {More_3_HP, More_1_1_creature_current, Destroy_engaged_creature, Destroy_enchantment};
 enum Blue_ritual_effects  {Draw_2_cards, Back_hand_creature};
@@ -41,6 +43,9 @@ int element_position(const T* elem, std::vector<T*> vec);
 
 template<typename T>
 bool contain(const T* elem, std::vector<T*> vec);
+
+template<typename T>
+void remove(const T* elem, std::vector<T*> vec);
 
 template<typename T>
 std::vector<T*> vec_to_vec_pointer(std::vector<T> vec);

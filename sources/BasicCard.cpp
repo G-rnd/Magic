@@ -22,7 +22,7 @@ bool BasicCard::get_engaged() const{
     return m_engaged;
 }
 
-std::vector<Enchantment> BasicCard::get_enchantments() const{
+std::vector<Enchantment*> BasicCard::get_enchantments() const{
     return m_enchantments;
 }
 
@@ -30,7 +30,7 @@ void BasicCard::set_engaged(bool engaged){
     m_engaged = engaged;
 }
 
-void BasicCard::add_enchantment(Enchantment e){
+void BasicCard::add_enchantment(Enchantment* e){
     m_enchantments.push_back(e);
 }
 

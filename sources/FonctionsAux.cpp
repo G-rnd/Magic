@@ -33,12 +33,13 @@ bool instanceof(const T*){
  */
 template<typename T>
 int element_position(const T* elem, std::vector<T*> vec){
-    for (int i = 0; i <= vec.size(); i++){
+    int i = 0;
+    for (int i = 0; i <= (int)vec.size(); i++){
         if(vec[i] == elem){
             return i;
         }
     }
-    //return std::find(vec.begin(), vec.end(), elem);
+    return i;
 }
 
 /**
@@ -56,6 +57,11 @@ bool contain(const T* elem, std::vector<T*> vec){
         return true;
     }
     return false;
+}
+
+template<typename T>
+void remove(const T* elem, std::vector<T*> vec){
+    vec.erase(element_position(elem, vec) + vec.begin());
 }
 
 template<typename T>
@@ -110,6 +116,14 @@ template bool contain<Creature>           (const Creature*, std::vector<Creature
 template bool contain<Land>               (const Land*, std::vector<Land*>);
 template bool contain<Ritual>             (const Ritual*, std::vector<Ritual*>);
 template bool contain<Enchantment>        (const Enchantment*, std::vector<Enchantment*>);
+
+template void remove<Card>               (const Card*, std::vector<Card*>);
+template void remove<BasicCard>          (const BasicCard*, std::vector<BasicCard*>);
+template void remove<SpecialCard>        (const SpecialCard*, std::vector<SpecialCard*>);
+template void remove<Creature>           (const Creature*, std::vector<Creature*>);
+template void remove<Land>               (const Land*, std::vector<Land*>);
+template void remove<Ritual>             (const Ritual*, std::vector<Ritual*>);
+template void remove<Enchantment>        (const Enchantment*, std::vector<Enchantment*>);
 
 template std::vector<Creature*> vec_to_vec_pointer<Creature>(std::vector<Creature>);
 template std::vector<Land*> vec_to_vec_pointer<Land>(std::vector<Land>);

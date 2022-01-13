@@ -25,19 +25,19 @@ void Game::next_player_turn() {
     m_player_turn = !m_player_turn;
 }
 
-std::vector<Player> Game::get_players() const {
+std::vector<Player*> Game::get_players() const {
     return m_players;
 }
 
-Player Game::get_first_player() const {
+Player* Game::get_first_player() const {
     return m_players[0];
 }
 
-Player Game::get_second_player() const {
+Player* Game::get_second_player() const {
     return m_players[1];
 }
 
-Player Game::get_current_player() const {
+Player* Game::get_current_player() const {
     return m_players[m_player_turn];
 }
 
@@ -58,8 +58,8 @@ void Game::start() {
     p1.set_opponent(&p2);
     p2.set_opponent(&p1);
 
-    m_players.push_back(p1);
-    m_players.push_back(p2);
+    m_players.push_back(&p1);
+    m_players.push_back(&p2);
     
     // TODO : à compléter game::start()
 

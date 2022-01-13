@@ -36,5 +36,5 @@ void SpecialCard::set_id(int id){
 }
 
 void SpecialCard::set_info(std::string info){
-    m_info = m_info;
+    m_info = info;
 }

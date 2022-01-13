@@ -73,6 +73,18 @@ void Player::set_played_land(bool b) {
     m_played_land = b;
 }
 
+void Player::add_hand(Card* c){
+    m_hand.push_back(c);
+}
+
+void Player::remove_battlefield(Card* c){
+    if(instanceof<Enchantment>(c)){
+        m_battlefield.remove_enchantment(dynamic_cast<Enchantment*>(c));
+    } else if(instanceof<BasicCard>(c)){
+        m_battlefield.remove_basic_card(dynamic_cast<BasicCard*>(c));
+    }
+}
+
 void Player::draw_card() {
     m_hand.push_back(*m_library.begin());
     m_library.erase(element_position(*m_library.begin(), m_library) + m_library.begin());
@@ -123,7 +135,7 @@ void Player::disengage_card(BasicCard* bc) {
 - Defender
 - Haste
 */
-std::vector<Creature> Player::attack() {
+std::vector<Creature*> Player::attack() {
 
     std::cout<< "Taper -1 pour quitter cette étape"<<std::endl;
 
@@ -131,8 +143,8 @@ std::vector<Creature> Player::attack() {
     int i = 1;
     bool quit = false;
     std::vector<Creature*> possible_opponents;
-    std::vector<Creature> chosen_opponents;
-    std::vector<Creature*> availabled_creature = vec_to_vec_pointer(m_battlefield.get_available_creatures());
+    std::vector<Creature*> chosen_opponents;
+    std::vector<Creature*> availabled_creature = m_battlefield.get_available_creatures();
     
     // List the available creatures
     for (auto creature : availabled_creature){
@@ -176,8 +188,8 @@ std::vector<Creature> Player::attack() {
         } else if(res > i || res < -1){
             std::cout<< " -!- Creature non disponible -!- "<<std::endl;
         } else{
-            chosen_opponents.push_back(*possible_opponents[res-1]);
-            availabled_creature.erase(element_position(possible_opponents[res-1], availabled_creature) + availabled_creature.begin());
+            chosen_opponents.push_back(possible_opponents[res-1]);
+            remove(possible_opponents[res - 1], availabled_creature);
         }
     }
 
@@ -185,13 +197,13 @@ std::vector<Creature> Player::attack() {
 
     for (auto card : chosen_opponents){
         // Check the vigilance ability
-        for (auto ability_card : card.get_abilities()){
+        for (auto ability_card : card->get_abilities()){
             if(ability_card == Ability::Vigilance){
                 vigilance_creature = true;
             }
         }
         if(!vigilance_creature){
-            card.set_engaged(true);
+            card->set_engaged(true);
         }
     }
 
@@ -205,12 +217,12 @@ std::vector<Creature> Player::attack() {
 - Threat
 */
 // TODO : Unblockable creatures must be removed of the vector
-void Player::choose_defenders(std::vector<Creature> opponents, Player other_player){
+void Player::choose_defenders(std::vector<Creature*> opponents){
 
     std::cout<< "Taper -1 pour quitter la creature ; Tapez 0 pour reinitialiser vos choix"<<std::endl;
     std::cout<< "Attention ! Choisissez vos defenseurs dans l'ordre souhaité"<<std::endl;
 
-    std::vector<Creature*> availabled_creature = vec_to_vec_pointer(m_battlefield.get_available_creatures());
+    std::vector<Creature*> availabled_creature = m_battlefield.get_available_creatures();
 
     for (auto opponent : opponents){
 
@@ -218,13 +230,13 @@ void Player::choose_defenders(std::vector<Creature> opponents, Player other_play
         int i = 1;
         bool quit = false;
         std::vector<Creature*> possible_defenders;
-        std::vector<Creature> chosen_defenders;
+        std::vector<Creature*> chosen_defenders;
 
         // Etablish opponent abilities
         bool threat_opponent = false;
         bool flight_opponent = false;
 
-        for (auto ability_opponent : opponent.get_abilities()){
+        for (auto ability_opponent : opponent->get_abilities()){
             if(ability_opponent == Ability::Flight){
                 flight_opponent = true;
             } else if(ability_opponent == Ability::Threat){
@@ -239,7 +251,7 @@ void Player::choose_defenders(std::vector<Creature> opponents, Player other_play
             bool scope_creature = false;
             bool flight_creature = false;
 
-            for (auto ability_creature : (*creature).get_abilities()){
+            for (auto ability_creature : creature->get_abilities()){
                 if(ability_creature == Ability::Flight){
                     flight_creature = true;
                 } else if(ability_creature == Ability::Scope){
@@ -261,37 +273,37 @@ void Player::choose_defenders(std::vector<Creature> opponents, Player other_play
             if(res == -1){
                 // Check Threat ability is respected
                 if(threat_opponent && (chosen_defenders.size() == 1)){
-                    std::cout<< opponent.get_name() << " vous Menace, choississez un autre defenseur ou annulez le blocage : "<<std::endl;
+                    std::cout<< opponent->get_name() << " vous Menace, choississez un autre defenseur ou annulez le blocage : "<<std::endl;
                 } else{
                     quit = true;
                 }
             } else if(res == 0){
                 chosen_defenders = {};
-                std::cout<< "Pour le moment, aucune creature ne defend : " << opponent.get_name()<<std::endl;
+                std::cout<< "Pour le moment, aucune creature ne defend : " << opponent->get_name()<<std::endl;
             } else if(res > i || res < -1){
                 std::cout<< " -!- Creature non disponible -!- "<<std::endl;
             } else{
-                chosen_defenders.push_back(*possible_defenders[res-1]);
+                chosen_defenders.push_back(possible_defenders[res-1]);
                 // Remove the chosen defender from the availabled defenders
-                availabled_creature.erase(element_position(possible_defenders[res-1], availabled_creature) + availabled_creature.begin());
+                remove(possible_defenders[res - 1], availabled_creature);
             }
         }
         
         if(!chosen_defenders.empty()){
             // Deflect attack for each opponent with the possible and chosen defender
-            this->deflect_attack(opponent, chosen_defenders, other_player);
+            this->deflect_attack(*opponent, chosen_defenders);
         }
         
     }
 }
 
 
-void Player::deflect_attack(Creature opponent, std::vector<Creature> defenders, Player other_player) {
+void Player::deflect_attack(Creature opponent, std::vector<Creature*> defenders) {
 
     for (auto defender : defenders){
         // Check if the opponent is already dead
         if(contain(dynamic_cast<BasicCard*>(&opponent), m_battlefield.get_basic_cards())){
-            battle_creature(opponent, defender, other_player);
+            battle_creature(opponent, *defender);
         }
     }
     
@@ -304,8 +316,8 @@ void Player::deflect_attack(Creature opponent, std::vector<Creature> defenders, 
 - Trampling
 - Life link
 */
-// other_player est le joueur ayant joué opponent
-void Player::battle_creature(Creature opponent, Creature defender, Player other_player) {
+// this est le joueur ayant joué defender
+void Player::battle_creature(Creature opponent, Creature defender) {
 
     bool opponent_dead = false;
     bool defender_dead = false;
@@ -337,7 +349,7 @@ void Player::battle_creature(Creature opponent, Creature defender, Player other_
             double_initiative_opponent = true;
         } else if(ability_opponent == Ability::Life_link){
             life_link_opponent = true;
-        } else if(trampling_opponent == Ability::Trampling){
+        } else if(ability_opponent == Ability::Trampling){
             trampling_opponent = true;
         }
     }
@@ -359,9 +371,9 @@ void Player::battle_creature(Creature opponent, Creature defender, Player other_
         // Check life_link ability
         if(life_link_opponent){
             if(toughness_defender >= opponent.get_power_current()){
-                other_player.set_hp(other_player.get_hp() + opponent.get_power_current());
+                m_opponent->set_hp(m_opponent->get_hp() + opponent.get_power_current());
             } else{
-                other_player.set_hp(other_player.get_hp() + toughness_defender);
+                m_opponent->set_hp(m_opponent->get_hp() + toughness_defender);
             }
         }
         if(defender.get_toughness_current() <= 0){
@@ -397,9 +409,9 @@ void Player::battle_creature(Creature opponent, Creature defender, Player other_
             // Check Life_link ability
             if(life_link_opponent){
                 if(toughness_defender >= opponent.get_power_current()){
-                    other_player.set_hp(other_player.get_hp() + opponent.get_power_current());
+                    m_opponent->set_hp(m_opponent->get_hp() + opponent.get_power_current());
                 } else{
-                    other_player.set_hp(other_player.get_hp() + toughness_defender);
+                    m_opponent->set_hp(m_opponent->get_hp() + toughness_defender);
                 }
             }
         }
@@ -446,7 +458,7 @@ void Player::destroy_card(Card* c) {
         m_graveyard.push_back(c);
         // We also deplace the enchantments associated to c
         for (auto e : (dynamic_cast<BasicCard*>(c))->get_enchantments()){
-            m_graveyard.push_back(&e);
+            m_graveyard.push_back(e);
         }
     } 
     // If c is a Ritual, we place it into the graveyard
@@ -528,16 +540,16 @@ void Player::play_ritual(Ritual r){
                         // Each enchantment on the battlefield of the opponent
                         for (auto e : (m_opponent->get_battlefield()).get_enchantments()){
                             
-                            std::cout<< i << " - " << e.get_name() << " global " <<std::endl;
-                            possible_enchantments.push_back(&e);
+                            std::cout<< i << " - " << e->get_name() << " global " <<std::endl;
+                            possible_enchantments.push_back(e);
                             i++;
                         }
                         // Each enchantment of a basic card on the battlefield of the opponent
                         for (auto bc : (m_opponent->get_battlefield()).get_basic_cards()){
                             for (auto e : bc->get_enchantments()){
                                 
-                                std::cout<< i << " - " << e.get_name() << " : " << bc->get_name() <<std::endl;
-                                possible_enchantments.push_back(&e);
+                                std::cout<< i << " - " << e->get_name() << " : " << bc->get_name() <<std::endl;
+                                possible_enchantments.push_back(e);
                                 i++;
 
                             }
@@ -602,6 +614,18 @@ void Player::play_ritual(Ritual r){
                         }
 
                     }
+
+                    while (!quit){
+                        std::cin>> res;
+                        if(res <= i || res >= 1){
+                            Creature* chosen_enchantment = possible_enchantments[res - 1];
+                            m_opponent->add_hand(chosen_enchantment);
+                            m_opponent->remove_battlefield(chosen_enchantment);
+                            quit = true;
+                        } else {
+                            std::cout<< " -- Enchantement non disponible -- "<<std::endl;
+                        }
+                    }
                     
                 }
                 break;
@@ -614,7 +638,182 @@ void Player::play_ritual(Ritual r){
         
             break;
 
-        case Token::Black :
+        case Token::Black :{
+            
+            for (auto effect : r.get_effects()){
+                
+                switch (effect){
+
+                case Black_ritual_effects::Kill_creature :{
+
+                    int i = 1;
+                    int res;
+                    bool quit = false;
+                    std::vector<Creature*> possible_creatures;
+
+                    for (auto bc : (m_opponent->get_battlefield()).get_basic_cards()){
+                        
+                        if(instanceof<Creature>(bc)){
+
+                            Creature creature = *dynamic_cast<Creature*>(bc);
+
+                            std::cout<< i << " - " << creature.get_name() <<std::endl;
+                            possible_creatures.push_back(&creature);
+                            i++;
+
+                        }
+
+                    }
+
+                    while (!quit){
+                        std::cin>> res;
+                        if(res <= i || res >= 1){
+                            Creature* chosen_creature = possible_creatures[res - 1];
+                            destroy_card(chosen_creature);
+                            quit = true;
+                        } else {
+                            std::cout<< " -- Creature non disponible -- "<<std::endl;
+                        }
+                    }
+
+                }
+                break;
+
+                case Black_ritual_effects::Kill_creature_2_power :{
+
+                    int i = 1;
+                    int res;
+                    bool quit = false;
+                    std::vector<Creature*> possible_creatures;
+
+                    for (auto bc : (m_opponent->get_battlefield()).get_basic_cards()){
+                        
+                        if(instanceof<Creature>(bc)){
+
+                            Creature creature = *dynamic_cast<Creature*>(bc);
+
+                            if(creature.get_power_current() <= 2){
+                                std::cout<< i << " - " << creature.get_name() <<std::endl;
+                                possible_creatures.push_back(&creature);
+                                i++;
+                            }
+
+                        }
+
+                    }
+
+                    while (!quit){
+                        std::cin>> res;
+                        if(res <= i || res >= 1){
+                            Creature* chosen_creature = possible_creatures[res - 1];
+                            destroy_card(chosen_creature);
+                            quit = true;
+                        } else {
+                            std::cout<< " -- Creature non disponible -- "<<std::endl;
+                        }
+                    }
+
+                }
+                break;
+
+                case Black_ritual_effects::Kill_not_angel :{
+
+                    int i = 1;
+                    int res;
+                    bool quit = false;
+                    std::vector<Creature*> possible_creatures;
+
+                    for (auto bc : (m_opponent->get_battlefield()).get_basic_cards()){
+                        
+                        if(instanceof<Creature>(bc)){
+
+                            Creature creature = *dynamic_cast<Creature*>(bc);
+                            bool is_angel = false;
+
+                            for (auto type_creature : creature.get_types()){
+                                if(type_creature == Type::Angel) is_angel = true;
+                            }
+                            
+                            if(!is_angel){
+                                std::cout<< i << " - " << creature.get_name() <<std::endl;
+                                possible_creatures.push_back(&creature);
+                                i++;
+                            }
+
+                        }
+
+                    }
+
+                    while (!quit){
+                        std::cin>> res;
+                        if(res <= i || res >= 1){
+                            Creature* chosen_creature = possible_creatures[res - 1];
+                            destroy_card(chosen_creature);
+                            quit = true;
+                        } else {
+                            std::cout<< " -- Creature non disponible -- "<<std::endl;
+                        }
+                    }
+
+                }
+                break;
+
+                case Black_ritual_effects::Less_2_2_creature_current :{
+
+                    int i = 1;
+                    int res;
+                    bool quit = false;
+                    std::vector<Creature*> possible_creatures;
+
+                    for (auto bc : (m_opponent->get_battlefield()).get_basic_cards()){
+                        
+                        if(instanceof<Creature>(bc)){
+
+                            Creature creature = *dynamic_cast<Creature*>(bc);
+
+                            std::cout<< i << " - " << creature.get_name() <<std::endl;
+                            possible_creatures.push_back(&creature);
+                            i++;
+
+                        }
+
+                    }
+
+                    while (!quit){
+                        std::cin>> res;
+                        if(res <= i || res >= 1){
+                            Creature* chosen_creature = possible_creatures[res - 1];
+                            
+                            if(chosen_creature->get_power_current() < 3){
+                                chosen_creature->set_power_current(0);
+                            } else{
+                                chosen_creature->set_power_current(chosen_creature->get_power_current() - 2);
+                            }
+
+                            if(chosen_creature->get_toughness_current() < 3){
+                                destroy_card(chosen_creature);
+                            } else{
+                                chosen_creature->set_toughness_current(chosen_creature->get_toughness_current() - 2);
+                            }
+
+                            quit = true;
+                        } else {
+                            std::cout<< " -- Creature non disponible -- "<<std::endl;
+                        }
+                    }
+
+                }
+                break;
+        
+                default:
+                    break;
+                }
+
+            }
+            
+
+        }
+        break;
 
         case Token::Red   :
 
