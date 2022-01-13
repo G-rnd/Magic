@@ -11,13 +11,17 @@
 
 #include "FonctionsAux.cpp"
 
-Player::Player(std::string name): m_name(name) {
+Player::Player(Game const& g, std::string name): m_game(g), m_name(name) {
     std::cout << "[Player] : Création de " << this << std::endl;
     m_hp = 20;
 }
 
 Player::~Player() {
     std::cout << "[Player] : Denstruction de " << this << std::endl;
+}
+
+Game Player::get_game() const {
+    return m_game;
 }
 
 std::string Player::get_name() const {
@@ -95,7 +99,7 @@ void Player::play_card(Card* c) {
     } else if(instanceof<Land>(c)){
 
     } else if(instanceof<Ritual>(c)){
-
+        play_ritual(*dynamic_cast<Ritual*>(c));
     } else if(instanceof<Enchantment>(c)){
 
     }
@@ -444,6 +448,98 @@ void Player::destroy_card(Card* c) {
     else if(instanceof<Ritual>(c)){
         m_graveyard.push_back(c);
     }
+
+}
+
+void Player::play_ritual(Ritual r){
+
+    switch(r.get_token()){
+        case Token::White :
+
+            for (auto effect : r.get_effects()){
+
+                switch(effect){
+
+                    // Add 3 HP to the player
+                    case White_ritual_effects::More_3_HP :
+                        this->set_hp(this->get_hp() + 3);
+                        break;
+
+                    // All the creatures of the player win 1 power and 1 toughness for the turn
+                    case White_ritual_effects::More_1_1_creature_current :
+
+                        for (auto bc : m_battlefield.get_basic_cards()){
+                            if(instanceof<Creature*>(bc)){
+                                Creature creature = *dynamic_cast<Creature*>(bc);
+                                creature.set_power_current(creature.get_power_current() + 1);
+                                creature.set_toughness_current(creature.get_toughness_current() + 1);
+                            }
+                        }
+                        break;
+
+                    // The player destroy an engaged creature of its opponent
+                    case White_ritual_effects::Destroy_engaged_creature :
+
+                        int i = 1;
+                        int res;
+                        bool quit = false;
+                        std::vector<Creature*> possible_creatures = {};
+
+                        for (auto bc : ((m_game.get_second_player()).get_battlefield()).get_basic_cards()){
+                            if(instanceof<Creature*>(bc)){
+                                Creature creature = *dynamic_cast<Creature*>(bc);
+
+                                if(creature.get_engaged()){
+                                    std::cout<< i << " - " << creature.get_name() <<std::endl;
+                                    possible_creatures.push_back(&creature);
+                                    i++;
+                                }
+                            }
+                        }
+
+                        while (!quit){
+                            std::cin>> res;
+                            if(res <= i || res >= 1){
+                                Creature* chosen_creature = possible_creatures[res - 1];
+                                // TODO : tester si delete suppr des listes de battlefield
+                                delete chosen_creature;
+                                quit = true;
+                            } else {
+                                std::cout<< " -- Creature non disponible -- "<<std::endl;
+                            }
+                        }
+
+                        break;
+
+                    // The player destroy an enchantment of its opponent
+                    case White_ritual_effects::Destroy_enchantment :
+
+                        break;
+                    default :
+                        // TODO error
+                        break;
+
+                }
+
+            }
+            break;
+            
+
+        case Token::Blue  :
+
+        case Token::Black :
+
+        case Token::Red   :
+
+        case Token::Green :
+
+        default           :
+            // TODO error
+            break;
+
+    }
+
+    destroy_card(dynamic_cast<Card*>(&r));
 
 }
 
