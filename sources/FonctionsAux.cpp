@@ -60,6 +60,7 @@ void remove(const T* elem, std::vector<T*> vec){
     vec.erase(element_position(elem, vec) + vec.begin());
 }
 
+template bool instanceof<Card, Card>              (const Card*);
 template bool instanceof<Card, BasicCard>         (const BasicCard*);
 template bool instanceof<Card, SpecialCard>       (const SpecialCard*);
 template bool instanceof<Card, Creature>          (const Creature*);
@@ -76,16 +77,45 @@ template bool instanceof<Enchantment, Card>       (const Card*);
   
 template bool instanceof<BasicCard, Creature>     (const Creature*);
 template bool instanceof<BasicCard, Land>         (const Land*);
+template bool instanceof<BasicCard, BasicCard>    (const BasicCard*);
+template bool instanceof<BasicCard, SpecialCard>  (const SpecialCard*);
+template bool instanceof<BasicCard, Ritual>       (const Ritual*);
+template bool instanceof<BasicCard, Enchantment>  (const Enchantment*);
 
-template bool instanceof<Creature, BasicCard>     (const BasicCard*);
-template bool instanceof<Land, BasicCard>         (const BasicCard*);
+template bool instanceof<SpecialCard, Creature>     (const Creature*);
+template bool instanceof<SpecialCard, Land>         (const Land*);
+template bool instanceof<SpecialCard, BasicCard>    (const BasicCard*);
+template bool instanceof<SpecialCard, SpecialCard>  (const SpecialCard*);
+template bool instanceof<SpecialCard, Ritual>       (const Ritual*);
+template bool instanceof<SpecialCard, Enchantment>  (const Enchantment*);
 
-template bool instanceof<SpecialCard, Ritual>     (const Ritual*);
-template bool instanceof<SpecialCard, Enchantment>(const Enchantment*);
+template bool instanceof<Creature, Creature>     (const Creature*);
+template bool instanceof<Creature, Land>         (const Land*);
+template bool instanceof<Creature, BasicCard>    (const BasicCard*);
+template bool instanceof<Creature, SpecialCard>  (const SpecialCard*);
+template bool instanceof<Creature, Ritual>       (const Ritual*);
+template bool instanceof<Creature, Enchantment>  (const Enchantment*);
 
-template bool instanceof<Ritual, SpecialCard>     (const SpecialCard*);
-template bool instanceof<Enchantment, SpecialCard>(const SpecialCard*);
+template bool instanceof<Land, Creature>     (const Creature*);
+//template bool instanceof<Land, Land>         (const Land*);
+template bool instanceof<Land, BasicCard>    (const BasicCard*);
+template bool instanceof<Land, SpecialCard>  (const SpecialCard*);
+template bool instanceof<Land, Ritual>       (const Ritual*);
+template bool instanceof<Land, Enchantment>  (const Enchantment*);
 
+template bool instanceof<Ritual, Creature>     (const Creature*);
+template bool instanceof<Ritual, Land>         (const Land*);
+template bool instanceof<Ritual, BasicCard>    (const BasicCard*);
+template bool instanceof<Ritual, SpecialCard>  (const SpecialCard*);
+template bool instanceof<Ritual, Ritual>       (const Ritual*);
+template bool instanceof<Ritual, Enchantment>  (const Enchantment*);
+
+template bool instanceof<Enchantment, Creature>     (const Creature*);
+template bool instanceof<Enchantment, Land>         (const Land*);
+template bool instanceof<Enchantment, BasicCard>    (const BasicCard*);
+template bool instanceof<Enchantment, SpecialCard>  (const SpecialCard*);
+template bool instanceof<Enchantment, Ritual>       (const Ritual*);
+template bool instanceof<Enchantment, Enchantment>  (const Enchantment*);
 
 template int element_position<Card>       (const Card*, std::vector<Card*>);
 template int element_position<BasicCard>  (const BasicCard*, std::vector<BasicCard*>);
