@@ -6,7 +6,7 @@
 #include "../includes/Card.hpp"
 #include "../includes/Enchantment.hpp"
 
-#include "FonctionsAux.cpp"
+#include "../includes/FonctionsAux.hpp"
 
 BasicCard::BasicCard(std::string name, int token): 
 Card(name, token){
@@ -22,7 +22,7 @@ bool BasicCard::get_engaged() const{
     return m_engaged;
 }
 
-std::vector<Enchantment> BasicCard::get_enchantments() const{
+std::vector<Enchantment*> BasicCard::get_enchantments() const{
     return m_enchantments;
 }
 
@@ -30,11 +30,15 @@ void BasicCard::set_engaged(bool engaged){
     m_engaged = engaged;
 }
 
-void BasicCard::add_enchantment(Enchantment e){
+void BasicCard::add_enchantment(Enchantment* e){
     m_enchantments.push_back(e);
 }
 
+void BasicCard::reset_enchantments(){
+    m_enchantments = {};
+}
+
 std::vector<BasicCard*> BasicCard::remove(std::vector<BasicCard*> cards){
-    cards.erase(element_position(this, cards));
+    cards.erase(element_position(this, cards) + cards.begin());
     return cards;
 }

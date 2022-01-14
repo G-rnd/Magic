@@ -21,7 +21,6 @@ class Creature : public virtual BasicCard{
         Cost*             m_cost;
         bool              m_is_first_turn;
 
-
     public:
         Creature(std::string, int, int, int, std::vector<int>, std::vector<int>, Cost*);
         ~Creature();
@@ -45,7 +44,7 @@ class Creature : public virtual BasicCard{
         void              add_ability(int i);
         void              add_type(int i);
               
-        void              engage_lands(std::vector<Land> lands) const;
+        void              engage_lands(std::vector<Land*> lands) const;
 
         virtual void      print();
 };
