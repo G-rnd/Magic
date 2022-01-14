@@ -136,5 +136,131 @@ bool Battlefield::is_playable(Creature creature) {
 }
 
 void Battlefield::print() {
-    //TODO : print
+    
+    int num_card;
+
+    // print les basics_cards
+    for (int i = 0; i < (m_basic_cards.size() / 5) + 1 ; i++){
+
+        // print les numéros de cartes
+        for (int j = 0; j < 5; j++){
+
+            num_card = i*5 + j;
+            
+            if(num_card < 10){
+
+                if(m_basic_cards[num_card]->get_enchantments().empty()){
+                    std::cout<< "[" << num_card << "        ]   ";
+                } else {
+                    std::cout<< "{" << num_card << "        }   ";
+                }
+
+            } else {
+                if(m_basic_cards[num_card]->get_enchantments().empty()){
+                    std::cout<< "[" << num_card << "       ]   ";
+                } else {
+                    std::cout<< "{" << num_card << "       }   ";
+                }            
+            }
+
+            if(num_card == m_basic_cards.size()) break;
+
+        }
+
+        std::cout<<std::endl;
+
+        // print type de carte
+        for (int j = 0; j < 5; j++){
+
+            num_card = i*5 + j;
+
+            if(instanceof<Creature>(m_basic_cards[num_card])){
+
+                Creature* creature = dynamic_cast<Creature*>(m_basic_cards[num_card]);
+                if(!creature->get_enchantments().empty()){
+                    std::cout<< "{CREATURE}";
+                } else {
+                    std::cout<< "[CREATURE]";
+                }
+
+            } else if(instanceof<Land>(m_basic_cards[num_card])){
+
+                Land* land = dynamic_cast<Land*>(m_basic_cards[num_card]);
+                if(!land->get_enchantments().empty()){
+                    std::cout<< "{LAND    }";
+                } else {
+                    std::cout<< "[LAND    ]";
+                }
+
+            }
+
+            if(num_card == m_basic_cards.size()) break;
+
+        }
+
+        // print type de carte
+        for (int j = 0; j < 5; j++){
+
+            num_card = i*5 + j;
+
+            if(instanceof<Creature>(m_basic_cards[num_card])){
+
+                Creature* creature = dynamic_cast<Creature*>(m_basic_cards[num_card]);
+                if(!creature->get_enchantments().empty()){
+                    std::cout<< "{CREATURE}";
+                } else {
+                    std::cout<< "[CREATURE]";
+                }
+
+            } else if(instanceof<Land>(m_basic_cards[num_card])){
+
+                Land* land = dynamic_cast<Land*>(m_basic_cards[num_card]);
+                if(!land->get_enchantments().empty()){
+                    std::cout<< "{LAND    }";
+                } else {
+                    std::cout<< "[LAND    ]";
+                }
+
+            }
+
+            if(num_card == m_basic_cards.size()) break;
+
+        }
+
+    }
+
+    // print les enchantements
+    for (int i = 0; i < (m_basic_cards.size() / 5) + 1 ; i++){
+
+        for (int j = 0; j < 6; j++){
+
+            if(num_card < 10){
+                std::cout<< "[" << num_card << "         ]   ";
+            } else {
+                std::cout<< "[" << num_card << "        ]   ";
+            }
+            num_card++;
+
+        }
+
+        std::cout<<std::endl;
+
+        for (auto c : m_basic_cards){
+            
+            if(instanceof<Creature>(c)){
+
+                
+
+            } else if(instanceof<Land>(c)){
+
+            }
+
+        }
+        
+
+    }
+
+
+    
+
 }

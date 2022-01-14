@@ -154,9 +154,7 @@ void Game::start() {
                 if (num > hand_size)
                     std::cout << "Id invalide" << std::endl;
                 else {
-                    Card* c = hand[num];
-                    // Joue la carte
-                    p->play_card(hand[num]);
+                    p->get_hand()[num]->print();
                 }            
             }            
             catch (std::invalid_argument &e) {
@@ -172,7 +170,9 @@ void Game::start() {
                 if (num > hand_size)
                     std::cout << "Id invalide" << std::endl;
                 else {
-                    p->get_hand()[num]->print();
+                    Card* c = hand[num];
+                    // Joue la carte
+                    p->play_card(hand[num]);
                 }
             }            
             catch (std::invalid_argument &e) {
@@ -199,7 +199,7 @@ void Game::start() {
         }
 
         // demander à l'adervsaire s'il veut défendre l'attaque
-        std::cout<< p->get_opponent()->get_name() << ", do you want to deflect this creatures ? yes / no"<<std::endl;
+        std::cout<< p->get_opponent()->get_name() << ", voulez-vous bloquer ces créatures ? oui / non"<<std::endl;
         int i = 1;
         for (auto creature : chosen_blockabled_opponent){
             std::cout<< i <<" - "<< creature->get_name()<<std::endl;            
@@ -209,10 +209,10 @@ void Game::start() {
         std::string res;
         while(!quit){
             std::cin>> res;
-            if(res == "yes"){
+            if(res == "oui"){
                 p->get_opponent()->choose_defenders(chosen_blockabled_opponent);
                 quit = true;
-            } else if(res == "no"){
+            } else if(res == "non"){
                 
                 // directement attaquer l'adervsaire
                 for (auto creature : chosen_blockabled_opponent){
@@ -220,15 +220,41 @@ void Game::start() {
                 }
 
             } else{
-                std::cout << "Invalide enter" << std::endl;
+                std::cout << "Commande Invalide" << std::endl;
             }
+
+        }
+
+        // PHASE SECONDAIRE
+
+        // FIN DE TOUR
+
+        while(p->get_hand().size() > 7){
+
+            std::cout<<"Défaussez des cartes, il doit vous rester 7"<<std::endl;
+            
+            int i = 1;
+            std::vector<Card*> possible_cards;
+            std::vector<Card*> chosen_cards;
+
+            for (auto card : p->get_hand()){
+                std::cout<< i << " - " << card->get_name()<<std::endl;
+                possible_cards.push_back(card);
+                i++;
+            }
+
+            bool quit = false;
+            while(!quit){
+
+            }
+            
 
         }
 
 
         m_player_turn = !m_player_turn;
-
     
+        // TODO : break fin de game
         break;
     }
 
