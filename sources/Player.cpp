@@ -67,6 +67,7 @@ void Player::set_name(std::string s) {
 
 void Player::set_hp(int i) {
     m_hp = i;
+    if(m_hp == 0) loose();
 }
 
 void Player::add_played_land(int i) {

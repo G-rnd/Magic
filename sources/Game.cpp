@@ -182,6 +182,48 @@ void Game::start() {
         
         // PHASE DE COMBAT
         
+        std::vector<Creature*> chosen_opponent =  p->attack();
+        std::vector<Creature*> chosen_blockabled_opponent = p->attack();
+
+        // supprimer les cartes imblocables des cartes blocables
+        for (auto creature : chosen_blockabled_opponent){
+
+            bool unblockable_opponent = false;
+
+            for (auto ability_creature : creature->get_abilities()){
+                if(ability_creature == Ability::Unblockable) unblockable_opponent = true;
+            }
+
+            if(unblockable_opponent) remove(creature, chosen_blockabled_opponent);
+
+        }
+
+        // demander à l'adervsaire s'il veut défendre l'attaque
+        std::cout<< p->get_opponent()->get_name() << ", do you want to deflect this creatures ? yes / no"<<std::endl;
+        int i = 1;
+        for (auto creature : chosen_blockabled_opponent){
+            std::cout<< i <<" - "<< creature->get_name()<<std::endl;            
+        }
+
+        bool quit = false;
+        std::string res;
+        while(!quit){
+            std::cin>> res;
+            if(res == "yes"){
+                p->get_opponent()->choose_defenders(chosen_blockabled_opponent);
+                quit = true;
+            } else if(res == "no"){
+                
+                // directement attaquer l'adervsaire
+                for (auto creature : chosen_blockabled_opponent){
+                    p->get_opponent()->set_hp(p->get_opponent()->get_hp() - creature->get_power_current());
+                }
+
+            } else{
+                std::cout << "Invalide enter" << std::endl;
+            }
+
+        }
 
 
         m_player_turn = !m_player_turn;
