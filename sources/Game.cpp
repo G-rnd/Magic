@@ -180,11 +180,14 @@ void Game::start() {
             }
         }
         
-        bool end_engage = false;
-        while (end_engage != false) {
-        }
+        // PHASE DE COMBAT
+        
+
 
         m_player_turn = !m_player_turn;
+
+    
+        break;
     }
 
     // TODO : à compléter game::start()
