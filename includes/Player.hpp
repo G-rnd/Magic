@@ -16,7 +16,7 @@ class Player {
         Player*               m_opponent;
         std::string           m_name;
         int                   m_hp;
-        bool                  m_played_land;
+        int                   m_played_land;
         Battlefield           m_battlefield;
         std::vector<Card*>    m_deck;
         std::vector<Card*>    m_graveyard;
@@ -30,7 +30,7 @@ class Player {
         Player*                get_opponent() const;
         std::string            get_name() const;
         int                    get_hp() const;
-        bool                   get_played_land() const;
+        int                    get_played_land() const;
         Battlefield            get_battlefield() const;
         std::vector<Card*>     get_deck() const;
         std::vector<Card*>     get_graveyard() const;
@@ -40,7 +40,7 @@ class Player {
         void                   set_opponent(Player* p);
         void                   set_name(std::string s);
         void                   set_hp(int i);
-        void                   set_played_land(bool b);
+        void                   add_played_land(int i);
  
         void                   add_hand(Card* c);
         void                   remove_battlefield(Card* c);

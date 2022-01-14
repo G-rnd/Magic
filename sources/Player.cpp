@@ -33,7 +33,7 @@ int Player::get_hp() const {
     return m_hp;
 }
 
-bool Player::get_played_land() const {
+int Player::get_played_land() const {
     return m_played_land;
 }
 
@@ -69,8 +69,8 @@ void Player::set_hp(int i) {
     m_hp = i;
 }
 
-void Player::set_played_land(bool b) {
-    m_played_land = b;
+void Player::add_played_land(int i) {
+    m_played_land += i;
 }
 
 void Player::add_hand(Card* c){
@@ -114,6 +114,7 @@ void Player::play_card(Card* c) {
     if(instanceof<Creature>(c)){
         
     } else if(instanceof<Land>(c)){
+
 
     } else if(instanceof<Ritual>(c)){
         play_ritual(*dynamic_cast<Ritual*>(c));
@@ -934,10 +935,10 @@ void Player::play_ritual(Ritual r){
 
                 switch (effect){
 
+                // We can play 2 lands this turn
                 case Green_ritual_effects::Play_another_land :
                     
-
-                    m_played_land = false;
+                    add_played_land(-1);
                 
                 break;
 
