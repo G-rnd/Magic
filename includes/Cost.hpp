@@ -15,6 +15,8 @@ class Cost{
 
     public:
         Cost(int, int, int, int, int, int);
+        Cost(const Cost &other);
+
         ~Cost();
 
         int     get_any() const;
@@ -32,6 +34,14 @@ class Cost{
         void    set_blue(int);
 
         void    print() const;
+        bool    is_null();
+        bool    is_color_null();
+        bool    is_any_null();
+        bool    is_white_null();
+        bool    is_black_null();
+        bool    is_red_null();
+        bool    is_green_null();
+        bool    is_blue_null();
 };
 
 #endif

@@ -85,6 +85,10 @@ void Player::remove_battlefield(Card* c){
     }
 }
 
+void Player::set_library(std::vector<Card*> cards) {
+    m_library = cards;
+}
+
 void Player::draw_card() {
     m_hand.push_back(*m_library.begin());
     m_library.erase(element_position(*m_library.begin(), m_library) + m_library.begin());
@@ -111,9 +115,10 @@ void Player::shuffle_library() {
 void Player::play_card(Card* c) {
     // TODO : à compléter player::play_card()
 
-    if(instanceof<Creature>(c)){
-        
-    } else if(instanceof<Land>(c)){
+    if(instanceof<Land>(c)){
+        set_played_land(true);
+        m_battlefield.place_basic_card(dynamic_cast<BasicCard*>(c));
+        m_hand.erase(element_position(c, m_hand));
 
 
     } else if(instanceof<Ritual>(c)){

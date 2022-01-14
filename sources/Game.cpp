@@ -1,8 +1,14 @@
 #include <iostream>
 #include <vector>
+#include <filesystem>
+#include <fstream>
+#include <iomanip> 
 
 #include "../includes/Game.hpp"
 #include "../includes/Player.hpp"
+#include "CardParser.hpp"
+#include "FonctionsAux.cpp"
+
 
 #include "../includes/FonctionsAux.hpp"
 
@@ -60,7 +66,127 @@ void Game::start() {
 
     m_players.push_back(&p1);
     m_players.push_back(&p2);
-    
+
+    // Choix des decks
+    for(int i = 0; i < 2; i++) {
+        if (i == 0)
+            std::cout << "Choisir un deck pour le premier joueur :" << std::endl;
+        if (i == 1)
+            std::cout << "Choisir un deck pour le second joueur :" << std::endl;
+        
+        std::string path = "/data/";
+        
+        int nb_decks = 0;
+        for (const auto & file : std::filesystem::directory_iterator(path)) {
+            std::cout << file.path() << std::endl;
+            nb_decks++;
+        }        
+        if (nb_decks == 0) {
+            std::cout << "Erreur: Aucun deck n'est disponible !" << std::endl;
+            return;
+        }
+
+        std::string filename = "";
+        bool ok = false;
+
+        while(!ok) {
+            std::cin >> filename;
+            std::ifstream ifile;
+            ifile.open(filename);
+
+            if(ifile) {
+                m_players[i].set_library(CardParser::parse(filename));
+                ok = true;
+            }
+        }
+    }
+    // Phases de jeu
+    while (true) {
+        Player p = get_current_player();
+
+        // Phase de pioche;
+        if (p.get_library().size() == 0) {
+            victory(m_players[!m_player_turn]);
+            return;
+        } else {
+            std::cout << "Vous piochez la carte : " << p.get_library()[0]->get_name() << std::endl;
+            p.draw_card();
+        }
+        
+        // Phase de désengagement
+        for(auto c : p.get_battlefield().get_basic_cards()) {
+            p.get_battlefield().disengage_card(c);
+        }
+
+        // Phase principale
+        std::cout << "Selectionnez une carte à placer :" << std::endl;
+        std::cout << "<id>      : pour jouer une carte." << std::endl;
+        std::cout << "info <id> : pour avoir des informations sur une carte." << std::endl;
+        std::cout << "end       : pour arrêter la phase principale." << std::endl << std::endl;
+
+        std::vector<Card*> hand;
+        for(auto c : p.get_hand())
+            hand.push_back(c);
+        int hand_size = hand.size();
+
+        // Vérifications 
+        for(int i = 0; i < hand_size; i++) {
+            // Une carte est jouable si:
+            // 
+            // TODO modifier le played_land
+            if (instanceof<Creature>(hand[i]) && p.get_battlefield().is_playable(*dynamic_cast<Creature*>(hand[i])) || instanceof<Land>(hand[i]) && !p.get_played_land() || instanceof<SpecialCard>(hand[i]))
+                std::cout << std::setfill(' ') << std::setw (hand_size / 10)  << i << " - " << hand[i]->get_name() << std::endl;
+            else {
+                hand.erase(hand.begin() + i);
+                i--;
+            }
+        }
+
+        std::string cmd;
+        std::cin >> cmd;
+        if (cmd.find("info ") != std::string::npos) {
+            // info sur une carte
+            int num;
+            try {
+                // 5: taille de "info "
+                num = std::stoi(cmd.substr(5));
+                
+                if (num > hand_size)
+                    std::cout << "Id invalide" << std::endl;
+                else {
+                    Card* c = hand[num];
+                    // Joue la carte
+                    p.play_card(hand[num]);
+                }            
+            }            
+            catch (std::invalid_argument &e) {
+                std::cout << "Id invalide" << std::endl;
+            }
+            
+        } else {
+            // selection d'une carte
+            int num;
+            try {
+                num = std::stoi(cmd);
+                
+                if (num > hand_size)
+                    std::cout << "Id invalide" << std::endl;
+                else {
+                    p.get_hand()[num]->print();
+                }
+            }            
+            catch (std::invalid_argument &e) {
+                std::cout << "Id invalide" << std::endl;
+            }
+        }
+        
+        bool end_engage = false;
+        while (end_engage != false) {
+        }
+
+        m_player_turn = !m_player_turn;
+    }
+
     // TODO : à compléter game::start()
 
 }

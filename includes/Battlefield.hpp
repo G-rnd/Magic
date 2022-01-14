@@ -25,12 +25,15 @@ class Battlefield {
 
         void                     remove_basic_card(BasicCard* bc);
         void                     remove_enchantment(Enchantment* e);
+    
         
+        void                     place_basic_card(BasicCard* bc);
         std::vector<Creature*>   get_engaged_creatures();
         std::vector<Creature*>   get_available_creatures();
         std::vector<Land*>       get_available_lands();
 
         void                     disengage_card(BasicCard* bc);
+        bool                     is_playable(Creature c); 
 
         void                     print();
 
