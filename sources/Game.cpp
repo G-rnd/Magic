@@ -86,11 +86,11 @@ void Game::start() {
             return;
         }
 
-        std::string filename = "";
+        std::string filename = "data/deck.txt";
         bool ok = false;
 
         while(!ok) {
-            std::cin >> filename;
+            //std::cin >> filename;
             std::ifstream ifile;
             ifile.open(filename);
 
@@ -104,8 +104,10 @@ void Game::start() {
             m_players[i]->draw_card();
         }
     }
+    
     // Phases de jeu
     while (true) {
+        // TODO erreur quand essaie d'accéder à un champ/méthode de p
         Player* p = get_current_player();
 
         // reset des stats des cartes 
@@ -118,7 +120,18 @@ void Game::start() {
                 }
             }
         }
+
         std::cout << "A" << std::endl;
+        p->get_name();
+        std::cout << "2" << std::endl;
+        std::cout << p1.get_library().size() << std::endl;
+        std::cout << p2.get_library().size() << std::endl;
+        std::cout << m_players[0]->get_library().size() << std::endl;
+        
+        std::cout << p->get_name() << std::endl;
+        auto vector = p->get_library();
+        std::cout << ( vector.size()) << std::endl;
+        std::cout << p->get_library().size() << std::endl;
 
         // Phase de pioche;
                 
@@ -142,8 +155,6 @@ void Game::start() {
         Game::main_phase(*p);
         
         // PHASE DE COMBAT
-        
-
 
         m_player_turn = !m_player_turn;
 
