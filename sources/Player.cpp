@@ -460,6 +460,7 @@ void Player::destroy_card(Card* c) {
         for (auto e : (dynamic_cast<BasicCard*>(c))->get_enchantments()){
             m_graveyard.push_back(e);
         }
+        dynamic_cast<BasicCard*>(c)->reset_enchantments();
     } 
     // If c is a Ritual, we place it into the graveyard
     else if(instanceof<Ritual>(c)){
@@ -815,9 +816,192 @@ void Player::play_ritual(Ritual r){
         }
         break;
 
-        case Token::Red   :
+        case Token::Red   :{
 
-        case Token::Green :
+            for (auto effect : r.get_effects()){
+
+                switch (effect){
+
+                case Red_ritual_effects::Damage_3_creature_or_player :{
+
+                    std::cout<< " Tapez 0 pour infliger 3 dégâts à l'adervsaire "<<std::endl;
+
+                    int i = 1;
+                    int res;
+                    bool quit = false;
+                    std::vector<Creature*> possible_creatures;
+
+                    for (auto bc : (m_opponent->get_battlefield()).get_basic_cards()){
+                        
+                        if(instanceof<Creature>(bc)){
+
+                            Creature* creature = dynamic_cast<Creature*>(bc);
+
+                            std::cout<< i << " - " << creature->get_name() <<std::endl;
+                            possible_creatures.push_back(creature);
+                            i++;
+
+                        }
+
+                    }
+
+                    while (!quit){
+                        std::cin>> res;
+                        if(res <= i || res >= 1){
+                            Creature* chosen_creature = possible_creatures[res - 1];
+
+                            if(chosen_creature->get_toughness_current() < 4){
+                                destroy_card(chosen_creature);
+                            } else{
+                                chosen_creature->set_toughness_current(chosen_creature->get_toughness_current() - 3);
+                            }
+                            quit = true;
+
+                        } else if(res == 0){
+
+                            m_opponent->set_hp(m_opponent->get_hp() - 3);
+                            quit = true;
+
+                        } else {
+                            std::cout<< " -- Creature non disponible -- "<<std::endl;
+                        }
+                    }
+
+                }
+                break;
+                
+                case Red_ritual_effects::Damage_4_creatures :{
+
+                    std::cout<< " Tapez 0 pour reinitialiser vos choix "<<std::endl;
+
+                    int i = 1;
+                    int res;
+                    bool quit = false;
+                    std::vector<Creature*> possible_creatures;
+                    std::vector<Creature*> chosen_creatures;
+
+                    for (auto bc : (m_opponent->get_battlefield()).get_basic_cards()){
+                        
+                        if(instanceof<Creature>(bc)){
+
+                            Creature* creature = dynamic_cast<Creature*>(bc);
+
+                            std::cout<< i << " - " << creature->get_name() <<std::endl;
+                            possible_creatures.push_back(creature);
+                            i++;
+
+                        }
+
+                    }
+
+                    while (!quit){
+                        std::cin>> res;
+                        if(res <= i || res >= 1){
+                            chosen_creatures.push_back(possible_creatures[res - 1]);
+
+                            if(chosen_creatures.size() == 4)
+                                quit = true;
+
+                        } else if(res == 0){
+
+                            chosen_creatures = {};
+                            std::cout<< "Vos choix sont reinitialisés "<<std::endl;
+
+                        } else {
+                            std::cout<< " -- Creature non disponible -- "<<std::endl;
+                        }
+                    }
+
+                    for (auto creature : chosen_creatures){
+                        creature->set_toughness_current(creature->get_toughness_current() - 1);
+                    }
+
+                }
+                break;
+
+                default:
+                    break;
+                
+                }   
+            }
+
+        }
+        break;
+
+        case Token::Green :{
+
+            for (auto effect : r.get_effects()){
+
+                switch (effect){
+
+                case Green_ritual_effects::Play_another_land :
+                    
+
+                    m_played_land = false;
+                
+                break;
+
+                case Green_ritual_effects::Take_2_lands_library_shuffle :{
+
+                    std::cout<< " Tapez 0 pour reinitialiser vos choix "<<std::endl;
+
+                    int i = 1;
+                    int res;
+                    bool quit = false;
+                    std::vector<Land*> possible_lands;
+                    std::vector<Land*> chosen_lands;
+
+                    for (auto c : m_library){
+                        
+                        if(instanceof<Land>(c)){
+
+                            Land* land = dynamic_cast<Land*>(c);
+
+                            std::cout<< i << " - " << land->get_name() <<std::endl;
+                            possible_lands.push_back(land);
+                            i++;
+
+                        }
+
+                    }
+
+                    while (!quit){
+                        std::cin>> res;
+                        if(res <= i || res >= 1){
+                            chosen_lands.push_back(possible_lands[res - 1]);
+
+                            if(chosen_lands.size() == 2)
+                                quit = true;
+
+                        } else if(res == 0){
+
+                            chosen_lands = {};
+                            std::cout<< "Vos choix sont reinitialisés "<<std::endl;
+
+                        } else {
+                            std::cout<< " -- Terrain non disponible -- "<<std::endl;
+                        }
+                    }
+
+                    for (auto land : chosen_lands){
+                        m_hand.push_back(land);
+                        remove( dynamic_cast<Card*>(land), m_library);
+                    }
+
+                    shuffle_library();
+                    
+
+                }
+                break;
+                
+                default:
+                    break;
+                }
+                
+            }
+
+        }
+        break;
 
         default           :
             // TODO error

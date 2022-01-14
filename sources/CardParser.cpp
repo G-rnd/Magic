@@ -344,7 +344,7 @@ std::vector<int> CardParser::parse_int_list(std::string& s) {
 
     std::string delimiter = ", ";
     int pos = 0;
-    while ((pos = s.find(delimiter)) != std::string::npos) {
+    while ( (pos = s.find(delimiter)) != std::string::npos) {
         l.push_back(stoi(s.substr(0, pos)));
         s.erase(0, pos + delimiter.length());
     }

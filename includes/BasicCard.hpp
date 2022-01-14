@@ -11,7 +11,7 @@ class BasicCard : public virtual Card{
 
     private:
         bool                             m_engaged;
-        std::vector<Enchantment*>         m_enchantments;
+        std::vector<Enchantment*>        m_enchantments;
 
     public:
         BasicCard(std::string, int);
@@ -22,6 +22,7 @@ class BasicCard : public virtual Card{
 
         virtual void                     set_engaged(bool b);
         virtual void                     add_enchantment(Enchantment* e);
+        virtual void                     reset_enchantments();
 
         std::vector<BasicCard*>          remove(std::vector<BasicCard*> cards);
              

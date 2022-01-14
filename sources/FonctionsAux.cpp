@@ -64,15 +64,6 @@ void remove(const T* elem, std::vector<T*> vec){
     vec.erase(element_position(elem, vec) + vec.begin());
 }
 
-template<typename T>
-std::vector<T*> vec_to_vec_pointer(std::vector<T> vec){
-    std::vector<T*> pointer_vec;
-    for (auto c : vec){
-        pointer_vec.push_back(&c);
-    }
-    return pointer_vec;
-}
-
 template bool instanceof<Card, BasicCard>         (const BasicCard*);
 template bool instanceof<Card, SpecialCard>       (const SpecialCard*);
 template bool instanceof<Card, Creature>          (const Creature*);
@@ -124,8 +115,3 @@ template void remove<Creature>           (const Creature*, std::vector<Creature*
 template void remove<Land>               (const Land*, std::vector<Land*>);
 template void remove<Ritual>             (const Ritual*, std::vector<Ritual*>);
 template void remove<Enchantment>        (const Enchantment*, std::vector<Enchantment*>);
-
-template std::vector<Creature*> vec_to_vec_pointer<Creature>(std::vector<Creature>);
-template std::vector<Land*> vec_to_vec_pointer<Land>(std::vector<Land>);
-template std::vector<Ritual*> vec_to_vec_pointer<Ritual>(std::vector<Ritual>);
-template std::vector<Enchantment*> vec_to_vec_pointer<Enchantment>(std::vector<Enchantment>);

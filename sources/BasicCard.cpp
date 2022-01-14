@@ -34,6 +34,10 @@ void BasicCard::add_enchantment(Enchantment* e){
     m_enchantments.push_back(e);
 }
 
+void BasicCard::reset_enchantments(){
+    m_enchantments = {};
+}
+
 std::vector<BasicCard*> BasicCard::remove(std::vector<BasicCard*> cards){
     cards.erase(element_position(this, cards) + cards.begin());
     return cards;
