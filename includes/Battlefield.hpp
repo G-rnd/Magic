@@ -26,8 +26,11 @@ class Battlefield {
         std::vector<Creature>    get_engaged_creatures();
         std::vector<Creature>    get_available_creatures();
         std::vector<Land>        get_available_lands();
+        
+        void                     place_basic_card(BasicCard* bc);
 
         void                     disengage_card(BasicCard* bc);
+        bool                     is_playable(Creature c); 
 
         void                     print();
 

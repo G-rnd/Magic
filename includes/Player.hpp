@@ -36,6 +36,7 @@ class Player {
         void                  set_name(std::string s);
         void                  set_ph(int i);
         void                  set_played_land(bool b);
+        void                  set_library(std::vector<Card*> cards);
   
         void                  draw_card();
         void                  discard_card(Card* c);
