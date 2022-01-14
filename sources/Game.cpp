@@ -95,27 +95,27 @@ void Game::start() {
             ifile.open(filename);
 
             if(ifile) {
-                m_players[i].set_library(CardParser::parse(filename));
+                m_players[i]->set_library(CardParser::parse(filename));
                 ok = true;
             }
         }
     }
     // Phases de jeu
     while (true) {
-        Player p = get_current_player();
+        Player* p = get_current_player();
 
         // Phase de pioche;
-        if (p.get_library().size() == 0) {
-            victory(m_players[!m_player_turn]);
+        if (p->get_library().size() == 0) {
+            victory(*m_players[!m_player_turn]);
             return;
         } else {
-            std::cout << "Vous piochez la carte : " << p.get_library()[0]->get_name() << std::endl;
-            p.draw_card();
+            std::cout << "Vous piochez la carte : " << p->get_library()[0]->get_name() << std::endl;
+            p->draw_card();
         }
         
         // Phase de désengagement
-        for(auto c : p.get_battlefield().get_basic_cards()) {
-            p.get_battlefield().disengage_card(c);
+        for(auto c : p->get_battlefield().get_basic_cards()) {
+            p->get_battlefield().disengage_card(c);
         }
 
         // Phase principale
@@ -125,7 +125,7 @@ void Game::start() {
         std::cout << "end       : pour arrêter la phase principale." << std::endl << std::endl;
 
         std::vector<Card*> hand;
-        for(auto c : p.get_hand())
+        for(auto c : p->get_hand())
             hand.push_back(c);
         int hand_size = hand.size();
 
@@ -134,7 +134,7 @@ void Game::start() {
             // Une carte est jouable si:
             // 
             // TODO modifier le played_land
-            if (instanceof<Creature>(hand[i]) && p.get_battlefield().is_playable(*dynamic_cast<Creature*>(hand[i])) || instanceof<Land>(hand[i]) && !p.get_played_land() || instanceof<SpecialCard>(hand[i]))
+            if (instanceof<Creature>(hand[i]) && p->get_battlefield().is_playable(*dynamic_cast<Creature*>(hand[i])) || instanceof<Land>(hand[i]) && !p->get_played_land() || instanceof<SpecialCard>(hand[i]))
                 std::cout << std::setfill(' ') << std::setw (hand_size / 10)  << i << " - " << hand[i]->get_name() << std::endl;
             else {
                 hand.erase(hand.begin() + i);
@@ -156,7 +156,7 @@ void Game::start() {
                 else {
                     Card* c = hand[num];
                     // Joue la carte
-                    p.play_card(hand[num]);
+                    p->play_card(hand[num]);
                 }            
             }            
             catch (std::invalid_argument &e) {
@@ -172,7 +172,7 @@ void Game::start() {
                 if (num > hand_size)
                     std::cout << "Id invalide" << std::endl;
                 else {
-                    p.get_hand()[num]->print();
+                    p->get_hand()[num]->print();
                 }
             }            
             catch (std::invalid_argument &e) {

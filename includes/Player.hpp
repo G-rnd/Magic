@@ -40,6 +40,7 @@ class Player {
         void                   set_opponent(Player* p);
         void                   set_name(std::string s);
         void                   set_hp(int i);
+        void                   set_library(std::vector<Card*> cards);
         void                   add_played_land(int i);
  
         void                   add_hand(Card* c);

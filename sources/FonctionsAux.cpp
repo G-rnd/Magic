@@ -6,10 +6,6 @@
 
 #include "../includes/FonctionsAux.hpp"
 
-bool check_info(std::string s){
-    return (s == "info");
-}
-
 /**
  * @brief return true T is an instance of Base, else false
  * syntax : instanceof<Base>(T);

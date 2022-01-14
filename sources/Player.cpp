@@ -116,10 +116,9 @@ void Player::play_card(Card* c) {
     // TODO : à compléter player::play_card()
 
     if(instanceof<Land>(c)){
-        set_played_land(true);
+        add_played_land(1);
         m_battlefield.place_basic_card(dynamic_cast<BasicCard*>(c));
-        m_hand.erase(element_position(c, m_hand));
-
+        remove(c, m_hand);
 
     } else if(instanceof<Ritual>(c)){
         play_ritual(*dynamic_cast<Ritual*>(c));
