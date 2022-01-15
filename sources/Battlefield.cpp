@@ -205,7 +205,7 @@ void Battlefield::print() {
                         std::cout<< "[" << std::setw(12) << "Creature" << "]";
                     }
                 } else {
-                    if(m_basic_cards[num_card]->get_engaged() || creature->is_class(Card_class::CREATURE) && dynamic_cast<Creature*>(m_basic_cards[num_card])->get_is_first_turn()){
+                    if(m_basic_cards[num_card]->get_engaged() || (creature->is_class(Card_class::CREATURE) && dynamic_cast<Creature*>(m_basic_cards[num_card])->get_is_first_turn())){
                         std::cout<< "{*" << std::setw(10) << "Creature" << "*}";
                     } else{
                         std::cout<< "{" << std::setw(12) << "Creature" << "}";
@@ -269,7 +269,7 @@ void Battlefield::print() {
 
             num_card = i*5 + j;
 
-            char* tokens[5] = {"White", "Blue", "Black", "Red", "Green"};
+            std::string tokens[5] = {"White", "Blue", "Black", "Red", "Green"};
             int token = m_basic_cards[num_card]->get_token();
             if(m_basic_cards[num_card]->get_enchantments().empty()){
                 if(m_basic_cards[num_card]->get_engaged() || (m_basic_cards[num_card]->is_class(Card_class::CREATURE) && dynamic_cast<Creature*>(m_basic_cards[num_card])->get_is_first_turn())){
