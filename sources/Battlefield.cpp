@@ -195,15 +195,15 @@ void Battlefield::print() {
 
             if(m_basic_cards[num_card]->get_enchantments().empty()){
                 if(m_basic_cards[num_card]->get_engaged() || (m_basic_cards[num_card]->is_class(Card_class::CREATURE) && dynamic_cast<Creature*>(m_basic_cards[num_card])->get_is_first_turn())){
-                    std::cout<< "[*" << std::setw(10) << num_card << "*]";
+                    std::cout<< "[*" << std::setfill(' ') << std::setw(10) << num_card << "*]";
                 } else{
-                    std::cout<< "[" << std::setw(12) << num_card << "]";
+                    std::cout<< "[" << std::setfill(' ') << std::setw(12) << num_card << "]";
                 }
             } else {
                 if(m_basic_cards[num_card]->get_engaged() || (m_basic_cards[num_card]->is_class(Card_class::CREATURE) && dynamic_cast<Creature*>(m_basic_cards[num_card])->get_is_first_turn())){
-                    std::cout<< "{*" << std::setw(10) << num_card << "*}";
+                    std::cout<< "{*" << std::setfill(' ') << std::setw(10) << num_card << "*}";
                 } else{
-                    std::cout<< "{" << std::setw(12) << num_card << "}";
+                    std::cout<< "{" << std::setfill(' ') << std::setw(12) << num_card << "}";
                 }
             }
 

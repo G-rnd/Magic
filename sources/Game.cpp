@@ -207,11 +207,15 @@ void Game::start() {
 
         // FIN DE TOUR
 
-        while(get_current_player()->get_hand().size() > 7){
+        while((get_current_player()->get_hand()).size() > 7){
 
-            std::cout<<"Défaussez des cartes, il doit vous rester 7"<<std::endl;
-            
-            int i = 1;
+            std::cout<<"Défaussez des cartes, il doit vous rester 7."<<std::endl;
+            std::cout << "<id>      : pour defausser une carte." << std::endl;
+            //std::cout << "info <id> : pour avoir des informations sur une carte." << std::endl;
+            std::cout << "reset     : pour reinitialiser vos choix." << std::endl << std::endl;
+            std::cout << "valid     : pour valider votre choix." << std::endl << std::endl;
+
+            int i = 0;
             std::vector<Card*> possible_cards;
             std::vector<Card*> chosen_cards;
 
@@ -221,7 +225,46 @@ void Game::start() {
                 i++;
             }
 
+            bool quit = false;
+            std::string cmd;
+            while(!quit){
+                std::getline(std::cin, cmd);
+                
+                if(cmd.find("valid") != std::string::npos){
+                    quit = true;
+                } else if(cmd.find("reset") != std::string::npos){
+                    chosen_cards = {};
+                    std::cout<< "Reset reussi" <<std::endl;
+                } else{
+                    try {
+                        int num = std::stoi(cmd);
+                        if (num > i || num < 0) {
+                            std::cout << "Id invalide" << std::endl;
+
+                            std::cout << "Entrée pour continuer." << std::endl;
+                            std::getline(std::cin, cmd);
+                        }
+                        else{
+                            if(contain(possible_cards[num], chosen_cards)){
+                                std::cout << num <<" deja defaussee." << std::endl; 
+                            } else {
+                                chosen_cards.push_back(possible_cards[num]);
+                            }
+                        }
+                    }
+                    catch (std::invalid_argument &e) {
+                        std::cout << "Commande Invalide" << std::endl;    
+                    }
+                }
+            }
+
+            for (auto card : chosen_cards){
+                get_current_player()->discard_card(card);
+            }
+            
         }
+
+        get_current_player()->print();
       
         m_player_turn = !m_player_turn;
 
@@ -252,8 +295,8 @@ void Game::main_phase() {
         // Vérifications 
         for(int i = 0; i < hand_size; i++) {
             // Une carte est jouable si:
-            if((hand[i]->is_class(Card_class::CREATURE) && get_current_player()->get_battlefield().is_playable(hand[i])) || hand[i]->is_class(Card_class::LAND) && (get_current_player()->get_played_land() <= 0)
-                ||  hand[i]->is_class(Card_class::RITUAL) && get_current_player()->get_battlefield().is_playable(hand[i]) || hand[i]->is_class(Card_class::ENCHANTEMENT) && get_current_player()->get_battlefield().is_playable(hand[i]) ) {
+            if((hand[i]->is_class(Card_class::CREATURE) && get_current_player()->get_battlefield().is_playable(hand[i])) || (hand[i]->is_class(Card_class::LAND) && (get_current_player()->get_played_land() <= 0))
+                ||  (hand[i]->is_class(Card_class::RITUAL) && get_current_player()->get_battlefield().is_playable(hand[i])) || (hand[i]->is_class(Card_class::ENCHANTEMENT) && get_current_player()->get_battlefield().is_playable(hand[i]))) {
                 std::cout << std::setfill(' ') << std::setw (hand_size / 10)  << i << " - " << hand[i]->get_name() << std::endl;
 
             } else {

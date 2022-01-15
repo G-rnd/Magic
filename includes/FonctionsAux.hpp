@@ -77,7 +77,9 @@ int element_position(const T* elem, const std::vector<T*>& vec)
 template <typename T>
 inline bool contain(const T* elem, const std::vector<T*>& vec)
 {
-    std::any_of(vec.begin(), vec.end(), [elem] (auto i) {return i == elem;});
+    //std::any_of(vec.begin(), vec.end(), [elem] (auto i) {return i == elem;});
+    return (std::find(vec.begin(), vec.end(), elem) != vec.end());
+    
 }
 
 template <typename T>

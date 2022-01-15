@@ -118,11 +118,11 @@ void Player::sort_hand(){
 
 void Player::draw_card() {
     m_hand.push_back(*m_library.begin());
-    m_library.erase(element_position(*m_library.begin(), m_library) + m_library.begin());
+    remove(*m_library.begin(), m_library);
 }
 
 void Player::discard_card(Card* c) {
-    m_hand.erase(element_position(c, m_graveyard) + m_hand.begin());
+    remove(c, m_hand);
     m_graveyard.push_back(c);
 }
 
@@ -153,6 +153,10 @@ void Player::play_card(Card* c) {
         play_ritual(*dynamic_cast<Ritual*>(c));
     } else if(c->is_class(Card_class::ENCHANTEMENT)){
 
+    } else if(c->is_class(Card_class::CREATURE)){
+        dynamic_cast<Creature*>(c)->set_is_first_turn(true);
+        m_battlefield.place_basic_card(dynamic_cast<BasicCard*>(c));
+        remove(c, m_hand);
     }
 }
 
@@ -182,10 +186,9 @@ std::vector<Creature*> Player::attack() {
     bool quit = false;
     std::vector<Creature*> possible_opponents;
     std::vector<Creature*> chosen_opponents;
-    std::vector<Creature*> availabled_creature = m_battlefield.get_available_creatures();
     
     // List the available creatures
-    for (auto creature : availabled_creature){
+    for (auto creature : m_battlefield.get_available_creatures()){
 
         // Etablish abilities
         bool defender_creature = false;
@@ -223,7 +226,7 @@ std::vector<Creature*> Player::attack() {
             quit = true;
         } else if(cmd.find("reset") != std::string::npos){
             chosen_opponents = {};
-            std::cout<< "Pour le moment, aucune creature n'attaque."<<std::endl;
+            std::cout<< "Reset reussi" <<std::endl;
         } else{
             try {
                 int num = std::stoi(cmd);
@@ -234,9 +237,12 @@ std::vector<Creature*> Player::attack() {
                     std::getline(std::cin, cmd);
                 }
                 else{
-                    chosen_opponents.push_back(possible_opponents[num-1]);
-                    remove(possible_opponents[num - 1], availabled_creature);
-                    // TODO : print availabled creature
+                    if(contain(possible_opponents[num], chosen_opponents)){
+                        std::cout << num <<" deja choisie" << std::endl; 
+                    } else{
+                        std::cout<< "Vous venez d'ajouter " << possible_opponents[num]->get_name() << "."<<std::endl; 
+                        chosen_opponents.push_back(possible_opponents[num]);
+                    }
                 }
             }
             catch (std::invalid_argument &e) {
@@ -337,7 +343,7 @@ void Player::choose_defenders(std::vector<Creature*> opponents){
                 }
             } else if(cmd.find("reset") != std::string::npos){
                 chosen_defenders = {};
-                std::cout<< "Pour le moment, aucune creature ne defend : " << opponent->get_name()<<std::endl;
+                std::cout<< "Reset reussi" <<std::endl;
             } else{
                 try {
                     int num = std::stoi(cmd);
@@ -348,10 +354,12 @@ void Player::choose_defenders(std::vector<Creature*> opponents){
                         std::getline(std::cin, cmd);
                     }
                     else{
-                        chosen_defenders.push_back(possible_defenders[num-1]);
-                        // Remove the chosen defender from the availabled defenders
-                        remove(possible_defenders[num - 1], availabled_creature);
-                        // TODO : print availabled creature
+                        if(contain(possible_defenders[num], chosen_defenders)){
+                            std::cout << num <<" deja choisie" << std::endl; 
+                        } else {
+                            std::cout<< "Vous venez d'ajouter " << possible_defenders[num]->get_name() << "."<<std::endl;
+                            chosen_defenders.push_back(possible_defenders[num]);
+                        }
                     }
                 }
                 catch (std::invalid_argument &e) {
@@ -1133,7 +1141,7 @@ void Player::print_hand(){
         for (int j = 0; j < 8; j++){
 
             num_card = i*8 + j;
-            std::cout<< "[" << std::setw(12) << num_card << "]";
+            std::cout<< "[" << std::setfill(' ') << std::setw(12) << num_card << "]";
 
             if(num_card == ((int) m_hand.size() - 1)) break;
             std::cout << delimiter;
