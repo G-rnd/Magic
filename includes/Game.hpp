@@ -23,9 +23,9 @@ class Game {
         Player*              get_first_player() const;
         Player*              get_second_player() const;
         Player*              get_current_player() const;
- 
+
         void                 start();
-        void                 main_phase(Player p);
+        void                 main_phase();
         void                 choose_name(Player p, std::string name);
         void                 choose_deck();
         void                 save();
