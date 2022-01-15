@@ -138,33 +138,54 @@ bool Battlefield::is_playable(Card* card) {
             i--;
         } else {
             // On commence par compter les terrains typés
-            if (lands[i]->get_token() == Token::White) {
-                c.set_white(c.get_white() - lands[i]->get_value());
-                lands.erase(lands.begin() + i);
-            }
+            switch(lands[i]->get_token()){
 
-            if (lands[i]->get_token() == Token::Black) {
-                c.set_black(c.get_black() - lands[i]->get_value());
-                lands.erase(lands.begin() + i);
-            }
+                case Token::White:
+                    c.set_white(c.get_white() - lands[i]->get_value());
+                break;
 
-            if (lands[i]->get_token() == Token::Red) {
-                c.set_red(c.get_red() - lands[i]->get_value());
-                lands.erase(lands.begin() + i);
-            }
+                case Token::Blue:
+                    c.set_blue(c.get_blue() - lands[i]->get_value());
+                break;
 
-            if (lands[i]->get_token() == Token::Green) {
-                c.set_green(c.get_green() - lands[i]->get_value());
-                lands.erase(lands.begin() + i);
-            }
+                case Token::Black:
+                    c.set_black(c.get_black() - lands[i]->get_value());
+                break;
 
-            if (lands[i]->get_token() == Token::Blue) {
-                c.set_blue(c.get_blue() - lands[i]->get_value());
-                lands.erase(lands.begin() + i);
+                case Token::Red:
+                    c.set_red(c.get_red() - lands[i]->get_value());
+                break;
+
+                case Token::Green:
+                    c.set_green(c.get_green() - lands[i]->get_value()); 
+                break;
+
+                default:
+                    break;
+
             }
+            lands.erase(lands.begin() + i);
         }
     }
     return c.is_null();
+}
+
+void Battlefield::engage_lands(Cost* c){
+
+    std::vector<Land*> lands = get_available_lands();
+    std::vector<int> needed = {c->get_white(), c->get_blue(), c->get_black(), c->get_red(), c->get_green(), c->get_any()};
+
+    for (auto land : lands){
+        int value = land->get_value();
+        if(needed[land->get_token()] >= 1){
+            land->set_engaged(true);
+            needed[land->get_token()] = needed[land->get_token()] - value; 
+        } else if(needed[5] >= 1){ //any needed
+            land->set_engaged(true);
+            needed[5] = needed[5] - value; 
+        }
+    }
+
 }
 
 void Battlefield::print() {

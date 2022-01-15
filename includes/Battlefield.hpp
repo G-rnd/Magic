@@ -38,6 +38,8 @@ class Battlefield {
 		void						disengage_card(BasicCard* bc);
 		bool						is_playable(Card* c); 
 
+        void                        engage_lands(Cost* c);
+
 		void						print();
 
 };

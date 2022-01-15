@@ -115,6 +115,9 @@ void Game::start() {
     
     // Phases de jeu
     while (true) {
+
+        get_current_player()->set_played_land(0);
+
         // reset des stats des cartes 
         for (auto p : m_players) {
             for (auto bc : p->get_battlefield().get_basic_cards()) {
@@ -170,8 +173,8 @@ void Game::start() {
 
         m_player_turn = !m_player_turn;
 
-        // TODO à envelver
-        break;
+    // TODO à enlever
+        //break;
     }
 }
 
@@ -190,7 +193,7 @@ bool Game::check_defeat() {
 void Game::main_phase() {
 
     while(true) {
-        std::system("clear");
+        //std::system("clear");
 
         get_current_player()->print();
 
@@ -198,8 +201,6 @@ void Game::main_phase() {
         std::cout << "<id>      : pour jouer une carte." << std::endl;
         std::cout << "info <id> : pour avoir des informations sur une carte." << std::endl;
         std::cout << "end       : pour arrêter la phase principale." << std::endl << std::endl;
-
-        get_current_player()->set_played_land(0);
 
         std::vector<Card*> hand{};
         for(Card* c : get_current_player()->get_hand()) {
@@ -209,6 +210,7 @@ void Game::main_phase() {
         
         // Vérifications 
         for(int i = 0; i < hand_size; i++) {
+
             // Une carte est jouable si:
             if((hand[i]->is_class(Card_class::CREATURE) && get_current_player()->get_battlefield().is_playable(hand[i])) || (hand[i]->is_class(Card_class::LAND) && (get_current_player()->get_played_land() <= 0))
             || (hand[i]->is_class(Card_class::RITUAL) && get_current_player()->get_battlefield().is_playable(hand[i])) || (hand[i]->is_class(Card_class::ENCHANTEMENT) && get_current_player()->get_battlefield().is_playable(hand[i]))) {

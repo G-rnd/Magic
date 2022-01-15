@@ -161,21 +161,23 @@ void Player::shuffle_library() {
 }
 
 void Player::play_card(Card* c) {
-    // TODO : à compléter player::play_card()
 
     if (c->is_class(Card_class::LAND)) {
         add_played_land(1);
         m_battlefield.place_basic_card(dynamic_cast<BasicCard*>(c));
         remove(c, m_hand);
+    } else if(c->is_class(Card_class::RITUAL)){
+        Ritual* r = dynamic_cast<Ritual*>(c);
+        play_ritual(*r);
+        m_battlefield.engage_lands(r->get_cost());
+    } else if(c->is_class(Card_class::ENCHANTEMENT)){
 
-    } else if (c->is_class(Card_class::RITUAL)) {
-        play_ritual(*dynamic_cast<Ritual*>(c));
-    } else if (c->is_class(Card_class::ENCHANTEMENT)) {
-        // todo je sais pas si c'est un oubli ou pas 
-    } else if (c->is_class(Card_class::CREATURE)) {
-        dynamic_cast<Creature*>(c)->set_is_first_turn(true);
+    } else if(c->is_class(Card_class::CREATURE)){
+        Creature* cre = dynamic_cast<Creature*>(c);
+        cre->set_is_first_turn(true);
         m_battlefield.place_basic_card(dynamic_cast<BasicCard*>(c));
         remove(c, m_hand);
+        m_battlefield.engage_lands(cre->get_cost());
     }
 }
 
@@ -1065,7 +1067,8 @@ void Player::play_ritual(Ritual r) {
 }
 
 void Player::loose() {
-    // TODO
+    // TODO : set_looser
+    m_looser = true;
 }
 
 void Player::print(){
@@ -1075,13 +1078,15 @@ void Player::print(){
 
     m_opponent->get_battlefield().print();
 
-    std::cout << std::setfill('=') << std::setw(147) << "=" << std::endl; 
+    std::cout<<std::endl;
+
+    std::cout<< std::setfill('=') << std::setw(147) << "=" << std::endl << std::endl; 
 
     m_battlefield.print();
 
     std::cout << std::setfill('-') << std::setw(147) << "-" << std::endl;
 
-    std::cout << "Ma main" << std::endl;
+    std::cout<<"Ma main"<<std::endl << std::endl;
 
     print_hand();
 
