@@ -103,6 +103,7 @@ std::vector<Land*> Battlefield::get_available_lands() {
 void Battlefield::place_basic_card(BasicCard* bc) {
     if(bc != nullptr)
         m_basic_cards.push_back(bc);
+    // TODO : engager les terrains
 }
 
 void Battlefield::disengage_card(BasicCard* bc){

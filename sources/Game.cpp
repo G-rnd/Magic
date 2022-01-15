@@ -203,6 +203,8 @@ void Game::main_phase() {
         std::cout << "info <id> : pour avoir des informations sur une carte." << std::endl;
         std::cout << "end       : pour arrêter la phase principale." << std::endl << std::endl;
 
+        get_current_player()->set_played_land(0);
+
         std::vector<Card*> hand{};
         for(Card* c : get_current_player()->get_hand()) {
             hand.push_back(c);

@@ -88,6 +88,10 @@ void Player::set_looser(bool b){
     m_looser = b;
 }
 
+void Player::set_played_land(int i) {
+    m_played_land = i;
+}
+
 void Player::add_played_land(int i) {
     m_played_land += i;
 }

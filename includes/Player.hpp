@@ -45,6 +45,7 @@ class Player {
         void                   set_library(std::vector<Card*> cards);
         void                   set_hand(std::vector<Card*> cards);
         void                   set_looser(bool b);
+        void                   set_played_land(int i);
         void                   add_played_land(int i);
  
         void                   add_hand(Card* c);
