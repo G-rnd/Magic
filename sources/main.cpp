@@ -37,10 +37,8 @@ int main() {
     Game g{};
     g.start();
 
-
     std::cout << "Entrée pour continuer." << std::endl;
     std::getline(std::cin, cmd);
     
-  
     return 0;
 }

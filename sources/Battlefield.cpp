@@ -181,38 +181,14 @@ void Battlefield::engage_lands(Cost* c){
 
     for (auto land : lands){
         int value = land->get_value();
-        if(needed[land->get_token()] >= value){
-            std::cout<<"BB"<<std::endl;
+        if(needed[land->get_token()] >= 1){
             land->set_engaged(true);
-            //remove(land, lands);
             needed[land->get_token()] = needed[land->get_token()] - value; 
-        } else if(needed[5] >= value){ //any needed
-            std::cout<<"CC"<<std::endl;
+        } else if(needed[5] >= 1){ //any needed
             land->set_engaged(true);
-            //remove(land, lands);
             needed[5] = needed[5] - value; 
         }
     }
-/*
-    //Check if more lands are needed
-    bool needed_more = false;
-    for (size_t i = 0; i < needed.size(); i++){
-        needed_more = needed_more || (needed[i] != 0);
-    }
-    
-    if(needed_more){
-        for (auto land : lands){
-            if(needed[land->get_token()] >= 1){
-                land->set_engaged(true);
-                remove(land, lands);
-                needed[land->get_token()] = needed[land->get_token()] - land->get_value(); 
-            } else if(needed[5] >= 1){ //any needed
-                land->set_engaged(true);
-                remove(land, lands);
-                needed[5] -= needed[5] - land->get_value(); 
-            }
-        }   
-    }*/
 
 }
 

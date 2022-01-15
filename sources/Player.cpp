@@ -159,7 +159,6 @@ void Player::shuffle_library() {
 }
 
 void Player::play_card(Card* c) {
-    // TODO : à compléter player::play_card()
 
     if(c->is_class(Card_class::LAND)){
         add_played_land(1);
@@ -177,7 +176,6 @@ void Player::play_card(Card* c) {
         m_battlefield.place_basic_card(dynamic_cast<BasicCard*>(c));
         remove(c, m_hand);
         m_battlefield.engage_lands(cre->get_cost());
-        std::cout<<"AA"<<std::endl;
     }
 }
 
