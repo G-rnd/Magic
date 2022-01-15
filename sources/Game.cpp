@@ -119,7 +119,6 @@ void Game::start() {
         }
 
         // Phase de pioche;
-                
         if (get_current_player()->get_library().size() == 0) {
             victory(*m_players[!m_player_turn]);
             return;
@@ -144,7 +143,7 @@ void Game::start() {
 
         // Phase secondaire
         Game::main_phase();
-        
+
         m_player_turn = !m_player_turn;
 
     
@@ -158,12 +157,12 @@ void Game::start() {
 
 void Game::main_phase() {
     while(true) {
-        //std::system("clear");
+        std::system("clear");
         std::cout << "Selectionnez une carte à placer :" << std::endl;
-  /*      std::cout << "<id>      : pour jouer une carte." << std::endl;
+        std::cout << "<id>      : pour jouer une carte." << std::endl;
         std::cout << "info <id> : pour avoir des informations sur une carte." << std::endl;
         std::cout << "end       : pour arrêter la phase principale." << std::endl << std::endl;
-*/
+
         std::vector<Card*> hand{};
         for(Card* c : get_current_player()->get_hand()) {
             hand.push_back(c);
@@ -195,8 +194,11 @@ void Game::main_phase() {
         else {
             try {
                 int num = std::stoi(cmd);
-                if (num > hand_size)
+                if (num >= hand_size) {
                     std::cout << "Id invalide" << std::endl;
+                    std::cout << "Entrée pour continuer." << std::endl;
+                    std::getline(std::cin, cmd);
+                }
                 else
                     // todo à vérifier si ça marche bien quand il y aura la nouvelle version des instanceof
                     get_current_player()->play_card(hand[num]);
@@ -207,9 +209,11 @@ void Game::main_phase() {
                 if (std::mismatch(info.begin(), info.end(), cmd.begin()).first == info.end()) {
                     try {
                         int num = std::stoi(cmd.substr(5));
-                        if (num > hand_size)
+                        if (num >= hand_size) {
                             std::cout << "Id invalide" << std::endl;
-                        else {
+                            std::cout << "Entrée pour continuer." << std::endl;
+                            std::getline(std::cin, cmd);
+                        } else {
                             hand[num]->print();
                             std::cout << "Entrée pour continuer." << std::endl;
                             std::getline(std::cin, cmd);
