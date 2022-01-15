@@ -33,6 +33,8 @@
 	#NAME: Mon super rituel
 	#TOKEN: 1
 
+	#EFFECTS: 1, 2, 3, 4
+	#COST: 3, 0, 0, 0, 0, 0
 	#ID: 2
 	#INFO: Blabla rituel génial
 #END_CARD
@@ -42,6 +44,234 @@
 	#NAME: Mon super enchantement
 	#TOKEN: 1
 
+
+	#EFFECTS: 1, 2, 3, 4
+	#COST: 3, 0, 0, 0, 0, 0
 	#ID: 1
 	#INFO: Blabla enchantement génial
+#END_CARD
+
+#BEGIN_CARD
+	#TYPE_CARD: Creature
+	#NAME: Ma super créature
+	#TOKEN: 1
+
+	#POWER: 2
+	#TOUGHNESS: 5
+	// types : <ability_1, ... ability_n>
+	#ABILITIES: 1, 2, 3, 5
+	
+	// types : <white, black, red, blue, green>
+	#TYPES: 1, 2, 3, 4
+	
+	// cost : <any>, <white>, <black>, <red>, <blue>, <green>
+	#COST: 3, 0, 0, 0, 0, 0
+#END_CARD
+#BEGIN_CARD
+	#TYPE_CARD: Creature
+	#NAME: Ma super créature
+	#TOKEN: 1
+
+	#POWER: 2
+	#TOUGHNESS: 5
+	// types : <ability_1, ... ability_n>
+	#ABILITIES: 1, 2, 3, 5
+	
+	// types : <white, black, red, blue, green>
+	#TYPES: 1, 2, 3, 4
+	
+	// cost : <any>, <white>, <black>, <red>, <blue>, <green>
+	#COST: 3, 0, 0, 0, 0, 0
+#END_CARD
+#BEGIN_CARD
+	#TYPE_CARD: Creature
+	#NAME: Ma super créature
+	#TOKEN: 1
+
+	#POWER: 2
+	#TOUGHNESS: 5
+	// types : <ability_1, ... ability_n>
+	#ABILITIES: 1, 2, 3, 5
+	
+	// types : <white, black, red, blue, green>
+	#TYPES: 1, 2, 3, 4
+	
+	// cost : <any>, <white>, <black>, <red>, <blue>, <green>
+	#COST: 3, 0, 0, 0, 0, 0
+#END_CARD
+#BEGIN_CARD
+	#TYPE_CARD: Creature
+	#NAME: Ma super créature
+	#TOKEN: 1
+
+	#POWER: 2
+	#TOUGHNESS: 5
+	// types : <ability_1, ... ability_n>
+	#ABILITIES: 1, 2, 3, 5
+	
+	// types : <white, black, red, blue, green>
+	#TYPES: 1, 2, 3, 4
+	
+	// cost : <any>, <white>, <black>, <red>, <blue>, <green>
+	#COST: 3, 0, 0, 0, 0, 0
+#END_CARD
+#BEGIN_CARD
+	#TYPE_CARD: Creature
+	#NAME: Ma super créature
+	#TOKEN: 1
+
+	#POWER: 2
+	#TOUGHNESS: 5
+	// types : <ability_1, ... ability_n>
+	#ABILITIES: 1, 2, 3, 5
+	
+	// types : <white, black, red, blue, green>
+	#TYPES: 1, 2, 3, 4
+	
+	// cost : <any>, <white>, <black>, <red>, <blue>, <green>
+	#COST: 3, 0, 0, 0, 0, 0
+#END_CARD
+#BEGIN_CARD
+	#TYPE_CARD: Creature
+	#NAME: Ma super créature
+	#TOKEN: 1
+
+	#POWER: 2
+	#TOUGHNESS: 5
+	// types : <ability_1, ... ability_n>
+	#ABILITIES: 1, 2, 3, 5
+	
+	// types : <white, black, red, blue, green>
+	#TYPES: 1, 2, 3, 4
+	
+	// cost : <any>, <white>, <black>, <red>, <blue>, <green>
+	#COST: 3, 0, 0, 0, 0, 0
+#END_CARD
+#BEGIN_CARD
+	#TYPE_CARD: Creature
+	#NAME: Ma super créature
+	#TOKEN: 1
+
+	#POWER: 2
+	#TOUGHNESS: 5
+	// types : <ability_1, ... ability_n>
+	#ABILITIES: 1, 2, 3, 5
+	
+	// types : <white, black, red, blue, green>
+	#TYPES: 1, 2, 3, 4
+	
+	// cost : <any>, <white>, <black>, <red>, <blue>, <green>
+	#COST: 3, 0, 0, 0, 0, 0
+#END_CARD
+#BEGIN_CARD
+	#TYPE_CARD: Creature
+	#NAME: Ma super créature
+	#TOKEN: 1
+
+	#POWER: 2
+	#TOUGHNESS: 5
+	// types : <ability_1, ... ability_n>
+	#ABILITIES: 1, 2, 3, 5
+	
+	// types : <white, black, red, blue, green>
+	#TYPES: 1, 2, 3, 4
+	
+	// cost : <any>, <white>, <black>, <red>, <blue>, <green>
+	#COST: 3, 0, 0, 0, 0, 0
+#END_CARD
+#BEGIN_CARD
+	#TYPE_CARD: Creature
+	#NAME: Ma super créature
+	#TOKEN: 1
+
+	#POWER: 2
+	#TOUGHNESS: 5
+	// types : <ability_1, ... ability_n>
+	#ABILITIES: 1, 2, 3, 5
+	
+	// types : <white, black, red, blue, green>
+	#TYPES: 1, 2, 3, 4
+	
+	// cost : <any>, <white>, <black>, <red>, <blue>, <green>
+	#COST: 3, 0, 0, 0, 0, 0
+#END_CARD
+#BEGIN_CARD
+	#TYPE_CARD: Creature
+	#NAME: Ma super créature
+	#TOKEN: 1
+
+	#POWER: 2
+	#TOUGHNESS: 5
+	// types : <ability_1, ... ability_n>
+	#ABILITIES: 1, 2, 3, 5
+	
+	// types : <white, black, red, blue, green>
+	#TYPES: 1, 2, 3, 4
+	
+	// cost : <any>, <white>, <black>, <red>, <blue>, <green>
+	#COST: 3, 0, 0, 0, 0, 0
+#END_CARD
+#BEGIN_CARD
+	#TYPE_CARD: Creature
+	#NAME: Ma super créature
+	#TOKEN: 1
+
+	#POWER: 2
+	#TOUGHNESS: 5
+	// types : <ability_1, ... ability_n>
+	#ABILITIES: 1, 2, 3, 5
+	
+	// types : <white, black, red, blue, green>
+	#TYPES: 1, 2, 3, 4
+	
+	// cost : <any>, <white>, <black>, <red>, <blue>, <green>
+	#COST: 3, 0, 0, 0, 0, 0
+#END_CARD
+#BEGIN_CARD
+	#TYPE_CARD: Creature
+	#NAME: Ma super créature
+	#TOKEN: 1
+
+	#POWER: 2
+	#TOUGHNESS: 5
+	// types : <ability_1, ... ability_n>
+	#ABILITIES: 1, 2, 3, 5
+	
+	// types : <white, black, red, blue, green>
+	#TYPES: 1, 2, 3, 4
+	
+	// cost : <any>, <white>, <black>, <red>, <blue>, <green>
+	#COST: 3, 0, 0, 0, 0, 0
+#END_CARD
+#BEGIN_CARD
+	#TYPE_CARD: Creature
+	#NAME: Ma super créature
+	#TOKEN: 1
+
+	#POWER: 2
+	#TOUGHNESS: 5
+	// types : <ability_1, ... ability_n>
+	#ABILITIES: 1, 2, 3, 5
+	
+	// types : <white, black, red, blue, green>
+	#TYPES: 1, 2, 3, 4
+	
+	// cost : <any>, <white>, <black>, <red>, <blue>, <green>
+	#COST: 3, 0, 0, 0, 0, 0
+#END_CARD
+#BEGIN_CARD
+	#TYPE_CARD: Creature
+	#NAME: Ma super créature
+	#TOKEN: 1
+
+	#POWER: 2
+	#TOUGHNESS: 5
+	// types : <ability_1, ... ability_n>
+	#ABILITIES: 1, 2, 3, 5
+	
+	// types : <white, black, red, blue, green>
+	#TYPES: 1, 2, 3, 4
+	
+	// cost : <any>, <white>, <black>, <red>, <blue>, <green>
+	#COST: 3, 0, 0, 0, 0, 0
 #END_CARD
