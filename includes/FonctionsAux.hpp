@@ -43,8 +43,6 @@ template<typename Base, typename T>
 bool instanceof(const T*);
 */
 
-}
-
 /**
  * @brief return true T is an instance of Base, else false
  *
