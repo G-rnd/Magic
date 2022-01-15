@@ -83,8 +83,7 @@ inline bool contain(const T* elem, const std::vector<T*>& vec)
 }
 
 template <typename T>
-inline void remove(const T* elem, std::vector<T*>& vec)
-{
+inline void remove(const T* elem, std::vector<T*>& vec){
 	vec.erase(vec.begin() + element_position(elem, vec));
 }
 

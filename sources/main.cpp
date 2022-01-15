@@ -26,10 +26,9 @@ int main() {
 
     Battlefield* b = new Battlefield();
     b->set_basic_cards(bc);
-    b->set_enchantments(e);
+    //b->set_enchantments(e);
 
     b->print();*/
-    
 
     std::cout << "Entrée pour continuer." << std::endl;
     std::string cmd;
@@ -41,6 +40,7 @@ int main() {
 
     std::cout << "Entrée pour continuer." << std::endl;
     std::getline(std::cin, cmd);
+    
   
     return 0;
 }

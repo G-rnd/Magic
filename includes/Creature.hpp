@@ -43,9 +43,7 @@ class Creature : public virtual BasicCard{
               
         void              add_ability(int i);
         void              add_type(int i);
-              
-        void              engage_lands(std::vector<Land*> lands) const;
-
+    
         virtual void      print();
 };
 

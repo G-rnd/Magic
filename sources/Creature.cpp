@@ -83,12 +83,6 @@ void Creature::add_type(int type){
     }
 }
 
-void Creature::engage_lands(std::vector<Land*> lands) const{
-    for (auto land : lands){
-        land->set_engaged(true);
-    }
-}
-
 void Creature::print(){
     // TODO : print
 }

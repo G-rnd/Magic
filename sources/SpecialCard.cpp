@@ -5,6 +5,7 @@
 #include "../includes/SpecialCard.hpp"
 #include "../includes/Card.hpp"
 #include "../includes/Cost.hpp"
+#include "Land.hpp"
 
 SpecialCard::SpecialCard(int c, std::string name, int token, std::string info, Cost* cost, std::vector<int> effects): 
 Card(c, name, token), m_info(info), m_cost(cost), m_effects(effects){
