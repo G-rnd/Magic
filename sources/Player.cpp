@@ -16,6 +16,7 @@
 Player::Player(std::string name): m_name(name) {
     //std::cout << "[Player] : Création de " << this << std::endl;
     m_hp = 20;
+    m_looser = false;
 }
 
 Player::~Player() {
@@ -58,6 +59,10 @@ std::vector<Card*> Player::get_hand() const {
     return m_hand;
 }
 
+bool Player::get_looser() const{
+    return m_looser;
+}
+
 void Player::set_opponent(Player* p){
     m_opponent = p;
 }
@@ -69,6 +74,18 @@ void Player::set_name(std::string s) {
 void Player::set_hp(int i) {
     m_hp = i;
     if(m_hp == 0) loose();
+}
+
+void Player::set_library(std::vector<Card*> cards) {
+    m_library = cards;
+}
+
+void Player::set_hand(std::vector<Card*> cards) {
+    m_hand = cards;
+}
+
+void Player::set_looser(bool b){
+    m_looser = b;
 }
 
 void Player::add_played_land(int i) {
@@ -85,14 +102,6 @@ void Player::remove_battlefield(Card* c){
     } else if(c->is_class(Card_class::CREATURE) || c->is_class(Card_class::LAND)){
         m_battlefield.remove_basic_card(dynamic_cast<BasicCard*>(c));
     }
-}
-
-void Player::set_library(std::vector<Card*> cards) {
-    m_library = cards;
-}
-
-void Player::set_hand(std::vector<Card*> cards) {
-    m_hand = cards;
 }
 
 void Player::sort_hand(){
@@ -117,8 +126,12 @@ void Player::sort_hand(){
 }
 
 void Player::draw_card() {
-    m_hand.push_back(*m_library.begin());
-    remove(*m_library.begin(), m_library);
+    if(m_library.empty()){
+        loose();
+    } else{
+        m_hand.push_back(*m_library.begin());
+        remove(*m_library.begin(), m_library);
+    }
 }
 
 void Player::discard_card(Card* c) {

@@ -26,6 +26,8 @@ class Game {
 
         void                 start();
         void                 main_phase();
+        void                 combat_phase();
+        void                 turn_end_phase();
         void                 choose_name(Player p, std::string name);
         void                 choose_deck();
         void                 save();

@@ -22,6 +22,7 @@ class Player {
         std::vector<Card*>    m_graveyard;
         std::vector<Card*>    m_library;
         std::vector<Card*>    m_hand;
+        bool                  m_looser;
 
     public:
         Player(std::string s);
@@ -36,12 +37,14 @@ class Player {
         std::vector<Card*>     get_graveyard() const;
         std::vector<Card*>     get_library() const;
         std::vector<Card*>     get_hand() const;
+        bool                   get_looser() const;
    
         void                   set_opponent(Player* p);
         void                   set_name(std::string s);
         void                   set_hp(int i);
         void                   set_library(std::vector<Card*> cards);
         void                   set_hand(std::vector<Card*> cards);
+        void                   set_looser(bool b);
         void                   add_played_land(int i);
  
         void                   add_hand(Card* c);
