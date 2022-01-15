@@ -147,52 +147,57 @@ void Game::start() {
         
         // Phase de combat
         std::vector<Creature*> chosen_opponent =  get_current_player()->attack();
-        std::vector<Creature*> chosen_blockabled_opponent = chosen_opponent;
 
         get_current_player()->print();
 
-        // supprimer les cartes imblocables des cartes blocables
-        for (auto creature : chosen_blockabled_opponent){
+        if(!chosen_opponent.empty()){
 
-            bool unblockable_opponent = false;
-
-            for (auto ability_creature : creature->get_abilities()){
-                if(ability_creature == Ability::Unblockable) unblockable_opponent = true;
-            }
-
-            if(unblockable_opponent) remove(creature, chosen_blockabled_opponent);
-
-        }
-
-        // demander à l'adervsaire s'il veut défendre l'attaque
-        if(!chosen_blockabled_opponent.empty()){
-
-            std::cout << get_current_player()->get_opponent()->get_name() << ", voulez-vous bloquer ces créatures ? " << std::endl;
-            std::cout << "oui       : pour choisir vos bloqueurs." << std::endl;
-            //std::cout << "info <id> : pour avoir des informations sur une carte." << std::endl;
-            std::cout << "non       : pour laisser l'attaque se faire." << std::endl << std::endl;
-            int i = 0;
+            std::vector<Creature*> chosen_blockabled_opponent = chosen_opponent;
+            
+            // supprimer les cartes imblocables des cartes blocables
             for (auto creature : chosen_blockabled_opponent){
-                std::cout<< i <<" - "<< creature->get_name()<<std::endl;            
-            }
-        }
 
-        bool quit = false;
-        std::string cmd;
-        while(!quit){
-            std::getline(std::cin, cmd);
-            if(cmd.find("oui") != std::string::npos){
-                get_current_player()->get_opponent()->choose_defenders(chosen_blockabled_opponent);
-                quit = true;
-            } else if(cmd.find("non") != std::string::npos){
-                
-                // directement attaquer l'adervsaire
-                for (auto creature : chosen_blockabled_opponent){
-                    get_current_player()->get_opponent()->set_hp(get_current_player()->get_opponent()->get_hp() - creature->get_power_current());
+                bool unblockable_opponent = false;
+
+                for (auto ability_creature : creature->get_abilities()){
+                    if(ability_creature == Ability::Unblockable) unblockable_opponent = true;
                 }
 
-            } else{
-                std::cout << "Commande Invalide" << std::endl;
+                if(unblockable_opponent) remove(creature, chosen_blockabled_opponent);
+
+            }
+            
+            // demander à l'adervsaire s'il veut défendre l'attaque
+            if(!chosen_blockabled_opponent.empty()){
+
+                std::cout << get_current_player()->get_opponent()->get_name() << ", voulez-vous bloquer ces créatures ? " << std::endl;
+                std::cout << "oui       : pour choisir vos bloqueurs." << std::endl;
+                //std::cout << "info <id> : pour avoir des informations sur une carte." << std::endl;
+                std::cout << "non       : pour laisser l'attaque se faire." << std::endl << std::endl;
+                int i = 0;
+                for (auto creature : chosen_blockabled_opponent){
+                    std::cout<< i <<" - "<< creature->get_name()<<std::endl;            
+                }
+            }
+
+            bool quit = false;
+            std::string cmd;
+            while(!quit){
+                std::getline(std::cin, cmd);
+                if(cmd.find("oui") != std::string::npos){
+                    get_current_player()->get_opponent()->choose_defenders(chosen_blockabled_opponent);
+                    quit = true;
+                } else if(cmd.find("non") != std::string::npos){
+                    
+                    // directement attaquer l'adervsaire
+                    for (auto creature : chosen_blockabled_opponent){
+                        get_current_player()->get_opponent()->set_hp(get_current_player()->get_opponent()->get_hp() - creature->get_power_current());
+                    }
+
+                } else{
+                    std::cout << "Commande Invalide" << std::endl;
+                }
+
             }
 
         }
@@ -200,7 +205,6 @@ void Game::start() {
         // PHASE SECONDAIRE
         Game::main_phase();
 
-      
         // FIN DE TOUR
 
         while(get_current_player()->get_hand().size() > 7){
