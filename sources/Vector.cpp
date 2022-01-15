@@ -2,7 +2,7 @@
 #include <memory>
 #include <iostream>
 
-#include "../includes/Vector.hpp"
+#include "Vector.hpp"
 
 template <typename E>
 Vector<E>::Vector() : m_vector() {}

@@ -12,6 +12,7 @@
 #include "Ritual.hpp"
 
 class Player {
+
     private:
         Player*               m_opponent;
         std::string           m_name;
