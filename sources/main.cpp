@@ -8,6 +8,7 @@
 #include "../includes/FonctionsAux.hpp"
 
 int main() {
+    /*
     Land* l1  = new Land(1, "terrain 1", 2, 999);
     Land* l2  = new Land(1, "terrain 2", 2, 3);
     Land* l3  = new Land(1, "terrain 333333333", 2, 3);
@@ -26,11 +27,12 @@ int main() {
     b->set_enchantments(e);
 
     b->print();
+    */
 
     std::cout << "Entrée pour continuer." << std::endl;
     std::string cmd;
     std::getline(std::cin, cmd);
-  
+
     Game g{};
     g.start();
 

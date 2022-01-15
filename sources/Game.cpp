@@ -53,11 +53,11 @@ void Game::start() {
 
     std::cout<< "Bienvenue dans votre partie : "<<std::endl;
 
-    std::cout<< "Le nom du premier joueur : "<<std::endl;
+    std::cout<< "Le nom du premier joueur : ";
     std::cin>> p_name_1;
     Player p1(p_name_1);
 
-    std::cout<< "Le nom du second joueur : "<<std::endl;
+    std::cout<< "Le nom du second joueur : ";
     std::cin>> p_name_2;
     Player p2(p_name_2);
 
@@ -99,7 +99,11 @@ void Game::start() {
                 ok = true;
             }
         }
+
         // Phase de pioche initiale
+
+        m_players[i]->shuffle_library();
+
         for(auto index = 0; index < 7; index++) {
             m_players[i]->draw_card();
         }
@@ -108,21 +112,18 @@ void Game::start() {
     // Phases de jeu
     while (true) {
 
-        int player_turn = m_player_turn ? 1:0;
-        Player* p = m_players[player_turn];
-
         // reset des stats des cartes 
         for (auto p : m_players) {
             for (auto bc : p->get_battlefield().get_basic_cards()) {
-                if (instanceof<Creature*>(bc)) {
-                    Creature c = *(dynamic_cast<Creature*>(bc));
-                    c.set_power_current(c.get_power());
-                    c.set_toughness_current(c.get_toughness());
+                if (bc->is_class(Card_class::CREATURE)){
+                    Creature* c = dynamic_cast<Creature*>(bc);
+                    c->set_power_current(c->get_power());
+                    c->set_toughness_current(c->get_toughness());
                 }
             }
         }
 
-        // Phase de pioche;
+        // Phase de pioche
         if (get_current_player()->get_library().size() == 0) {
             victory(*m_players[!m_player_turn]);
             return;
@@ -130,8 +131,10 @@ void Game::start() {
             std::cout << "Vous piochez la carte : " << get_current_player()->get_library()[0]->get_name() << std::endl;
             get_current_player()->draw_card();
 
+            get_current_player()->print();
+
             std::cout << "Entrée pour continuer." << std::endl;
-            std::cin.get(); 
+            std::cin.get();
         }
 
         // Phase de désengagement
@@ -142,13 +145,11 @@ void Game::start() {
         // Phase principale
         Game::main_phase();
         
-        // PHASE DE COMBAT
+        // Phase de combat
+        std::vector<Creature*> chosen_opponent =  get_current_player()->attack();
+        std::vector<Creature*> chosen_blockabled_opponent = get_current_player()->attack();
 
-        
-        // PHASE DE COMBAT
-        
-        std::vector<Creature*> chosen_opponent =  p->attack();
-        std::vector<Creature*> chosen_blockabled_opponent = p->attack();
+        get_current_player()->print();
 
         // supprimer les cartes imblocables des cartes blocables
         for (auto creature : chosen_blockabled_opponent){
@@ -164,20 +165,26 @@ void Game::start() {
         }
 
         // demander à l'adervsaire s'il veut défendre l'attaque
-        std::cout<< get_current_player()->get_opponent()->get_name() << ", voulez-vous bloquer ces créatures ? oui / non"<<std::endl;
-        int i = 1;
-        for (auto creature : chosen_blockabled_opponent){
-            std::cout<< i <<" - "<< creature->get_name()<<std::endl;            
+        if(!chosen_blockabled_opponent.empty()){
+
+            std::cout << get_current_player()->get_opponent()->get_name() << ", voulez-vous bloquer ces créatures ? " << std::endl;
+            std::cout << "oui       : pour choisir vos bloqueurs." << std::endl;
+            //std::cout << "info <id> : pour avoir des informations sur une carte." << std::endl;
+            std::cout << "non       : pour laisser l'attaque se faire." << std::endl << std::endl;
+            int i = 0;
+            for (auto creature : chosen_blockabled_opponent){
+                std::cout<< i <<" - "<< creature->get_name()<<std::endl;            
+            }
         }
 
         bool quit = false;
-        std::string res;
+        std::string cmd;
         while(!quit){
-            std::cin>> res;
-            if(res == "oui"){
+            std::getline(std::cin, cmd);
+            if(cmd.find("oui") != std::string::npos){
                 get_current_player()->get_opponent()->choose_defenders(chosen_blockabled_opponent);
                 quit = true;
-            } else if(res == "non"){
+            } else if(cmd.find("non") != std::string::npos){
                 
                 // directement attaquer l'adervsaire
                 for (auto creature : chosen_blockabled_opponent){
@@ -204,7 +211,7 @@ void Game::start() {
             std::vector<Card*> possible_cards;
             std::vector<Card*> chosen_cards;
 
-            for (auto card : p->get_hand()){
+            for (auto card : get_current_player()->get_hand()){
                 std::cout<< i << " - " << card->get_name()<<std::endl;
                 possible_cards.push_back(card);
                 i++;
@@ -222,11 +229,11 @@ void Game::start() {
 
 void Game::main_phase() {
 
-    int player_turn = m_player_turn ? 1:0;
-    Player* p = m_players[player_turn];
-
     while(true) {
         std::system("clear");
+
+        get_current_player()->print();
+
         std::cout << "Selectionnez une carte à placer :" << std::endl;
         std::cout << "<id>      : pour jouer une carte." << std::endl;
         std::cout << "info <id> : pour avoir des informations sur une carte." << std::endl;
@@ -241,8 +248,8 @@ void Game::main_phase() {
         // Vérifications 
         for(int i = 0; i < hand_size; i++) {
             // Une carte est jouable si:
-            if(hand[i]->is_class(Card_class::CREATURE) && p->get_battlefield().is_playable(hand[i]) || hand[i]->is_class(Card_class::LAND) && (p->get_played_land() <= 0)
-                ||  hand[i]->is_class(Card_class::RITUAL) && p->get_battlefield().is_playable(hand[i]) || hand[i]->is_class(Card_class::ENCHANTEMENT) && p->get_battlefield().is_playable(hand[i]) ) {
+            if((hand[i]->is_class(Card_class::CREATURE) && get_current_player()->get_battlefield().is_playable(hand[i])) || hand[i]->is_class(Card_class::LAND) && (get_current_player()->get_played_land() <= 0)
+                ||  hand[i]->is_class(Card_class::RITUAL) && get_current_player()->get_battlefield().is_playable(hand[i]) || hand[i]->is_class(Card_class::ENCHANTEMENT) && get_current_player()->get_battlefield().is_playable(hand[i]) ) {
                 std::cout << std::setfill(' ') << std::setw (hand_size / 10)  << i << " - " << hand[i]->get_name() << std::endl;
 
             } else {
@@ -267,7 +274,7 @@ void Game::main_phase() {
                     std::getline(std::cin, cmd);
                 }
                 else
-                    // todo à vérifier si ça marche bien quand il y aura la nouvelle version des instanceof
+                    // TODO à vérifier si ça marche bien quand il y aura la nouvelle version des instanceof
                     get_current_player()->play_card(hand[num]);
             }
             catch (std::invalid_argument &e) {

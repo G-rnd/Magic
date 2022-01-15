@@ -41,10 +41,13 @@ class Player {
         void                   set_name(std::string s);
         void                   set_hp(int i);
         void                   set_library(std::vector<Card*> cards);
+        void                   set_hand(std::vector<Card*> cards);
         void                   add_played_land(int i);
  
         void                   add_hand(Card* c);
         void                   remove_battlefield(Card* c);
+
+        void                   sort_hand();
    
         void                   draw_card();
         void                   discard_card(Card* c);
@@ -60,7 +63,8 @@ class Player {
         void                   play_ritual(Ritual c);
         void                   loose();   
    
-        void                   print() const;
+        void                   print();
+        void                   print_hand();
 
 };
 

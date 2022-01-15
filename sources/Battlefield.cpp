@@ -313,7 +313,7 @@ void Battlefield::print() {
 
         std::cout<<std::endl;
 
-        // print type
+        // print type pour creature et value pour land
         for (int j = 0; j < 8; j++){
 
             num_card = i*8 + j;
