@@ -107,6 +107,10 @@ void Game::start() {
     
     // Phases de jeu
     while (true) {
+
+        int player_turn = m_player_turn ? 1:0;
+        Player* p = m_players[player_turn];
+
         // reset des stats des cartes 
         for (auto p : m_players) {
             for (auto bc : p->get_battlefield().get_basic_cards()) {
@@ -217,6 +221,10 @@ void Game::start() {
 
 
 void Game::main_phase() {
+
+    int player_turn = m_player_turn ? 1:0;
+    Player* p = m_players[player_turn];
+
     while(true) {
         std::system("clear");
         std::cout << "Selectionnez une carte à placer :" << std::endl;
