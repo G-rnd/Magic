@@ -9,8 +9,8 @@
 #include "../includes/Land.hpp"
 #include "../includes/Cost.hpp"
 
-Creature::Creature(std::string name, int token, int power, int toughness, std::vector<int> abilities, std::vector<int> types, Cost* cost): 
-Card(name, token), BasicCard(name, token), m_power(power), m_toughness(toughness), m_power_current(power), m_toughness_current(toughness), m_abilities(abilities), m_types(types), m_cost(cost){
+Creature::Creature(int c, std::string name, int token, int power, int toughness, std::vector<int> abilities, std::vector<int> types, Cost* cost): 
+Card(c, name, token), BasicCard(c, name, token), m_power(power), m_toughness(toughness), m_power_current(power), m_toughness_current(toughness), m_abilities(abilities), m_types(types), m_cost(cost){
     std::cout << "[Creature] : Création de " << this << std::endl;
     m_is_first_turn = false;
 }

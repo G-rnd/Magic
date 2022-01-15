@@ -16,7 +16,7 @@ class SpecialCard : public virtual Card{
         std::vector<int>         m_effects;
 
     public:
-        SpecialCard(std::string, int, int, std::string, Cost*, std::vector<int>);
+        SpecialCard(int, std::string, int, int, std::string, Cost*, std::vector<int>);
         virtual ~SpecialCard() = 0;
 
         virtual int              get_id() const;

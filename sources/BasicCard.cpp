@@ -8,8 +8,8 @@
 
 #include "../includes/FonctionsAux.hpp"
 
-BasicCard::BasicCard(std::string name, int token): 
-Card(name, token){
+BasicCard::BasicCard(int c, std::string name, int token): 
+Card(c, name, token){
     std::cout << "[BasicCard] : Création de " << this << std::endl;
     m_engaged = false;
 }

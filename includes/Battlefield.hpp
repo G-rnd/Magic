@@ -33,7 +33,7 @@ class Battlefield {
         std::vector<Land*>       get_available_lands();
 
         void                     disengage_card(BasicCard* bc);
-        bool                     is_playable(Creature c); 
+        bool                     is_playable(Card* c); 
 
         void                     print();
 

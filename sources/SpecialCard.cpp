@@ -6,8 +6,8 @@
 #include "../includes/Card.hpp"
 #include "../includes/Cost.hpp"
 
-SpecialCard::SpecialCard(std::string name, int token, int id, std::string info, Cost* cost, std::vector<int> effects): 
-Card(name, token), m_id(id), m_info(info), m_cost(cost), m_effects(effects){
+SpecialCard::SpecialCard(int c, std::string name, int token, int id, std::string info, Cost* cost, std::vector<int> effects): 
+Card(c, name, token), m_id(id), m_info(info), m_cost(cost), m_effects(effects){
     std::cout << "[SpecialCard] : Création de " << this << std::endl;
 }
 

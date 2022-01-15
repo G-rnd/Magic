@@ -15,7 +15,9 @@
 #include "Ritual.hpp"
 #include "Enchantment.hpp"
 
-enum Token					{ White, Blue, Black, Red, Green };
+enum Card_class           {CREATURE, LAND, RITUAL, ENCHANTEMENT};
+
+enum Token                {White, Blue, Black, Red, Green};
 
 enum Ability				{ Flight, Scope, Vigilance, Touch_of_death, Defender, Initiative, Double_initiative, Haste,
 								Unblockable, Life_link, Threat, Trampling, White_protection, Blue_protection, Black_protection, Red_protection, Green_protection };

@@ -140,18 +140,79 @@ void Game::start() {
         
         // PHASE DE COMBAT
 
+        
+        // PHASE DE COMBAT
+        
+        std::vector<Creature*> chosen_opponent =  p->attack();
+        std::vector<Creature*> chosen_blockabled_opponent = p->attack();
 
-        // Phase secondaire
+        // supprimer les cartes imblocables des cartes blocables
+        for (auto creature : chosen_blockabled_opponent){
+
+            bool unblockable_opponent = false;
+
+            for (auto ability_creature : creature->get_abilities()){
+                if(ability_creature == Ability::Unblockable) unblockable_opponent = true;
+            }
+
+            if(unblockable_opponent) remove(creature, chosen_blockabled_opponent);
+
+        }
+
+        // demander à l'adervsaire s'il veut défendre l'attaque
+        std::cout<< get_current_player()->get_opponent()->get_name() << ", voulez-vous bloquer ces créatures ? oui / non"<<std::endl;
+        int i = 1;
+        for (auto creature : chosen_blockabled_opponent){
+            std::cout<< i <<" - "<< creature->get_name()<<std::endl;            
+        }
+
+        bool quit = false;
+        std::string res;
+        while(!quit){
+            std::cin>> res;
+            if(res == "oui"){
+                get_current_player()->get_opponent()->choose_defenders(chosen_blockabled_opponent);
+                quit = true;
+            } else if(res == "non"){
+                
+                // directement attaquer l'adervsaire
+                for (auto creature : chosen_blockabled_opponent){
+                    get_current_player()->get_opponent()->set_hp(get_current_player()->get_opponent()->get_hp() - creature->get_power_current());
+                }
+
+            } else{
+                std::cout << "Commande Invalide" << std::endl;
+            }
+
+        }
+      
+        // PHASE SECONDAIRE
         Game::main_phase();
 
+      
+        // FIN DE TOUR
+
+        while(get_current_player()->get_hand().size() > 7){
+
+            std::cout<<"Défaussez des cartes, il doit vous rester 7"<<std::endl;
+            
+            int i = 1;
+            std::vector<Card*> possible_cards;
+            std::vector<Card*> chosen_cards;
+
+            for (auto card : p->get_hand()){
+                std::cout<< i << " - " << card->get_name()<<std::endl;
+                possible_cards.push_back(card);
+                i++;
+            }
+
+        }
+      
         m_player_turn = !m_player_turn;
 
-    
+    // TODO à envelver
         break;
     }
-
-    // TODO : à compléter game::start()
-
 }
 
 
@@ -172,14 +233,11 @@ void Game::main_phase() {
         // Vérifications 
         for(int i = 0; i < hand_size; i++) {
             // Une carte est jouable si:
-
-            // TODO modifier le played_land
-            // TODO modif avec le instanceof
-            //if (instanceof<Creature*>(hand[i]) && get_current_player()->get_battlefield().is_playable(*dynamic_cast<Creature*>(hand[i])) || instanceof<Land*>(hand[i]) && !get_current_player()->get_played_land() || instanceof<SpecialCard*>(hand[i]))
-            
-            if (true)
+            if(hand[i]->is_class(Card_class::CREATURE) && p->get_battlefield().is_playable(hand[i]) || hand[i]->is_class(Card_class::LAND) && (p->get_played_land() <= 0)
+                ||  hand[i]->is_class(Card_class::RITUAL) && p->get_battlefield().is_playable(hand[i]) || hand[i]->is_class(Card_class::ENCHANTEMENT) && p->get_battlefield().is_playable(hand[i]) ) {
                 std::cout << std::setfill(' ') << std::setw (hand_size / 10)  << i << " - " << hand[i]->get_name() << std::endl;
-            else {
+
+            } else {
                 hand.erase(hand.begin() + i);
                 i--;
                 hand_size--;        
@@ -196,6 +254,7 @@ void Game::main_phase() {
                 int num = std::stoi(cmd);
                 if (num >= hand_size) {
                     std::cout << "Id invalide" << std::endl;
+
                     std::cout << "Entrée pour continuer." << std::endl;
                     std::getline(std::cin, cmd);
                 }

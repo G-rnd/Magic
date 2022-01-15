@@ -12,7 +12,7 @@ class Land : public virtual BasicCard{
         int             m_value;
 
     public:
-        Land(std::string, int, int);
+        Land(int, std::string, int, int);
         ~Land();
 
         int             get_value() const;

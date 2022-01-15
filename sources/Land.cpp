@@ -6,8 +6,8 @@
 #include "../includes/BasicCard.hpp"
 #include "../includes/Enchantment.hpp"
 
-Land::Land(std::string name, int token, int value): 
-Card(name, token), BasicCard(name, token), m_value(value){
+Land::Land(int c, std::string name, int token, int value): 
+Card(c, name, token), BasicCard(c, name, token), m_value(value){
     std::cout << "[Land] : Création de " << this << std::endl;
 }
 

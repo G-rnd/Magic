@@ -6,13 +6,17 @@
 
 #include "../includes/FonctionsAux.hpp"
 
-Card::Card(std::string name, int token): m_name(name), m_token(token){
+Card::Card(int c, std::string name, int token): m_class(c), m_name(name), m_token(token){
     std::cout << "[Card] : Création de " << this << std::endl;
 }
 
 Card::~Card(){
     std::cout << "[Card] : Destruction de " << this << std::endl;
 
+}
+
+int Card::get_class() const{
+    return m_class;
 }
 
 std::string Card::get_name() const{
@@ -29,6 +33,10 @@ void Card::set_name(std::string name){
 
 void Card::set_token(int token){
     m_token = token;
+}
+
+bool Card::is_class(int cl) const{
+    return this->get_class() == cl;
 }
 
 std::vector<Card*> Card::remove(std::vector<Card*> cards){

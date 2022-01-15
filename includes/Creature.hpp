@@ -22,7 +22,7 @@ class Creature : public virtual BasicCard{
         bool              m_is_first_turn;
 
     public:
-        Creature(std::string, int, int, int, std::vector<int>, std::vector<int>, Cost*);
+        Creature(int, std::string, int, int, int, std::vector<int>, std::vector<int>, Cost*);
         ~Creature();
 
         int               get_power() const;
