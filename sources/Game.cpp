@@ -133,10 +133,12 @@ void Game::start() {
         for(int i = 0; i < hand_size; i++) {
             // Une carte est jouable si:
             // 
-            // TODO modifier le played_land
-            if (instanceof<Creature>(hand[i]) && p->get_battlefield().is_playable(*dynamic_cast<Creature*>(hand[i])) || instanceof<Land>(hand[i]) && !p->get_played_land() || instanceof<SpecialCard>(hand[i]))
+            if(hand[i]->is_class(Card_class::CREATURE) && p->get_battlefield().is_playable(hand[i]) || hand[i]->is_class(Card_class::LAND) && (p->get_played_land() <= 0)
+                ||  hand[i]->is_class(Card_class::RITUAL) && p->get_battlefield().is_playable(hand[i]) || hand[i]->is_class(Card_class::ENCHANTEMENT) && p->get_battlefield().is_playable(hand[i]) ){
+
                 std::cout << std::setfill(' ') << std::setw (hand_size / 10)  << i << " - " << hand[i]->get_name() << std::endl;
-            else {
+
+            } else {
                 hand.erase(hand.begin() + i);
                 i--;
             }

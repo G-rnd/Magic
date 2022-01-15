@@ -11,6 +11,7 @@
 #include "Land.hpp"
 #include "Enchantment.hpp"
 #include "Ritual.hpp"
+#include "FonctionsAux.hpp"
 
 const std::string CardParser::begin_card    = "#BEGIN_CARD";
 const std::string CardParser::end_card      = "#END_CARD";
@@ -188,7 +189,7 @@ Creature* CardParser::parse_creature(const std::vector<std::string>& data) {
 */
 
     if (valid == 0b1111111)
-        return new Creature(name, token, power, toughness, abilities, types, new Cost(cost[0], cost[1], cost[2], cost[3], cost[4], cost[5]));        
+        return new Creature(Card_class::CREATURE, name, token, power, toughness, abilities, types, new Cost(cost[0], cost[1], cost[2], cost[3], cost[4], cost[5]));        
 
     return nullptr;
 }
@@ -221,7 +222,7 @@ Land* CardParser::parse_land(const std::vector<std::string>& data) {
     }
 
     if (valid == 0b111)
-        return new Land(name, token, value);
+        return new Land(Card_class::LAND, name, token, value);
 
     return nullptr;
 }
@@ -278,7 +279,7 @@ Enchantment* CardParser::parse_enchantment(const std::vector<std::string>& data)
     }
 
     if (valid == 0b1111)
-        return new Enchantment(name, token, id, info, new Cost(cost[0], cost[1], cost[2], cost[3], cost[4], cost[5]), effects);
+        return new Enchantment(Card_class::ENCHANTEMENT, name, token, id, info, new Cost(cost[0], cost[1], cost[2], cost[3], cost[4], cost[5]), effects);
 
     return nullptr;
 }
@@ -334,7 +335,7 @@ Ritual* CardParser::parse_ritual(const std::vector<std::string>& data) {
     }
 
     if (valid == 0b1111)
-        return new Ritual(name, token, id, info, new Cost(cost[0], cost[1], cost[2], cost[3], cost[4], cost[5]), effects);
+        return new Ritual(Card_class::RITUAL, name, token, id, info, new Cost(cost[0], cost[1], cost[2], cost[3], cost[4], cost[5]), effects);
 
     return nullptr;
 }

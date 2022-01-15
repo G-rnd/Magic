@@ -79,9 +79,9 @@ void Player::add_hand(Card* c){
 }
 
 void Player::remove_battlefield(Card* c){
-    if(instanceof<Enchantment>(c)){
+    if(c->is_class(Card_class::ENCHANTEMENT)){
         m_battlefield.remove_enchantment(dynamic_cast<Enchantment*>(c));
-    } else if(instanceof<BasicCard>(c)){
+    } else if(c->is_class(Card_class::CREATURE) || c->is_class(Card_class::LAND)){
         m_battlefield.remove_basic_card(dynamic_cast<BasicCard*>(c));
     }
 }
@@ -116,14 +116,14 @@ void Player::shuffle_library() {
 void Player::play_card(Card* c) {
     // TODO : à compléter player::play_card()
 
-    if(instanceof<Land>(c)){
+    if(c->is_class(Card_class::LAND)){
         add_played_land(1);
         m_battlefield.place_basic_card(dynamic_cast<BasicCard*>(c));
         remove(c, m_hand);
 
-    } else if(instanceof<Ritual>(c)){
+    } else if(c->is_class(Card_class::RITUAL)){
         play_ritual(*dynamic_cast<Ritual*>(c));
-    } else if(instanceof<Enchantment>(c)){
+    } else if(c->is_class(Card_class::ENCHANTEMENT)){
 
     }
 }
@@ -384,7 +384,7 @@ void Player::battle_creature(Creature opponent, Creature defender) {
         }
         if(defender.get_toughness_current() <= 0){
             defender_dead = true;
-            destroy_card(dynamic_cast<Card*>(&defender));
+            destroy_card(&defender);
         }
     } else if ((!initiative_opponent && initiative_defender) || (!double_initiative_opponent && double_initiative_defender)){
         opponent.set_toughness_current(opponent.get_toughness_current() - defender.get_power_current());
@@ -398,7 +398,7 @@ void Player::battle_creature(Creature opponent, Creature defender) {
         }
         if(opponent.get_toughness_current() <= 0){
             opponent_dead = true;
-            destroy_card(dynamic_cast<Card*>(&opponent));
+            destroy_card(&opponent);
         }
     }
     // If the battle continue
@@ -440,11 +440,11 @@ void Player::battle_creature(Creature opponent, Creature defender) {
         // If the creatures are dead, deplace them into the graveyard
         if(opponent.get_toughness_current() <= 0){
             opponent_dead = true;
-            destroy_card(dynamic_cast<Card*>(&opponent));
+            destroy_card(&opponent);
         }
         if(defender.get_toughness_current() <= 0){
             defender_dead = true;
-            destroy_card(dynamic_cast<Card*>(&defender));
+            destroy_card(&defender);
         }
 
     }
@@ -459,7 +459,7 @@ void Player::battle_creature(Creature opponent, Creature defender) {
 void Player::destroy_card(Card* c) {
 
     // If c is a BasicCard, we deplace it into the graveyard
-    if(instanceof<BasicCard>(c)){
+    if(c->is_class(Card_class::LAND) || c->is_class(Card_class::CREATURE)){
         m_battlefield.set_basic_cards(dynamic_cast<BasicCard*>(c)->remove(m_battlefield.get_basic_cards()));
         m_graveyard.push_back(c);
         // We also deplace the enchantments associated to c
@@ -469,7 +469,7 @@ void Player::destroy_card(Card* c) {
         dynamic_cast<BasicCard*>(c)->reset_enchantments();
     } 
     // If c is a Ritual, we place it into the graveyard
-    else if(instanceof<Ritual>(c)){
+    else if(c->is_class(Card_class::RITUAL)){
         m_graveyard.push_back(c);
     }
 
@@ -493,7 +493,7 @@ void Player::play_ritual(Ritual r){
                     case White_ritual_effects::More_1_1_creature_current :{
 
                         for (auto bc : m_battlefield.get_basic_cards()){
-                            if(instanceof<Creature>(bc)){
+                            if(bc->is_class(Card_class::CREATURE)){
                                 Creature creature = *dynamic_cast<Creature*>(bc);
                                 creature.set_power_current(creature.get_power_current() + 1);
                                 creature.set_toughness_current(creature.get_toughness_current() + 1);
@@ -511,7 +511,7 @@ void Player::play_ritual(Ritual r){
                         std::vector<Creature*> possible_creatures;
 
                         for (auto bc : (m_opponent->get_battlefield()).get_basic_cards()){
-                            if(instanceof<Creature>(bc)){
+                            if(bc->is_class(Card_class::CREATURE)){
                                 Creature creature = *dynamic_cast<Creature*>(bc);
 
                                 if(creature.get_engaged()){
@@ -610,7 +610,7 @@ void Player::play_ritual(Ritual r){
 
                     for (auto bc : (m_opponent->get_battlefield()).get_basic_cards()){
                         
-                        if(instanceof<Creature>(bc)){
+                        if(bc->is_class(Card_class::CREATURE)){
 
                             Creature creature = *dynamic_cast<Creature*>(bc);
 
@@ -660,7 +660,7 @@ void Player::play_ritual(Ritual r){
 
                     for (auto bc : (m_opponent->get_battlefield()).get_basic_cards()){
                         
-                        if(instanceof<Creature>(bc)){
+                        if(bc->is_class(Card_class::CREATURE)){
 
                             Creature creature = *dynamic_cast<Creature*>(bc);
 
@@ -695,7 +695,7 @@ void Player::play_ritual(Ritual r){
 
                     for (auto bc : (m_opponent->get_battlefield()).get_basic_cards()){
                         
-                        if(instanceof<Creature>(bc)){
+                        if(bc->is_class(Card_class::CREATURE)){
 
                             Creature creature = *dynamic_cast<Creature*>(bc);
 
@@ -732,7 +732,7 @@ void Player::play_ritual(Ritual r){
 
                     for (auto bc : (m_opponent->get_battlefield()).get_basic_cards()){
                         
-                        if(instanceof<Creature>(bc)){
+                        if(bc->is_class(Card_class::CREATURE)){
 
                             Creature creature = *dynamic_cast<Creature*>(bc);
                             bool is_angel = false;
@@ -774,7 +774,7 @@ void Player::play_ritual(Ritual r){
 
                     for (auto bc : (m_opponent->get_battlefield()).get_basic_cards()){
                         
-                        if(instanceof<Creature>(bc)){
+                        if(bc->is_class(Card_class::CREATURE)){
 
                             Creature creature = *dynamic_cast<Creature*>(bc);
 
@@ -839,7 +839,7 @@ void Player::play_ritual(Ritual r){
 
                     for (auto bc : (m_opponent->get_battlefield()).get_basic_cards()){
                         
-                        if(instanceof<Creature>(bc)){
+                        if(bc->is_class(Card_class::CREATURE)){
 
                             Creature* creature = dynamic_cast<Creature*>(bc);
 
@@ -888,7 +888,7 @@ void Player::play_ritual(Ritual r){
 
                     for (auto bc : (m_opponent->get_battlefield()).get_basic_cards()){
                         
-                        if(instanceof<Creature>(bc)){
+                        if(bc->is_class(Card_class::CREATURE)){
 
                             Creature* creature = dynamic_cast<Creature*>(bc);
 
@@ -959,7 +959,7 @@ void Player::play_ritual(Ritual r){
 
                     for (auto c : m_library){
                         
-                        if(instanceof<Land>(c)){
+                        if(c->is_class(Card_class::LAND)){
 
                             Land* land = dynamic_cast<Land*>(c);
 
@@ -1015,7 +1015,7 @@ void Player::play_ritual(Ritual r){
 
     }
 
-    destroy_card(dynamic_cast<Card*>(&r));
+    destroy_card(&r);
 
 }
 

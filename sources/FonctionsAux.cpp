@@ -6,18 +6,12 @@
 
 #include "../includes/FonctionsAux.hpp"
 
-/**
- * @brief return true T is an instance of Base, else false
- * syntax : instanceof<Base>(T);
- * 
- * @tparam Base 
- * @tparam T 
- * @return boolean
- */
+/*
 template<typename Base, typename T>
 bool instanceof(const T*){
     return std::is_base_of<Base, T>::value;
 }
+*/
 
 /**
  * @brief return the position of elem into vec
@@ -59,7 +53,7 @@ template<typename T>
 void remove(const T* elem, std::vector<T*> vec){
     vec.erase(element_position(elem, vec) + vec.begin());
 }
-
+/*
 template bool instanceof<Card, Card>              (const Card*);
 template bool instanceof<Card, BasicCard>         (const BasicCard*);
 template bool instanceof<Card, SpecialCard>       (const SpecialCard*);
@@ -97,7 +91,7 @@ template bool instanceof<Creature, Ritual>       (const Ritual*);
 template bool instanceof<Creature, Enchantment>  (const Enchantment*);
 
 template bool instanceof<Land, Creature>     (const Creature*);
-//template bool instanceof<Land, Land>         (const Land*);
+template bool instanceof<Land, Land>         (const Land*);
 template bool instanceof<Land, BasicCard>    (const BasicCard*);
 template bool instanceof<Land, SpecialCard>  (const SpecialCard*);
 template bool instanceof<Land, Ritual>       (const Ritual*);
@@ -116,6 +110,8 @@ template bool instanceof<Enchantment, BasicCard>    (const BasicCard*);
 template bool instanceof<Enchantment, SpecialCard>  (const SpecialCard*);
 template bool instanceof<Enchantment, Ritual>       (const Ritual*);
 template bool instanceof<Enchantment, Enchantment>  (const Enchantment*);
+
+*/
 
 template int element_position<Card>       (const Card*, std::vector<Card*>);
 template int element_position<BasicCard>  (const BasicCard*, std::vector<BasicCard*>);

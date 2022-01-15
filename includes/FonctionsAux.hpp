@@ -15,6 +15,8 @@
 #include "Ritual.hpp"
 #include "Enchantment.hpp"
 
+enum Card_class           {CREATURE, LAND, RITUAL, ENCHANTEMENT};
+
 enum Token                {White, Blue, Black, Red, Green};
 
 enum Ability              {Flight, Scope, Vigilance, Touch_of_death, Defender, Initiative, Double_initiative, Haste, 
@@ -29,14 +31,10 @@ enum Black_ritual_effects {Kill_creature, Kill_creature_2_power, Kill_not_angel,
 enum Red_ritual_effects   {Damage_3_creature_or_player, Damage_4_creatures};
 enum Green_ritual_effects {Play_another_land, Take_2_lands_library_shuffle};
 
-// TODO : à virer
-bool check_info(std::string s);
-
-template<typename T>
-void print_card(T* c);
-
+/*
 template<typename Base, typename T>
 bool instanceof(const T*);
+*/
 
 template<typename T>
 int element_position(const T* elem, std::vector<T*> vec);

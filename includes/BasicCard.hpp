@@ -14,7 +14,7 @@ class BasicCard : public virtual Card{
         std::vector<Enchantment*>        m_enchantments;
 
     public:
-        BasicCard(std::string, int);
+        BasicCard(int, std::string, int);
         virtual ~BasicCard() = 0;
 
         virtual bool                     get_engaged() const;
