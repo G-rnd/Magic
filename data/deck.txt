@@ -1,6 +1,224 @@
 // Liste des cartes d'un deck
 
-// creature
+// LANDS
+#BEGIN_CARD
+	#TYPE_CARD: Land
+	#NAME: Plains
+	#TOKEN: 0
+
+	#VALUE: 1
+#END_CARD
+
+#BEGIN_CARD
+	#TYPE_CARD: Land
+	#NAME: Plains
+	#TOKEN: 0
+
+	#VALUE: 1
+#END_CARD
+
+#BEGIN_CARD
+	#TYPE_CARD: Land
+	#NAME: Plains
+	#TOKEN: 0
+
+	#VALUE: 1
+#END_CARD
+
+#BEGIN_CARD
+	#TYPE_CARD: Land
+	#NAME: Plains
+	#TOKEN: 0
+
+	#VALUE: 1
+#END_CARD
+
+#BEGIN_CARD
+	#TYPE_CARD: Land
+	#NAME: Plains
+	#TOKEN: 0
+
+	#VALUE: 1
+#END_CARD
+
+#BEGIN_CARD
+	#TYPE_CARD: Land
+	#NAME: Ilsand
+	#TOKEN: 1
+
+	#VALUE: 1
+#END_CARD
+
+#BEGIN_CARD
+	#TYPE_CARD: Land
+	#NAME: Ilsand
+	#TOKEN: 1
+
+	#VALUE: 1
+#END_CARD
+
+#BEGIN_CARD
+	#TYPE_CARD: Land
+	#NAME: Ilsand
+	#TOKEN: 1
+
+	#VALUE: 1
+#END_CARD
+
+#BEGIN_CARD
+	#TYPE_CARD: Land
+	#NAME: Ilsand
+	#TOKEN: 1
+
+	#VALUE: 1
+#END_CARD
+
+#BEGIN_CARD
+	#TYPE_CARD: Land
+	#NAME: Ilsand
+	#TOKEN: 1
+
+	#VALUE: 1
+#END_CARD
+
+#BEGIN_CARD
+	#TYPE_CARD: Land
+	#NAME: Swamp
+	#TOKEN: 2
+
+	#VALUE: 1
+#END_CARD
+
+#BEGIN_CARD
+	#TYPE_CARD: Land
+	#NAME: Swamp
+	#TOKEN: 2
+
+	#VALUE: 1
+#END_CARD
+
+#BEGIN_CARD
+	#TYPE_CARD: Land
+	#NAME: Swamp
+	#TOKEN: 2
+
+	#VALUE: 1
+#END_CARD
+
+#BEGIN_CARD
+	#TYPE_CARD: Land
+	#NAME: Swamp
+	#TOKEN: 2
+
+	#VALUE: 1
+#END_CARD
+
+#BEGIN_CARD
+	#TYPE_CARD: Land
+	#NAME: Swamp
+	#TOKEN: 2
+
+	#VALUE: 1
+#END_CARD
+
+#BEGIN_CARD
+	#TYPE_CARD: Land
+	#NAME: Swamp
+	#TOKEN: 2
+
+	#VALUE: 1
+#END_CARD
+
+#BEGIN_CARD
+	#TYPE_CARD: Land
+	#NAME: Mountain
+	#TOKEN: 3
+
+	#VALUE: 1
+#END_CARD
+
+#BEGIN_CARD
+	#TYPE_CARD: Land
+	#NAME: Mountain
+	#TOKEN: 3
+
+	#VALUE: 1
+#END_CARD
+
+#BEGIN_CARD
+	#TYPE_CARD: Land
+	#NAME: Mountain
+	#TOKEN: 3
+
+	#VALUE: 1
+#END_CARD
+
+#BEGIN_CARD
+	#TYPE_CARD: Land
+	#NAME: Mountain
+	#TOKEN: 3
+
+	#VALUE: 1
+#END_CARD
+
+#BEGIN_CARD
+	#TYPE_CARD: Land
+	#NAME: Mountain
+	#TOKEN: 3
+
+	#VALUE: 1
+#END_CARD
+
+#BEGIN_CARD
+	#TYPE_CARD: Land
+	#NAME: Forest
+	#TOKEN: 4
+
+	#VALUE: 1
+#END_CARD
+
+#BEGIN_CARD
+	#TYPE_CARD: Land
+	#NAME: Forest
+	#TOKEN: 4
+
+	#VALUE: 1
+#END_CARD
+
+#BEGIN_CARD
+	#TYPE_CARD: Land
+	#NAME: Forest
+	#TOKEN: 4
+
+	#VALUE: 1
+#END_CARD
+
+#BEGIN_CARD
+	#TYPE_CARD: Land
+	#NAME: Forest
+	#TOKEN: 4
+
+	#VALUE: 1
+#END_CARD
+
+#BEGIN_CARD
+	#TYPE_CARD: Land
+	#NAME: Forest
+	#TOKEN: 4
+
+	#VALUE: 1
+#END_CARD
+
+#BEGIN_CARD
+	#TYPE_CARD: Land
+	#NAME: Forest
+	#TOKEN: 4
+
+	#VALUE: 1
+#END_CARD
+
+
+// CREATURES
 #BEGIN_CARD
 	#TYPE_CARD: Creature
 	#NAME: Ma super créature
@@ -18,14 +236,7 @@
 	#COST: 3, 0, 0, 0, 0, 0
 #END_CARD
 
-// land
-#BEGIN_CARD
-	#TYPE_CARD: Land
-	#NAME: Mon super terrain
-	#TOKEN: 1
 
-	#VALUE: 2
-#END_CARD
 
 // enchantment / ritual
 #BEGIN_CARD
