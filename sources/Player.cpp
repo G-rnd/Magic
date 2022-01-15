@@ -175,7 +175,7 @@ std::vector<Creature*> Player::attack() {
     std::cout << "<id>      : pour attaquer avec cette carte." << std::endl;
     std::cout << "reset     : pour annuler vos choix." << std::endl;
     //std::cout << "info <id> : pour avoir des informations sur une carte." << std::endl;
-    std::cout << "end       : pour passer la phase de combat." << std::endl << std::endl;
+    std::cout << "valid      : pour valider vos choix." << std::endl << std::endl;
 
     int i = 0;
     std::string cmd;
@@ -219,11 +219,11 @@ std::vector<Creature*> Player::attack() {
     while(!quit){
         std::getline(std::cin, cmd);
 
-        if(cmd.find("end") != std::string::npos){
+        if(cmd.find("valid") != std::string::npos){
             quit = true;
         } else if(cmd.find("reset") != std::string::npos){
             chosen_opponents = {};
-            std::cout<< "Pour le moment, aucune creature n'attaque "<<std::endl;
+            std::cout<< "Pour le moment, aucune creature n'attaque."<<std::endl;
         } else{
             try {
                 int num = std::stoi(cmd);

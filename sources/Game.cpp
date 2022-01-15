@@ -147,7 +147,7 @@ void Game::start() {
         
         // Phase de combat
         std::vector<Creature*> chosen_opponent =  get_current_player()->attack();
-        std::vector<Creature*> chosen_blockabled_opponent = get_current_player()->attack();
+        std::vector<Creature*> chosen_blockabled_opponent = chosen_opponent;
 
         get_current_player()->print();
 
