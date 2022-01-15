@@ -6,13 +6,13 @@
 
 Cost::Cost(int any, int white, int black, int red, int green, int blue): 
 m_any(any), m_white(white), m_black(black), m_red(red), m_green(green), m_blue(blue){
-    std::cout << "[Cost] : Création de " << this << std::endl;
+    //std::cout << "[Cost] : Création de " << this << std::endl;
 }
 
 Cost::Cost(const Cost &other) : m_any(other.m_any), m_white(other.m_white), m_black(other.m_black), m_red(other.m_red), m_green(other.m_green), m_blue(other.m_blue){}
 
 Cost::~Cost(){
-    std::cout << "[Cost] : Destruction de " << this << std::endl;
+    //std::cout << "[Cost] : Destruction de " << this << std::endl;
 }
 
 int Cost::get_any() const{

@@ -8,11 +8,11 @@
 
 Land::Land(int c, std::string name, int token, int value): 
 Card(c, name, token), BasicCard(c, name, token), m_value(value){
-    std::cout << "[Land] : Création de " << this << std::endl;
+    //std::cout << "[Land] : Création de " << this << std::endl;
 }
 
 Land::~Land(){
-    std::cout << "[Land] : Destruction de " << this << std::endl;
+    //std::cout << "[Land] : Destruction de " << this << std::endl;
 }
 
 int Land::get_value() const{

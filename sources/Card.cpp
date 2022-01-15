@@ -7,11 +7,11 @@
 #include "../includes/FonctionsAux.hpp"
 
 Card::Card(int c, std::string name, int token): m_class(c), m_name(name), m_token(token){
-    std::cout << "[Card] : Création de " << this << std::endl;
+    //std::cout << "[Card] : Création de " << this << std::endl;
 }
 
 Card::~Card(){
-    std::cout << "[Card] : Destruction de " << this << std::endl;
+    //std::cout << "[Card] : Destruction de " << this << std::endl;
 
 }
 

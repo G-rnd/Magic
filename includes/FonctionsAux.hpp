@@ -38,11 +38,6 @@ enum Black_enchantment_effects {Less_HP_death_creature};
 enum Red_enchantment_effects   {More_1_0_attack_creatures};
 enum Green_enchantment_effects {More_1_land, More_G_G_creature};
 
-/*
-template<typename Base, typename T>
-bool instanceof(const T*);
-*/
-
 /**
  * @brief return true T is an instance of Base, else false
  *

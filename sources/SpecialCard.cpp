@@ -8,11 +8,11 @@
 
 SpecialCard::SpecialCard(int c, std::string name, int token, std::string info, Cost* cost, std::vector<int> effects): 
 Card(c, name, token), m_info(info), m_cost(cost), m_effects(effects){
-    std::cout << "[SpecialCard] : Création de " << this << std::endl;
+    //std::cout << "[SpecialCard] : Création de " << this << std::endl;
 }
 
 SpecialCard::~SpecialCard(){
-    std::cout << "[SpecialCard] : Destruction de " << this << std::endl;
+    //std::cout << "[SpecialCard] : Destruction de " << this << std::endl;
 }
 
 std::string SpecialCard::get_info() const{

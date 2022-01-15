@@ -10,12 +10,12 @@
 
 BasicCard::BasicCard(int c, std::string name, int token): 
 Card(c, name, token){
-    std::cout << "[BasicCard] : Création de " << this << std::endl;
+    //std::cout << "[BasicCard] : Création de " << this << std::endl;
     m_engaged = false;
 }
 
 BasicCard::~BasicCard(){
-    std::cout << "[BasicCard] : Destruction de " << this << std::endl;
+    //std::cout << "[BasicCard] : Destruction de " << this << std::endl;
 }
 
 bool BasicCard::get_engaged() const{

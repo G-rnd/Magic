@@ -12,11 +12,11 @@
 #include "../includes/FonctionsAux.hpp"
 
 Battlefield::Battlefield() {
-    std::cout << "[Battlefield] : Création de " << this << std::endl;
+    //std::cout << "[Battlefield] : Création de " << this << std::endl;
 }
 
 Battlefield::~Battlefield() {
-    std::cout << "[Battlefield] : Destruction de " << this << std::endl;
+    //std::cout << "[Battlefield] : Destruction de " << this << std::endl;
 }
 
 std::vector<BasicCard*> Battlefield::get_basic_cards() const{

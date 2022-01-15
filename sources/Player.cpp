@@ -14,12 +14,12 @@
 #include "../includes/FonctionsAux.hpp"
 
 Player::Player(std::string name): m_name(name) {
-    std::cout << "[Player] : Création de " << this << std::endl;
+    //std::cout << "[Player] : Création de " << this << std::endl;
     m_hp = 20;
 }
 
 Player::~Player() {
-    std::cout << "[Player] : Denstruction de " << this << std::endl;
+    //std::cout << "[Player] : Denstruction de " << this << std::endl;
 }
 
 Player* Player::get_opponent() const {

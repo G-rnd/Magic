@@ -13,11 +13,11 @@
 #include "../includes/FonctionsAux.hpp"
 
 Game::Game() {
-    std::cout << "[Game] : Création de " << this << std::endl;
+    //std::cout << "[Game] : Création de " << this << std::endl;
 }
 
 Game::~Game() {
-    std::cout << "[Game] : Destruction de " << this << std::endl;
+    //std::cout << "[Game] : Destruction de " << this << std::endl;
 }
 bool Game::get_player_turn() const {
     return m_player_turn;
