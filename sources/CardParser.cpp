@@ -32,7 +32,6 @@ const std::string CardParser::land          = "Land";
 const std::string CardParser::enchantment   = "Enchantment";
 const std::string CardParser::ritual        = "Ritual";
 
-
 void CardParser::clean_data(std::vector<std::string>& data) {
     std::transform(data.begin(), data.end(), data.begin(), [] (std::string& s) {
         s.erase(std::remove(s.begin(), s.end(), '\t'), s.end());
@@ -167,26 +166,7 @@ Creature* CardParser::parse_creature(const std::vector<std::string>& data) {
                 valid |= 1 << 6;
         }
     }
-
-/*
-    std::cout << "Reconnaissance d'une créature: " << std::endl;
-    std::cout << "Nom:       " << name << std::endl;
-    std::cout << "Token:     " << token << std::endl;
-    std::cout << "Stats:     " << power << '/' << toughness << std::endl;
-    std::cout << "Abilities: (";
-    for(auto i : abilities)
-        std::cout << i << ", ";
     
-    std::cout << ")" << std::endl << "Types:     (";
-    for(auto i : types)
-        std::cout << i << ", ";
-
-    std::cout << ")" << std::endl << "Coûts:     (";
-    for(auto i : cost)
-        std::cout << i << ", ";
-    std::cout << ")" << std::endl << std::endl;
-*/
-
     if (valid == 0b1111111)
         return new Creature(Card_class::CREATURE, name, token, power, toughness, abilities, types, new Cost(cost[0], cost[1], cost[2], cost[3], cost[4], cost[5]));        
 
@@ -329,8 +309,9 @@ std::vector<int> CardParser::parse_int_list(std::string& s) {
     std::vector<int> l{};
 
     std::string delimiter = ", ";
-    int pos = 0;
-    while ( (pos = s.find(delimiter)) != std::string::npos) {
+    size_t pos = 0;
+    
+    while ((pos = s.find(delimiter)) != std::string::npos) {
         l.push_back(stoi(s.substr(0, pos)));
         s.erase(0, pos + delimiter.length());
     }

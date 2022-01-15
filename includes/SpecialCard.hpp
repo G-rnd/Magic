@@ -7,7 +7,7 @@
 #include "Card.hpp"
 #include "Cost.hpp"
 
-class SpecialCard : public virtual Card{
+class SpecialCard : public virtual Card {
 
     private:
         std::string              m_info;

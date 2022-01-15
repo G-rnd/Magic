@@ -6,7 +6,7 @@
 #include "BasicCard.hpp"
 #include "Enchantment.hpp"
 
-class Land : public virtual BasicCard{
+class Land : public virtual BasicCard {
 
     private:
         int             m_value;
@@ -16,7 +16,6 @@ class Land : public virtual BasicCard{
         ~Land();
 
         int             get_value() const;
-
         void            set_value(int i);
 
         virtual void    print();

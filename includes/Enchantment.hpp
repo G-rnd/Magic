@@ -3,15 +3,15 @@
 
 #include "SpecialCard.hpp"
 
-class Enchantment : public virtual SpecialCard{
+class Enchantment : public virtual SpecialCard {
 
-    private:
+	private:
 
-    public:
-        Enchantment(int, std::string, int, std::string, Cost*, std::vector<int>);
-        ~Enchantment();
+	public:
+		Enchantment(int, std::string, int, std::string, Cost*, std::vector<int>);
+		~Enchantment();
 
-        virtual void print();
+		virtual void print();
 
 };
 

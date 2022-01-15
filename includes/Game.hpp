@@ -7,6 +7,7 @@
 #include "Player.hpp"
 
 class Game {
+
     private:
         bool                 m_player_turn;
         std::vector<Player*> m_players;
@@ -25,17 +26,15 @@ class Game {
         Player*              get_current_player() const;
 
         void                 start();
+        bool                 check_defeat();
         void                 main_phase();
         void                 combat_phase();
         void                 turn_end_phase();
-        void                 choose_name(Player p, std::string name);
-        void                 choose_deck();
         void                 save();
         void                 choose_save();
-        void                 load(std::string filename);
+        void                 load();
         void                 exit();
         void                 victory(Player p);
-
 
 };
 

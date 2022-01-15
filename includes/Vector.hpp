@@ -27,7 +27,7 @@ class Vector {
         /*
         const E*                            begin() const;
         const E*                            end() const;
-*/
+        */
 };
 
 #endif
