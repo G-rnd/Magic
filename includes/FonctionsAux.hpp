@@ -31,6 +31,13 @@ enum Black_ritual_effects {Kill_creature, Kill_creature_2_power, Kill_not_angel,
 enum Red_ritual_effects   {Damage_3_creature_or_player, Damage_4_creatures};
 enum Green_ritual_effects {Play_another_land, Take_2_lands_library_shuffle};
 
+// TODO : faire les enchantements 
+enum White_enchantment_effects {Win_1_HP_white, Flight_Life_link};
+enum Blue_enchantment_effects  {Control_creature};
+enum Black_enchantment_effects {Less_HP_death_creature};
+enum Red_enchantment_effects   {More_1_0_attack_creatures};
+enum Green_enchantment_effects {More_1_land, More_G_G_creature};
+
 /*
 template<typename Base, typename T>
 bool instanceof(const T*);

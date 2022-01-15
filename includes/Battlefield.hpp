@@ -23,6 +23,8 @@ class Battlefield {
         void                     set_basic_cards(std::vector<BasicCard*> bc);
         void                     set_enchantments(std::vector<Enchantment*> e);
 
+        void                     sort_basic_cards();
+
         void                     remove_basic_card(BasicCard* bc);
         void                     remove_enchantment(Enchantment* e);
     

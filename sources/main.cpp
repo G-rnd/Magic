@@ -15,10 +15,15 @@ int main() {
     Creature* c2 = new Creature(0, "yolo", 1, 1 ,1, {}, {}, new Cost(1, 1, 1, 1, 1, 1));
     Creature* c3 = new Creature(0, "Ange de ces mprts", 1, 1 ,1, {}, {}, new Cost(1, 1, 1, 1, 1, 1));
 
+    Enchantment* e1 = new Enchantment(3, "enchan 3", 3, "mes infos blabla", new Cost(1, 1, 1, 1, 1, 1), {0});
+    Enchantment* e2 = new Enchantment(4, "dragon des tenebres", 4, "mes 2 infos blabla", new Cost(1, 1, 1, 1, 1, 1), {0, 1});
+
     std::vector<BasicCard*> bc = {l1, c1, l2, l3, c2, c3};
+    std::vector<Enchantment*> e = {e1, e2};
 
     Battlefield* b = new Battlefield();
     b->set_basic_cards(bc);
+    b->set_enchantments(e);
 
     b->print();
 

@@ -8,7 +8,7 @@ class Enchantment : public virtual SpecialCard{
     private:
 
     public:
-        Enchantment(int, std::string, int, int, std::string, Cost*, std::vector<int>);
+        Enchantment(int, std::string, int, std::string, Cost*, std::vector<int>);
         ~Enchantment();
 
         virtual void print();

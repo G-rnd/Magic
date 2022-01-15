@@ -26,7 +26,6 @@ class CardParser {
 		static const std::string types;
 		static const std::string cost;
         static const std::string value;
-        static const std::string id;
         static const std::string info;
         static const std::string effects;
         static const std::string comment;
