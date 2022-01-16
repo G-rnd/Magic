@@ -155,9 +155,8 @@ void Player::shuffle_library() {
         m_library_copy.erase(m_library_copy.begin() + j);
         i_lib++;
     }
-
-    std::cout << "Bibliothèque mélangée." << std::endl;
-
+    
+    print_info("Bibliothèque mélangée.");
 }
 
 void Player::play_card(Card* c) {
