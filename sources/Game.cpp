@@ -11,6 +11,7 @@
 
 Game::Game() {
     //std::cout << "[Game] : Création de " << this << std::endl;
+    m_player_turn = false;
 }
 
 Game::~Game() {
@@ -193,7 +194,7 @@ bool Game::check_defeat() {
 void Game::main_phase() {
 
     while(true) {
-        //std::system("clear");
+        std::system("clear");
 
         get_current_player()->print();
 
