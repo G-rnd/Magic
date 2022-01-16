@@ -10,6 +10,7 @@
 #include "FonctionsAux.hpp"
 
 Game::Game() {
+    m_player_turn = false;
     //std::cout << "[Game] : Création de " << this << std::endl;
 }
 
@@ -85,9 +86,7 @@ void Game::start() {
             nb_decks++;
         }        
         if (nb_decks == 0) {
-            std::cout << "Erreur: Aucun deck n'est disponible !" << std::endl << "Entrée pour continuer." << std::endl;
-            std::string s;
-            std::getline(std::cin, s);
+            print_info("Erreur : Aucun deck n'est disponible !");
             return;
         }
 
@@ -95,6 +94,7 @@ void Game::start() {
 
         while(true) {
             std::cin >> filename;
+            std::cin.ignore();
             std::ifstream ifile;
             ifile.open(filename);
 
@@ -103,7 +103,6 @@ void Game::start() {
                 break;
             }
         }
-
         // Mélange de la bibliothèque
         m_players[i]->shuffle_library();
 
@@ -115,7 +114,7 @@ void Game::start() {
     
     // Phases de jeu
     while (true) {
-
+        print_info("C'est au tour de " + get_current_player()->get_name() + " de jouer !");
         get_current_player()->set_played_land(0);
 
         // reset des stats des cartes 
@@ -134,19 +133,15 @@ void Game::start() {
             victory(*get_current_player()->get_opponent());
             return;
         } else {
-            std::cout << "Vous piochez la carte : " << get_current_player()->get_library()[0]->get_name() << std::endl;
-            get_current_player()->draw_card();
-
-            get_current_player()->print();
+            print_info("Vous piochez la carte : " + get_current_player()->get_library()[0]->get_name());
         }
 
         // Phase de désengagement
         for (auto c : get_current_player()->get_battlefield().get_basic_cards()) {
             get_current_player()->get_battlefield().disengage_card(c);
         }
-
         // Phase principale
-        Game::main_phase();
+        Game::main_phase(true);
 
         // check if a player has lost
         if (check_defeat())
@@ -160,7 +155,7 @@ void Game::start() {
             return;
         
         // Phase secondaire
-        Game::main_phase();
+        Game::main_phase(false);
 
         // check if a player has lost
         if (check_defeat())
@@ -170,11 +165,7 @@ void Game::start() {
         Game::turn_end_phase();
 
         get_current_player()->print();
-
         m_player_turn = !m_player_turn;
-
-    // TODO à enlever
-        //break;
     }
 }
 
@@ -190,30 +181,35 @@ bool Game::check_defeat() {
     return false;
 }
 
-void Game::main_phase() {
+void Game::main_phase(bool first) {
 
     while(true) {
-        //std::system("clear");
-
+        std::system("clear");
         get_current_player()->print();
 
         std::cout << "Selectionnez une carte à placer :" << std::endl;
         std::cout << "<id>      : pour jouer une carte." << std::endl;
         std::cout << "info <id> : pour avoir des informations sur une carte." << std::endl;
-        std::cout << "end       : pour arrêter la phase principale." << std::endl << std::endl;
+        std::cout << "end       : pour arrêter la phase " << ((first) ? "principale": "secondaire") << "." << std::endl << std::endl;
 
         std::vector<Card*> hand{};
         for(Card* c : get_current_player()->get_hand()) {
             hand.push_back(c);
         }
         int hand_size = hand.size();
-        
         // Vérifications 
         for(int i = 0; i < hand_size; i++) {
 
-            // Une carte est jouable si:
-            if((hand[i]->is_class(Card_class::CREATURE) && get_current_player()->get_battlefield().is_playable(hand[i])) || (hand[i]->is_class(Card_class::LAND) && (get_current_player()->get_played_land() <= 0))
-            || (hand[i]->is_class(Card_class::RITUAL) && get_current_player()->get_battlefield().is_playable(hand[i])) || (hand[i]->is_class(Card_class::ENCHANTEMENT) && get_current_player()->get_battlefield().is_playable(hand[i]))) {
+            /* Cas possibles pour une carte jouable:
+                - une créature jouable
+                - un terrain et le nombre de terrains déjà placés <= 0
+                - un rituel jouable
+                - un enchantement jouable
+             */
+            if((hand[i]->is_class(Card_class::CREATURE) && get_current_player()->get_battlefield().is_playable(hand[i])) 
+            || (hand[i]->is_class(Card_class::LAND) && (get_current_player()->get_played_land() <= 0))
+            || (hand[i]->is_class(Card_class::RITUAL) && get_current_player()->get_battlefield().is_playable(hand[i]))
+            || (hand[i]->is_class(Card_class::ENCHANTEMENT) && get_current_player()->get_battlefield().is_playable(hand[i]))) {
                 std::cout << std::setfill(' ') << std::setw (hand_size / 10)  << i << " - " << hand[i]->get_name() << std::endl;
 
             } else {
@@ -225,43 +221,38 @@ void Game::main_phase() {
 
         std::string cmd;
         std::getline(std::cin, cmd);
-
         if (cmd.find("end") != std::string::npos)
             return;
-        else {
+        else if (hand_size > 0) {
             try {
                 int num = std::stoi(cmd);
                 if (num >= hand_size) {
-                    std::cout << "Id invalide" << std::endl;
-
-                    std::cout << "Entrée pour continuer." << std::endl;
-                    std::getline(std::cin, cmd);
+                    print_info("L'id saisit est invalide, veuillez saisir un id disponible dans la liste des id ci-dessus.");
                 }
                 else
                     get_current_player()->play_card(hand[num]);
             }
             catch (std::invalid_argument &e) {
-                // TODO faire un truc plus propre s'il y a le temps
                 std::string info = "info ";
                 if (std::mismatch(info.begin(), info.end(), cmd.begin()).first == info.end()) {
                     try {
                         int num = std::stoi(cmd.substr(5));
                         if (num >= hand_size) {
-                            std::cout << "Id invalide" << std::endl;
-                            std::cout << "Entrée pour continuer." << std::endl;
-                            std::getline(std::cin, cmd);
+                            print_info("L'id saisit est invalide, veuillez saisir un id disponible dans la liste des ids ci-dessus.");
                         } else {
+                            // todo afficher les cartes
                             hand[num]->print();
                             std::cout << "Entrée pour continuer." << std::endl;
                             std::getline(std::cin, cmd);
                         }            
-                    }            
-                    catch (std::invalid_argument &e) {
-                        std::cout << "Id invalide" << std::endl;
+                    } catch (std::invalid_argument &e) {
+                        print_info("help : info <id>, id est un chiffre disponible dans la liste des ids ci-dessus.");
                     }  
                 } else
-                    std::cout << "Commande Invalide" << std::endl;
+                    print_info("Commande non reconnue.");
             } 
+        } else {
+            print_info("Aucune action disponible, veuillez saisir \"end\" pour terminer cette phase");
         }
     }
 }
@@ -356,10 +347,7 @@ void Game::turn_end_phase() {
                 try {
                     int num = std::stoi(cmd);
                     if (num > i || num < 0) {
-                        std::cout << "Id invalide" << std::endl;
-
-                        std::cout << "Entrée pour continuer." << std::endl;
-                        std::getline(std::cin, cmd);
+                        print_info("Id invalide");
                     } else {
                         if (contain(possible_cards[num], chosen_cards)) {
                             std::cout << num <<" deja defaussee." << std::endl; 
@@ -368,7 +356,7 @@ void Game::turn_end_phase() {
                         }
                     }
                 } catch (std::invalid_argument &e) {
-                    std::cout << "Commande Invalide" << std::endl;    
+                    print_info("Commande invalide.");
                 }
             }
         }
@@ -394,5 +382,6 @@ void Game::exit() {
 }
 
 void Game::victory(Player p) {
-    std::cout << "Bravo " << p.get_name() << " tu as vaincu " << p.get_opponent()->get_name() << " ! "<< std::endl;
+    std::string text = "Bravo " + p.get_name() + " tu as vaincu " + p.get_opponent()->get_name() + " !";
+    print_info(text);
 }

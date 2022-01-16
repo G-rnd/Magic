@@ -99,6 +99,7 @@ std::vector<Land*> Battlefield::get_available_lands() {
 void Battlefield::place_basic_card(BasicCard* bc) {
     if(bc != nullptr)
         m_basic_cards.push_back(bc);
+    
     // TODO : engager les terrains
 }
 
@@ -108,28 +109,22 @@ void Battlefield::disengage_card(BasicCard* bc) {
 
 // Renvoie vrai si le terrain comporte assez de cartes terrains pour jouer la carte c
 bool Battlefield::is_playable(Card* card) {
-
     Cost c = Cost(0, 0, 0, 0, 0, 0);
-
-    switch (card->get_class()){
-
+    switch (card->get_class()) {
         case Card_class::CREATURE:
             c = *(dynamic_cast<Creature*>(card)->get_cost());
             break;
-
         case Card_class::RITUAL:
             c = *(dynamic_cast<Ritual*>(card)->get_cost());
             break;
-
         case Card_class::ENCHANTEMENT:
             c = *(dynamic_cast<Enchantment*>(card)->get_cost());
             break;
-        
         default:
-            break;
+            return false;
     }
-
     std::vector<Land*> lands = get_available_lands();
+
     for (size_t i = 0; i < lands.size() && !c.is_null(); i++) {
         // Si la carte n'a pas besoin de terrains typés ou que tous ses terrains colorés ont déjà été comptés
         if (c.is_color_null()) {
@@ -139,26 +134,40 @@ bool Battlefield::is_playable(Card* card) {
         } else {
             // On commence par compter les terrains typés
             switch(lands[i]->get_token()){
-
                 case Token::White:
-                    c.set_white(c.get_white() - lands[i]->get_value());
-                break;
+                    if (c.get_white() > 0)
+                        c.set_white(c.get_white() - lands[i]->get_value());
+                    else 
+                        c.set_any(c.get_any() - lands[i]->get_value());
+                    break;
 
                 case Token::Blue:
-                    c.set_blue(c.get_blue() - lands[i]->get_value());
-                break;
+                    if (c.get_blue() > 0)
+                        c.set_blue(c.get_blue() - lands[i]->get_value());
+                    else 
+                        c.set_any(c.get_any() - lands[i]->get_value());
+                    break;
 
                 case Token::Black:
-                    c.set_black(c.get_black() - lands[i]->get_value());
-                break;
+                    if (c.get_black() > 0)
+                        c.set_black(c.get_black() - lands[i]->get_value());
+                    else 
+                        c.set_any(c.get_any() - lands[i]->get_value());
+                    break;
 
                 case Token::Red:
-                    c.set_red(c.get_red() - lands[i]->get_value());
-                break;
+                    if (c.get_red() > 0)
+                        c.set_red(c.get_red() - lands[i]->get_value());
+                    else 
+                        c.set_any(c.get_any() - lands[i]->get_value());
+                    break;
 
                 case Token::Green:
-                    c.set_green(c.get_green() - lands[i]->get_value()); 
-                break;
+                    if (c.get_green() > 0)
+                        c.set_green(c.get_green() - lands[i]->get_value());
+                    else 
+                        c.set_any(c.get_any() - lands[i]->get_value()); 
+                    break;
 
                 default:
                     break;

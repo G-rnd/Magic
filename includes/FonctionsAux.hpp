@@ -84,3 +84,5 @@ inline void remove(const T* elem, std::vector<T*>& vec) {
 }
 
 #endif
+
+void print_info(const std::string& s);
