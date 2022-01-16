@@ -135,6 +135,7 @@ void Game::start() {
             return;
         } else {
             print_info("Vous piochez la carte : " + get_current_player()->get_library()[0]->get_name());
+            get_current_player()->draw_card();
         }
 
         // Phase de désengagement
