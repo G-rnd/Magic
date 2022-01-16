@@ -174,8 +174,6 @@ void Game::start() {
 
         m_player_turn = !m_player_turn;
 
-    // TODO à enlever
-        //break;
     }
 }
 
