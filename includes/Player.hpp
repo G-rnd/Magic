@@ -66,7 +66,6 @@ class Player {
         void                   battle_creature(Creature opponent, Creature defender);
         void                   destroy_card(Card* c);
         void                   play_ritual(Ritual c);
-        void                   loose();   
    
         void                   print();
         void                   print_hand();

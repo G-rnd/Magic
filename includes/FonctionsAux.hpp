@@ -39,18 +39,6 @@ enum Red_enchantment_effects    {More_1_0_attack_creatures};
 enum Green_enchantment_effects  {More_1_land, More_G_G_creature};
 
 /**
- * @brief return true T is an instance of Base, else false
- *
- * @tparam Base ?
- * @tparam T ?
- * @return ?
- */
-template <class Base, typename T>
-inline bool instanceof(const T*) {
-	return std::is_base_of<Base, T>::value;
-}
-
-/**
  * @brief return the position of elem into vec
  *
  * @tparam T ?

@@ -73,7 +73,7 @@ void Player::set_name(std::string s) {
 
 void Player::set_hp(int i) {
     m_hp = i;
-    if(m_hp == 0) loose();
+    if(m_hp == 0) m_looser = true;
 }
 
 void Player::set_library(std::vector<Card*> cards) {
@@ -133,7 +133,7 @@ void Player::sort_hand(){
 
 void Player::draw_card() {
     if (m_library.empty()) {
-        loose();
+        m_looser = true;
     } else {
         m_hand.push_back(*m_library.begin());
         remove(*m_library.begin(), m_library);
@@ -289,7 +289,7 @@ std::vector<Creature*> Player::attack() {
 - Scope
 - Threat
 */
-// TODO : Unblockable creatures must be removed of the vector
+
 void Player::choose_defenders(std::vector<Creature*> opponents) {
 
     std::cout << "Selectionnez les cartes pour défendre :" << std::endl;
@@ -1063,11 +1063,6 @@ void Player::play_ritual(Ritual r) {
             break;
     }
     destroy_card(&r);
-}
-
-void Player::loose() {
-    // TODO : set_looser
-    m_looser = true;
 }
 
 void Player::print(){

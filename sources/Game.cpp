@@ -12,6 +12,7 @@
 Game::Game() {
     m_player_turn = false;
     //std::cout << "[Game] : Création de " << this << std::endl;
+    m_player_turn = false;
 }
 
 Game::~Game() {
@@ -183,7 +184,7 @@ bool Game::check_defeat() {
 
 void Game::main_phase(bool first) {
 
-    while(true) {
+    while (true) {
         std::system("clear");
         get_current_player()->print();
 
@@ -193,12 +194,12 @@ void Game::main_phase(bool first) {
         std::cout << "end       : pour arrêter la phase " << ((first) ? "principale": "secondaire") << "." << std::endl << std::endl;
 
         std::vector<Card*> hand{};
-        for(Card* c : get_current_player()->get_hand()) {
+        for (Card* c : get_current_player()->get_hand()) {
             hand.push_back(c);
         }
         int hand_size = hand.size();
         // Vérifications 
-        for(int i = 0; i < hand_size; i++) {
+        for (int i = 0; i < hand_size; i++) {
 
             /* Cas possibles pour une carte jouable:
                 - une créature jouable
@@ -206,7 +207,7 @@ void Game::main_phase(bool first) {
                 - un rituel jouable
                 - un enchantement jouable
              */
-            if((hand[i]->is_class(Card_class::CREATURE) && get_current_player()->get_battlefield().is_playable(hand[i])) 
+            if ((hand[i]->is_class(Card_class::CREATURE) && get_current_player()->get_battlefield().is_playable(hand[i])) 
             || (hand[i]->is_class(Card_class::LAND) && (get_current_player()->get_played_land() <= 0))
             || (hand[i]->is_class(Card_class::RITUAL) && get_current_player()->get_battlefield().is_playable(hand[i]))
             || (hand[i]->is_class(Card_class::ENCHANTEMENT) && get_current_player()->get_battlefield().is_playable(hand[i]))) {
