@@ -43,128 +43,24 @@
 
 #BEGIN_CARD
 	#TYPE_CARD: Land
-	#NAME: Ilsand
-	#TOKEN: 1
+	#NAME: Plains
+	#TOKEN: 0
 
 	#VALUE: 1
 #END_CARD
 
 #BEGIN_CARD
 	#TYPE_CARD: Land
-	#NAME: Ilsand
-	#TOKEN: 1
+	#NAME: Plains
+	#TOKEN: 0
 
 	#VALUE: 1
 #END_CARD
 
 #BEGIN_CARD
 	#TYPE_CARD: Land
-	#NAME: Ilsand
-	#TOKEN: 1
-
-	#VALUE: 1
-#END_CARD
-
-#BEGIN_CARD
-	#TYPE_CARD: Land
-	#NAME: Ilsand
-	#TOKEN: 1
-
-	#VALUE: 1
-#END_CARD
-
-#BEGIN_CARD
-	#TYPE_CARD: Land
-	#NAME: Ilsand
-	#TOKEN: 1
-
-	#VALUE: 1
-#END_CARD
-
-#BEGIN_CARD
-	#TYPE_CARD: Land
-	#NAME: Swamp
-	#TOKEN: 2
-
-	#VALUE: 1
-#END_CARD
-
-#BEGIN_CARD
-	#TYPE_CARD: Land
-	#NAME: Swamp
-	#TOKEN: 2
-
-	#VALUE: 1
-#END_CARD
-
-#BEGIN_CARD
-	#TYPE_CARD: Land
-	#NAME: Swamp
-	#TOKEN: 2
-
-	#VALUE: 1
-#END_CARD
-
-#BEGIN_CARD
-	#TYPE_CARD: Land
-	#NAME: Swamp
-	#TOKEN: 2
-
-	#VALUE: 1
-#END_CARD
-
-#BEGIN_CARD
-	#TYPE_CARD: Land
-	#NAME: Swamp
-	#TOKEN: 2
-
-	#VALUE: 1
-#END_CARD
-
-#BEGIN_CARD
-	#TYPE_CARD: Land
-	#NAME: Swamp
-	#TOKEN: 2
-
-	#VALUE: 1
-#END_CARD
-
-#BEGIN_CARD
-	#TYPE_CARD: Land
-	#NAME: Mountain
-	#TOKEN: 3
-
-	#VALUE: 1
-#END_CARD
-
-#BEGIN_CARD
-	#TYPE_CARD: Land
-	#NAME: Mountain
-	#TOKEN: 3
-
-	#VALUE: 1
-#END_CARD
-
-#BEGIN_CARD
-	#TYPE_CARD: Land
-	#NAME: Mountain
-	#TOKEN: 3
-
-	#VALUE: 1
-#END_CARD
-
-#BEGIN_CARD
-	#TYPE_CARD: Land
-	#NAME: Mountain
-	#TOKEN: 3
-
-	#VALUE: 1
-#END_CARD
-
-#BEGIN_CARD
-	#TYPE_CARD: Land
-	#NAME: Mountain
-	#TOKEN: 3
+	#NAME: Forest
+	#TOKEN: 4
 
 	#VALUE: 1
 #END_CARD
@@ -221,35 +117,345 @@
 // CREATURES
 #BEGIN_CARD
 	#TYPE_CARD: Creature
-	#NAME: Ma super créature
-	#TOKEN: 1
+	#NAME: Kalonian Tusker
+	#TOKEN: 4
 
-	#POWER: 2
-	#TOUGHNESS: 5
+	#POWER: 3
+	#TOUGHNESS: 3
 	// types : <ability_1, ... ability_n>
-	#ABILITIES: 1, 2, 3, 5
+	#ABILITIES: 
 	
 	// types : <white, black, red, blue, green>
-	#TYPES: 1, 2, 3, 4
+	#TYPES: 
 	
 	// cost : <any>, <white>, <black>, <red>, <blue>, <green>
-	#COST: 3, 0, 0, 0, 0, 0
+	#COST: 0, 0, 0, 0, 0, 2
 #END_CARD
 
+#BEGIN_CARD
+	#TYPE_CARD: Creature
+	#NAME: Tireless Hauler
+	#TOKEN: 4
 
+	#POWER: 4
+	#TOUGHNESS: 5
+	// types : <ability_1, ... ability_n>
+	#ABILITIES: 2
+	
+	// types : <white, black, red, blue, green>
+	#TYPES: 2
+	
+	// cost : <any>, <white>, <black>, <red>, <blue>, <green>
+	#COST: 4, 0, 0, 0, 0, 1
+#END_CARD
 
-// enchantment / ritual
+#BEGIN_CARD
+	#TYPE_CARD: Creature
+	#NAME: Loyal Griff
+	#TOKEN: 0
+
+	#POWER: 2
+	#TOUGHNESS: 2
+	// types : <ability_1, ... ability_n>
+	#ABILITIES: 0
+	
+	// types : <white, black, red, blue, green>
+	#TYPES: 3
+	
+	// cost : <any>, <white>, <black>, <red>, <blue>, <green>
+	#COST: 2, 1, 0, 0, 0, 0
+#END_CARD
+
+#BEGIN_CARD
+	#TYPE_CARD: Creature
+	#NAME: Cliffhaven Sell-Sword
+	#TOKEN: 0
+
+	#POWER: 3
+	#TOUGHNESS: 1
+	// types : <ability_1, ... ability_n>
+	#ABILITIES: 
+	
+	// types : <white, black, red, blue, green>
+	#TYPES: 4
+	
+	// cost : <any>, <white>, <black>, <red>, <blue>, <green>
+	#COST: 1, 1, 0, 0, 0, 0
+#END_CARD
+
+#BEGIN_CARD
+	#TYPE_CARD: Creature
+	#NAME: Angelic Guardian
+	#TOKEN: 0
+
+	#POWER: 5
+	#TOUGHNESS: 5
+	// types : <ability_1, ... ability_n>
+	#ABILITIES: 0
+	
+	// types : <white, black, red, blue, green>
+	#TYPES: 0
+	
+	// cost : <any>, <white>, <black>, <red>, <blue>, <green>
+	#COST: 4, 2, 0, 0, 0, 0
+#END_CARD
+
+#BEGIN_CARD
+	#TYPE_CARD: Creature
+	#NAME: Serra Angel
+	#TOKEN: 0
+
+	#POWER: 4
+	#TOUGHNESS: 4
+	// types : <ability_1, ... ability_n>
+	#ABILITIES: 0, 2
+	
+	// types : <white, black, red, blue, green>
+	#TYPES: 0
+	
+	// cost : <any>, <white>, <black>, <red>, <blue>, <green>
+	#COST: 3, 2, 0, 0, 0, 0
+#END_CARD
+
+#BEGIN_CARD
+	#TYPE_CARD: Creature
+	#NAME: Serra Angel
+	#TOKEN: 0
+
+	#POWER: 4
+	#TOUGHNESS: 4
+	// types : <ability_1, ... ability_n>
+	#ABILITIES: 0, 2
+	
+	// types : <white, black, red, blue, green>
+	#TYPES: 0
+	
+	// cost : <any>, <white>, <black>, <red>, <blue>, <green>
+	#COST: 3, 2, 0, 0, 0, 0
+#END_CARD
+
+#BEGIN_CARD
+	#TYPE_CARD: Creature
+	#NAME: Intrepid Adversary
+	#TOKEN: 0
+
+	#POWER: 3
+	#TOUGHNESS: 1
+	// types : <ability_1, ... ability_n>
+	#ABILITIES: 9
+	
+	// types : <white, black, red, blue, green>
+	#TYPES: 6
+	
+	// cost : <any>, <white>, <black>, <red>, <blue>, <green>
+	#COST: 1, 1, 0, 0, 0, 0
+#END_CARD
+
+#BEGIN_CARD
+	#TYPE_CARD: Creature
+	#NAME: Mesa Lynx
+	#TOKEN: 0
+
+	#POWER: 2
+	#TOUGHNESS: 1
+	// types : <ability_1, ... ability_n>
+	#ABILITIES: 2
+	
+	// types : <white, black, red, blue, green>
+	#TYPES: 1
+	
+	// cost : <any>, <white>, <black>, <red>, <blue>, <green>
+	#COST: 1, 1, 0, 0, 0, 0
+#END_CARD
+
+#BEGIN_CARD
+	#TYPE_CARD: Creature
+	#NAME: Welcoming Vampire
+	#TOKEN: 0
+
+	#POWER: 2
+	#TOUGHNESS: 3
+	// types : <ability_1, ... ability_n>
+	#ABILITIES: 0
+	
+	// types : <white, black, red, blue, green>
+	#TYPES: 7
+	
+	// cost : <any>, <white>, <black>, <red>, <blue>, <green>
+	#COST: 2, 1, 0, 0, 0, 0
+#END_CARD
+
+#BEGIN_CARD
+	#TYPE_CARD: Creature
+	#NAME: Welcoming Vampire
+	#TOKEN: 0
+
+	#POWER: 2
+	#TOUGHNESS: 3
+	// types : <ability_1, ... ability_n>
+	#ABILITIES: 0
+	
+	// types : <white, black, red, blue, green>
+	#TYPES: 7
+	
+	// cost : <any>, <white>, <black>, <red>, <blue>, <green>
+	#COST: 2, 1, 0, 0, 0, 0
+#END_CARD
+
+#BEGIN_CARD
+	#TYPE_CARD: Creature
+	#NAME: Welcoming Vampire
+	#TOKEN: 0
+
+	#POWER: 2
+	#TOUGHNESS: 3
+	// types : <ability_1, ... ability_n>
+	#ABILITIES: 0
+	
+	// types : <white, black, red, blue, green>
+	#TYPES: 7
+	
+	// cost : <any>, <white>, <black>, <red>, <blue>, <green>
+	#COST: 2, 1, 0, 0, 0, 0
+#END_CARD
+
+#BEGIN_CARD
+	#TYPE_CARD: Creature
+	#NAME: Fancing Ace
+	#TOKEN: 0
+
+	#POWER: 1
+	#TOUGHNESS: 1
+	// types : <ability_1, ... ability_n>
+	#ABILITIES: 5
+	
+	// types : <white, black, red, blue, green>
+	#TYPES: 6
+	
+	// cost : <any>, <white>, <black>, <red>, <blue>, <green>
+	#COST: 1, 1, 0, 0, 0, 0
+#END_CARD
+
+#BEGIN_CARD
+	#TYPE_CARD: Creature
+	#NAME: Gnottvold Recluse
+	#TOKEN: 4
+
+	#POWER: 4
+	#TOUGHNESS: 2
+	// types : <ability_1, ... ability_n>
+	#ABILITIES: 1
+	
+	// types : <white, black, red, blue, green>
+	#TYPES: 8
+	
+	// cost : <any>, <white>, <black>, <red>, <blue>, <green>
+	#COST: 2, 0, 0, 0, 0, 2
+#END_CARD
+
+#BEGIN_CARD
+	#TYPE_CARD: Creature
+	#NAME: Kazandu Stomper
+	#TOKEN: 4
+
+	#POWER: 6
+	#TOUGHNESS: 5
+	// types : <ability_1, ... ability_n>
+	#ABILITIES: 11
+	
+	// types : <white, black, red, blue, green>
+	#TYPES: 1
+	
+	// cost : <any>, <white>, <black>, <red>, <blue>, <green>
+	#COST: 5, 0, 0, 0, 0, 1
+#END_CARD
+
+#BEGIN_CARD
+	#TYPE_CARD: Creature
+	#NAME: Taruju Paragon
+	#TOKEN: 4
+
+	#POWER: 3
+	#TOUGHNESS: 2
+	// types : <ability_1, ... ability_n>
+	#ABILITIES: 
+	
+	// types : <white, black, red, blue, green>
+	#TYPES: 9
+	
+	// cost : <any>, <white>, <black>, <red>, <blue>, <green>
+	#COST: 1, 0, 0, 0, 0, 1
+#END_CARD
+
+#BEGIN_CARD
+	#TYPE_CARD: Creature
+	#NAME: Murasa Brute
+	#TOKEN: 4
+
+	#POWER: 3
+	#TOUGHNESS: 3
+	// types : <ability_1, ... ability_n>
+	#ABILITIES: 
+	
+	// types : <white, black, red, blue, green>
+	#TYPES: 10
+	
+	// cost : <any>, <white>, <black>, <red>, <blue>, <green>
+	#COST: 2, 0, 0, 0, 0, 1
+#END_CARD
+
+// RITUALS
 #BEGIN_CARD
 	#TYPE_CARD: Ritual
-	#NAME: Mon super rituel
-	#TOKEN: 1
+	#NAME: Titanic Growth
+	#TOKEN: 0
 
-	#EFFECTS: 1, 2, 3, 4
-	#COST: 3, 0, 0, 0, 0, 0
-	#ID: 2
-	#INFO: Blabla rituel génial
+	#EFFECTS: 0
+	#COST: 1, 1, 0, 0, 0, 0
+	#INFO: Titanice Growth give you three health of power
 #END_CARD
 
+#BEGIN_CARD
+	#TYPE_CARD: Ritual
+	#NAME: Related Strengths
+	#TOKEN: 0
+
+	#EFFECTS: 1
+	#COST: 1, 1, 0, 0, 0, 0
+	#INFO: Give 1 / 1 to your favorite creature
+#END_CARD
+
+#BEGIN_CARD
+	#TYPE_CARD: Ritual
+	#NAME: Ritual of Destroy
+	#TOKEN: 0
+
+	#EFFECTS: 2
+	#COST: 1, 2, 0, 0, 0, 0
+	#INFO: Destroy a creature of your opponent
+#END_CARD
+
+#BEGIN_CARD
+	#TYPE_CARD: Ritual
+	#NAME: Placement
+	#TOKEN: 4
+
+	#EFFECTS: 0
+	#COST: 1, 1, 0, 0, 0, 0
+	#INFO: Play another land
+#END_CARD
+
+#BEGIN_CARD
+	#TYPE_CARD: Ritual
+	#NAME: Spirit Lands
+	#TOKEN: 4
+
+	#EFFECTS: 1
+	#COST: 1, 1, 0, 0, 0, 0
+	#INFO: Take 2 lands in your library and shuffle your library
+#END_CARD
+
+// ENCHANTMENTS
 #BEGIN_CARD
 	#TYPE_CARD: Enchantment
 	#NAME: Mon super enchantement
@@ -260,229 +466,4 @@
 	#COST: 3, 0, 0, 0, 0, 0
 	#ID: 1
 	#INFO: Blabla enchantement génial
-#END_CARD
-
-#BEGIN_CARD
-	#TYPE_CARD: Creature
-	#NAME: Ma super créature
-	#TOKEN: 1
-
-	#POWER: 2
-	#TOUGHNESS: 5
-	// types : <ability_1, ... ability_n>
-	#ABILITIES: 1, 2, 3, 5
-	
-	// types : <white, black, red, blue, green>
-	#TYPES: 1, 2, 3, 4
-	
-	// cost : <any>, <white>, <black>, <red>, <blue>, <green>
-	#COST: 3, 0, 0, 0, 0, 0
-#END_CARD
-#BEGIN_CARD
-	#TYPE_CARD: Creature
-	#NAME: Ma super créature
-	#TOKEN: 1
-
-	#POWER: 2
-	#TOUGHNESS: 5
-	// types : <ability_1, ... ability_n>
-	#ABILITIES: 1, 2, 3, 5
-	
-	// types : <white, black, red, blue, green>
-	#TYPES: 1, 2, 3, 4
-	
-	// cost : <any>, <white>, <black>, <red>, <blue>, <green>
-	#COST: 3, 0, 0, 0, 0, 0
-#END_CARD
-#BEGIN_CARD
-	#TYPE_CARD: Creature
-	#NAME: Ma super créature
-	#TOKEN: 1
-
-	#POWER: 2
-	#TOUGHNESS: 5
-	// types : <ability_1, ... ability_n>
-	#ABILITIES: 1, 2, 3, 5
-	
-	// types : <white, black, red, blue, green>
-	#TYPES: 1, 2, 3, 4
-	
-	// cost : <any>, <white>, <black>, <red>, <blue>, <green>
-	#COST: 3, 0, 0, 0, 0, 0
-#END_CARD
-#BEGIN_CARD
-	#TYPE_CARD: Creature
-	#NAME: Ma super créature
-	#TOKEN: 1
-
-	#POWER: 2
-	#TOUGHNESS: 5
-	// types : <ability_1, ... ability_n>
-	#ABILITIES: 1, 2, 3, 5
-	
-	// types : <white, black, red, blue, green>
-	#TYPES: 1, 2, 3, 4
-	
-	// cost : <any>, <white>, <black>, <red>, <blue>, <green>
-	#COST: 3, 0, 0, 0, 0, 0
-#END_CARD
-#BEGIN_CARD
-	#TYPE_CARD: Creature
-	#NAME: Ma super créature
-	#TOKEN: 1
-
-	#POWER: 2
-	#TOUGHNESS: 5
-	// types : <ability_1, ... ability_n>
-	#ABILITIES: 1, 2, 3, 5
-	
-	// types : <white, black, red, blue, green>
-	#TYPES: 1, 2, 3, 4
-	
-	// cost : <any>, <white>, <black>, <red>, <blue>, <green>
-	#COST: 3, 0, 0, 0, 0, 0
-#END_CARD
-#BEGIN_CARD
-	#TYPE_CARD: Creature
-	#NAME: Ma super créature
-	#TOKEN: 1
-
-	#POWER: 2
-	#TOUGHNESS: 5
-	// types : <ability_1, ... ability_n>
-	#ABILITIES: 1, 2, 3, 5
-	
-	// types : <white, black, red, blue, green>
-	#TYPES: 1, 2, 3, 4
-	
-	// cost : <any>, <white>, <black>, <red>, <blue>, <green>
-	#COST: 3, 0, 0, 0, 0, 0
-#END_CARD
-#BEGIN_CARD
-	#TYPE_CARD: Creature
-	#NAME: Ma super créature
-	#TOKEN: 1
-
-	#POWER: 2
-	#TOUGHNESS: 5
-	// types : <ability_1, ... ability_n>
-	#ABILITIES: 1, 2, 3, 5
-	
-	// types : <white, black, red, blue, green>
-	#TYPES: 1, 2, 3, 4
-	
-	// cost : <any>, <white>, <black>, <red>, <blue>, <green>
-	#COST: 3, 0, 0, 0, 0, 0
-#END_CARD
-#BEGIN_CARD
-	#TYPE_CARD: Creature
-	#NAME: Ma super créature
-	#TOKEN: 1
-
-	#POWER: 2
-	#TOUGHNESS: 5
-	// types : <ability_1, ... ability_n>
-	#ABILITIES: 1, 2, 3, 5
-	
-	// types : <white, black, red, blue, green>
-	#TYPES: 1, 2, 3, 4
-	
-	// cost : <any>, <white>, <black>, <red>, <blue>, <green>
-	#COST: 3, 0, 0, 0, 0, 0
-#END_CARD
-#BEGIN_CARD
-	#TYPE_CARD: Creature
-	#NAME: Ma super créature
-	#TOKEN: 1
-
-	#POWER: 2
-	#TOUGHNESS: 5
-	// types : <ability_1, ... ability_n>
-	#ABILITIES: 1, 2, 3, 5
-	
-	// types : <white, black, red, blue, green>
-	#TYPES: 1, 2, 3, 4
-	
-	// cost : <any>, <white>, <black>, <red>, <blue>, <green>
-	#COST: 3, 0, 0, 0, 0, 0
-#END_CARD
-#BEGIN_CARD
-	#TYPE_CARD: Creature
-	#NAME: Ma super créature
-	#TOKEN: 1
-
-	#POWER: 2
-	#TOUGHNESS: 5
-	// types : <ability_1, ... ability_n>
-	#ABILITIES: 1, 2, 3, 5
-	
-	// types : <white, black, red, blue, green>
-	#TYPES: 1, 2, 3, 4
-	
-	// cost : <any>, <white>, <black>, <red>, <blue>, <green>
-	#COST: 3, 0, 0, 0, 0, 0
-#END_CARD
-#BEGIN_CARD
-	#TYPE_CARD: Creature
-	#NAME: Ma super créature
-	#TOKEN: 1
-
-	#POWER: 2
-	#TOUGHNESS: 5
-	// types : <ability_1, ... ability_n>
-	#ABILITIES: 1, 2, 3, 5
-	
-	// types : <white, black, red, blue, green>
-	#TYPES: 1, 2, 3, 4
-	
-	// cost : <any>, <white>, <black>, <red>, <blue>, <green>
-	#COST: 3, 0, 0, 0, 0, 0
-#END_CARD
-#BEGIN_CARD
-	#TYPE_CARD: Creature
-	#NAME: Ma super créature
-	#TOKEN: 1
-
-	#POWER: 2
-	#TOUGHNESS: 5
-	// types : <ability_1, ... ability_n>
-	#ABILITIES: 1, 2, 3, 5
-	
-	// types : <white, black, red, blue, green>
-	#TYPES: 1, 2, 3, 4
-	
-	// cost : <any>, <white>, <black>, <red>, <blue>, <green>
-	#COST: 3, 0, 0, 0, 0, 0
-#END_CARD
-#BEGIN_CARD
-	#TYPE_CARD: Creature
-	#NAME: Ma super créature
-	#TOKEN: 1
-
-	#POWER: 2
-	#TOUGHNESS: 5
-	// types : <ability_1, ... ability_n>
-	#ABILITIES: 1, 2, 3, 5
-	
-	// types : <white, black, red, blue, green>
-	#TYPES: 1, 2, 3, 4
-	
-	// cost : <any>, <white>, <black>, <red>, <blue>, <green>
-	#COST: 3, 0, 0, 0, 0, 0
-#END_CARD
-#BEGIN_CARD
-	#TYPE_CARD: Creature
-	#NAME: Ma super créature
-	#TOKEN: 1
-
-	#POWER: 2
-	#TOUGHNESS: 5
-	// types : <ability_1, ... ability_n>
-	#ABILITIES: 1, 2, 3, 5
-	
-	// types : <white, black, red, blue, green>
-	#TYPES: 1, 2, 3, 4
-	
-	// cost : <any>, <white>, <black>, <red>, <blue>, <green>
-	#COST: 3, 0, 0, 0, 0, 0
 #END_CARD

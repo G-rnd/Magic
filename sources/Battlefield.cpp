@@ -102,6 +102,10 @@ void Battlefield::place_basic_card(BasicCard* bc) {
 }
 
 void Battlefield::disengage_card(BasicCard* bc) {
+    if(bc->is_class(Card_class::CREATURE)){
+        Creature* c = dynamic_cast<Creature*>(bc);
+        c->set_is_first_turn(false);
+    }
     bc->set_engaged(false);
 }
 
@@ -266,7 +270,7 @@ void Battlefield::print() {
                 Land* land = dynamic_cast<Land*>(m_basic_cards[num_card]);
                 if (land->get_enchantments().empty()) {
                     if (land->get_engaged()) {
-                        std::cout<< "[*" << std::setw(10) << "Land " << "*]";
+                        std::cout<< "[*" << std::setw(10) << "Land" << "*]";
                     } else {
                         std::cout<< "[" << std::setw(12) << "Land" << "]";
                     }

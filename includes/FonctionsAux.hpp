@@ -22,7 +22,7 @@ enum Token                      { White, Blue, Black, Red, Green };
 enum Ability                    { Flight, Scope, Vigilance, Touch_of_death, Defender, Initiative, Double_initiative, Haste, Unblockable,
                                     Life_link, Threat, Trampling, White_protection, Blue_protection, Black_protection, Red_protection, Green_protection };
 
-enum Type					    { Angel };
+enum Type					    { Angel, Beast, Human_werewolf, HippoGriff, Kor_warrior, Dinosaur, Humans, Vampire, Spider, Elf, Troll };
 
 // TODO : Destroy détruit complètement la carte : delete
 enum White_ritual_effects	    { More_3_HP, More_1_1_creature_current, Destroy_engaged_creature, Destroy_enchantment };

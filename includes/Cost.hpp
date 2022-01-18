@@ -8,10 +8,10 @@ class Cost {
 	private:
 		int		m_any;
 		int		m_white;
+		int		m_blue;
 		int		m_black;
 		int		m_red;
 		int		m_green;
-		int		m_blue;
 
 	public:
 		Cost(int, int, int, int, int, int);

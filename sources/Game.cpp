@@ -304,11 +304,11 @@ void Game::combat_phase() {
                 get_current_player()->get_opponent()->choose_defenders(chosen_blockabled_opponent);
                 quit = true;
             } else if (cmd.find("non") != std::string::npos) {
-                
                 // directement attaquer l'adervsaire
-                for (auto creature : chosen_blockabled_opponent)
+                for (auto creature : chosen_blockabled_opponent){
                     get_current_player()->get_opponent()->set_hp(get_current_player()->get_opponent()->get_hp() - creature->get_power_current());
-
+                }
+                quit = true;
             } else
                 std::cout << "Commande Invalide" << std::endl;
         }

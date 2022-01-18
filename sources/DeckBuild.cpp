@@ -368,6 +368,8 @@ void DeckBuild::create_land(){
 }
 
 void DeckBuild::create_ritual(){
+
+    
     
 }
 
