@@ -36,6 +36,8 @@ class Game {
         void                 exit();
         void                 victory(Player p);
 
+        static void          print_title_screen();
+
 };
 
 #endif

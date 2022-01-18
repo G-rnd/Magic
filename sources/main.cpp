@@ -6,17 +6,8 @@
 #include "DeckBuild.hpp"
 
 int main() {
-
+    Game::print_title_screen();
     while(1){
-
-        std::cout << "Bienvenue dans une nouvelle édition de Magic The Gathering !" << std::endl << std::endl;
-
-        std::cout << "play       : pour lancer une nouvelle partie." << std::endl;
-        std::cout << "load       : pour charger une de vos parties." << std::endl;
-        std::cout << "deck-build : pour créer votre propre deck." << std::endl;
-        std::cout << "exit       : pour quitter le jeu." << std::endl << std::endl;
-
-        std::cout << "Choississez votre mode : " << std::endl;
 
         std::string s;
         bool quit = false;
@@ -37,6 +28,7 @@ int main() {
                 return EXIT_SUCCESS;
             } else {
                 print_info("Commande non reconnue.");
+                Game::print_title_screen();
             }
 
         }

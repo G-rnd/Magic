@@ -1089,10 +1089,6 @@ void Player::print() {
 
     std::cout << m_name << " : " << m_hp << " PV" << std::endl;
     std::cout << "Nb de cartes restantes dans ma bibliothèque : " << m_library.size() << std::endl;
-
-    std::string s;
-    std::cout << "Entrée pour continuer." << std::endl;
-    std::getline(std::cin, s);
 }
 
 void Player::print_hand(){
