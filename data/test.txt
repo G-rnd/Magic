@@ -1,0 +1,162 @@
+// Liste des cartes d'un deck
+
+// LANDS
+#BEGIN_CARD
+	#TYPE_CARD: Land
+	#NAME: Plains
+	#TOKEN: 0
+
+	#VALUE: 1
+#END_CARD
+
+// CREATURES
+#BEGIN_CARD
+	#TYPE_CARD: Creature
+	#NAME: Nom de la créature
+	#TOKEN: 0
+
+	#POWER: 5
+	#TOUGHNESS: 5
+	// types : <ability_1, ... ability_n>
+	#ABILITIES: 1, 2, 3, 5
+	
+	// types : <white, black, red, blue, green>
+	#TYPES: 1, 2, 3, 4
+	
+	// cost : <any>, <white>, <black>, <red>, <blue>, <green>
+	#COST: 1, 0, 0, 0, 0, 0
+#END_CARD
+
+
+
+
+// LANDS
+#BEGIN_CARD
+	#TYPE_CARD: Land
+	#NAME: Plains
+	#TOKEN: 0
+
+	#VALUE: 1
+#END_CARD
+
+// CREATURES
+#BEGIN_CARD
+	#TYPE_CARD: Creature
+	#NAME: Nom de la créature
+	#TOKEN: 0
+
+	#POWER: 5
+	#TOUGHNESS: 5
+	// types : <ability_1, ... ability_n>
+	#ABILITIES: 1, 2, 3, 5
+	
+	// types : <white, black, red, blue, green>
+	#TYPES: 1, 2, 3, 4
+	
+	// cost : <any>, <white>, <black>, <red>, <blue>, <green>
+	#COST: 1, 0, 0, 0, 0, 0
+#END_CARD
+// LANDS
+#BEGIN_CARD
+	#TYPE_CARD: Land
+	#NAME: Plains
+	#TOKEN: 0
+
+	#VALUE: 1
+#END_CARD
+
+// CREATURES
+#BEGIN_CARD
+	#TYPE_CARD: Creature
+	#NAME: Nom de la créature
+	#TOKEN: 0
+
+	#POWER: 5
+	#TOUGHNESS: 5
+	// types : <ability_1, ... ability_n>
+	#ABILITIES: 1, 2, 3, 5
+	
+	// types : <white, black, red, blue, green>
+	#TYPES: 1, 2, 3, 4
+	
+	// cost : <any>, <white>, <black>, <red>, <blue>, <green>
+	#COST: 1, 0, 0, 0, 0, 0
+#END_CARD
+// LANDS
+#BEGIN_CARD
+	#TYPE_CARD: Land
+	#NAME: Plains
+	#TOKEN: 0
+
+	#VALUE: 1
+#END_CARD
+
+// CREATURES
+#BEGIN_CARD
+	#TYPE_CARD: Creature
+	#NAME: Nom de la créature
+	#TOKEN: 0
+
+	#POWER: 5
+	#TOUGHNESS: 5
+	// types : <ability_1, ... ability_n>
+	#ABILITIES: 1, 2, 3, 5
+	
+	// types : <white, black, red, blue, green>
+	#TYPES: 1, 2, 3, 4
+	
+	// cost : <any>, <white>, <black>, <red>, <blue>, <green>
+	#COST: 1, 0, 0, 0, 0, 0
+#END_CARD
+// LANDS
+#BEGIN_CARD
+	#TYPE_CARD: Land
+	#NAME: Plains
+	#TOKEN: 0
+
+	#VALUE: 1
+#END_CARD
+
+// CREATURES
+#BEGIN_CARD
+	#TYPE_CARD: Creature
+	#NAME: Nom de la créature
+	#TOKEN: 0
+
+	#POWER: 5
+	#TOUGHNESS: 5
+	// types : <ability_1, ... ability_n>
+	#ABILITIES: 1, 2, 3, 5
+	
+	// types : <white, black, red, blue, green>
+	#TYPES: 1, 2, 3, 4
+	
+	// cost : <any>, <white>, <black>, <red>, <blue>, <green>
+	#COST: 1, 0, 0, 0, 0, 0
+#END_CARD
+// LANDS
+#BEGIN_CARD
+	#TYPE_CARD: Land
+	#NAME: Plains
+	#TOKEN: 0
+
+	#VALUE: 1
+#END_CARD
+
+// CREATURES
+#BEGIN_CARD
+	#TYPE_CARD: Creature
+	#NAME: Nom de la créature
+	#TOKEN: 0
+
+	#POWER: 5
+	#TOUGHNESS: 5
+	// types : <ability_1, ... ability_n>
+	#ABILITIES: 1, 2, 3, 5
+	
+	// types : <white, black, red, blue, green>
+	#TYPES: 1, 2, 3, 4
+	
+	// cost : <any>, <white>, <black>, <red>, <blue>, <green>
+	#COST: 1, 0, 0, 0, 0, 0
+#END_CARD

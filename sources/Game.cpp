@@ -120,11 +120,12 @@ void Game::start() {
 
         // reset des stats des cartes 
         for (auto p : m_players) {
-            for (auto bc : p->get_battlefield().get_basic_cards()) {
+            for (auto bc : p->get_battlefield()->get_basic_cards()) {
                 if (bc->is_class(Card_class::CREATURE)){
                     Creature* c = dynamic_cast<Creature*>(bc);
                     c->set_power_current(c->get_power());
                     c->set_toughness_current(c->get_toughness());
+                    c->set_is_first_turn(false);
                 }
             }
         }
@@ -139,12 +140,13 @@ void Game::start() {
         }
 
         // Phase de désengagement
-        for (auto c : get_current_player()->get_battlefield().get_basic_cards()) {
-            get_current_player()->get_battlefield().disengage_card(c);
+        for (auto c : get_current_player()->get_battlefield()->get_basic_cards()) {
+            get_current_player()->get_battlefield()->disengage_card(c);
         }
+
         // Phase principale
         Game::main_phase(true);
-
+        
         // check if a player has lost
         if (check_defeat())
             return;
@@ -187,6 +189,7 @@ void Game::main_phase(bool first) {
 
     while (true) {
         std::system("clear");
+
         get_current_player()->print();
 
         std::cout << "Selectionnez une carte à placer :" << std::endl;
@@ -208,10 +211,10 @@ void Game::main_phase(bool first) {
                 - un rituel jouable
                 - un enchantement jouable
              */
-            if ((hand[i]->is_class(Card_class::CREATURE) && get_current_player()->get_battlefield().is_playable(hand[i])) 
+            if ((hand[i]->is_class(Card_class::CREATURE) && get_current_player()->get_battlefield()->is_playable(hand[i])) 
             || (hand[i]->is_class(Card_class::LAND) && (get_current_player()->get_played_land() <= 0))
-            || (hand[i]->is_class(Card_class::RITUAL) && get_current_player()->get_battlefield().is_playable(hand[i]))
-            || (hand[i]->is_class(Card_class::ENCHANTEMENT) && get_current_player()->get_battlefield().is_playable(hand[i]))) {
+            || (hand[i]->is_class(Card_class::RITUAL) && get_current_player()->get_battlefield()->is_playable(hand[i]))
+            || (hand[i]->is_class(Card_class::ENCHANTEMENT) && get_current_player()->get_battlefield()->is_playable(hand[i]))) {
                 std::cout << std::setfill(' ') << std::setw (hand_size / 10)  << i << " - " << hand[i]->get_name() << std::endl;
 
             } else {

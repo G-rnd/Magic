@@ -18,7 +18,7 @@ class Player {
         std::string           m_name;
         int                   m_hp;
         int                   m_played_land;
-        Battlefield           m_battlefield;
+        Battlefield*          m_battlefield;
         std::vector<Card*>    m_deck;
         std::vector<Card*>    m_graveyard;
         std::vector<Card*>    m_library;
@@ -33,7 +33,7 @@ class Player {
         std::string            get_name() const;
         int                    get_hp() const;
         int                    get_played_land() const;
-        Battlefield            get_battlefield() const;
+        Battlefield*           get_battlefield() const;
         std::vector<Card*>     get_deck() const;
         std::vector<Card*>     get_graveyard() const;
         std::vector<Card*>     get_library() const;

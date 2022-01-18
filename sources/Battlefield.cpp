@@ -341,24 +341,27 @@ void Battlefield::print() {
         }
 
         std::cout << std::endl;
+        // TODO le segfault est ici
 
         // print type pour creature et value pour land
         for (size_t j = 0; j < 8; j++) {
-
             num_card = i*8 + j;
 
             if (m_basic_cards[num_card]->is_class(Card_class::CREATURE)) {
-
                 Creature* creature = dynamic_cast<Creature*>(m_basic_cards[num_card]);
-                std::string types[1] = {"Angel"};
-                std::vector<int> creat_type =  creature->get_types();
+                std::vector<std::string> types{"Angel"};
+                std::vector<int> creat_type = creature->get_types();
                 std::string s = "";
+
                 for (auto t : creat_type) {
-                    s += types[t].substr(0, 3);
-                    s += "-";
+                    if ((size_t) t < types.size()) {
+                        s += types[t].substr(0, 3);
+                        s += "-";
+                    }
                 }
+
                 s = s.substr(0, s.size() - 2);
-        
+
                 if (m_basic_cards[num_card]->get_enchantments().empty()) {
                     if(m_basic_cards[num_card]->get_engaged() || (m_basic_cards[num_card]->is_class(Card_class::CREATURE) 
                     && dynamic_cast<Creature*>(m_basic_cards[num_card])->get_is_first_turn())) {
@@ -374,7 +377,6 @@ void Battlefield::print() {
                         std::cout<< "{" << std::setw(12) << s.substr(0,12) << "}";
                     }
                 }
-
             } else if (m_basic_cards[num_card]->is_class(Card_class::LAND)) {
 
                 Land* land = dynamic_cast<Land*>(m_basic_cards[num_card]);
@@ -395,7 +397,6 @@ void Battlefield::print() {
                         std::cout<< "{" << std::setw(12) << val << "}";
                     }
                 }
-
             }
 
             if (num_card == m_basic_cards.size() - 1)
