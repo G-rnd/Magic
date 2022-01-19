@@ -156,8 +156,6 @@ void Player::shuffle_library() {
         m_library_copy.erase(m_library_copy.begin() + j);
         i_lib++;
     }
-    
-    print_info("Bibliothèque mélangée.");
 }
 
 void Player::play_card(Card* c) {
@@ -195,17 +193,10 @@ void Player::disengage_card(BasicCard* bc) {
 - Haste
 */
 std::vector<Creature*> Player::attack() {
-
-    std::cout << "Selectionnez les cartes pour attaquer :" << std::endl;
-    std::cout << "<id>      : pour attaquer avec cette carte." << std::endl;
-    std::cout << "reset     : pour annuler vos choix." << std::endl;
-    //std::cout << "info <id> : pour avoir des informations sur une carte." << std::endl;
-    std::cout << "valid      : pour valider vos choix." << std::endl << std::endl;
-
     int i = 0;
-    std::vector<Creature*> possible_opponents;
-    std::vector<Creature*> chosen_opponents;
+    std::vector<Creature*> possible_creatures = {};
     
+    std::vector<std::pair<std::string, std::string> > print_creatures = {};
     // List the available creatures
     for (auto creature : m_battlefield->get_available_creatures()) {
         // Etablish abilities
@@ -225,8 +216,8 @@ std::vector<Creature*> Player::attack() {
             if (!creature->get_is_first_turn() || haste_creature) {
                 // Check defender ability
                 if (!defender_creature) {
-                    std::cout << i << " - " << creature->get_name() << std::endl;
-                    possible_opponents.push_back(creature);
+                    print_creatures.push_back({std::to_string(i), creature->get_name()});
+                    possible_creatures.push_back(creature);
                     i++;
                 }
             } else {
@@ -235,46 +226,77 @@ std::vector<Creature*> Player::attack() {
         }
     }
 
+    if (possible_creatures.size() == 0) {
+        print_info("Aucune action disponible pour cette phase.");
+        return possible_creatures;
+    }
+
+    std::vector<Creature*> returned_creatures = {};
+    std::vector<Creature*> creatures = {};
+    for(auto& c : possible_creatures)
+        creatures.push_back(c);
+
     std::string cmd;
-    bool quit = false;
 
     // Interaction with player : choices
-    while (!quit) {
+    while (true) {
+        cls();
+        print_actions("Sélectionnez les cartes pour attaquer !", {
+            {"<id>", "pour attaquer avec cette carte"},
+            {"reset", "pour annuler vos choix"},
+            {"valid", "pour valider vos choix"}
+        });
+
+        size_t id = 0;
+        print_creatures = {};
+        for(auto& c : creatures) {
+            print_creatures.push_back({std::to_string(id), c->get_name()});
+            id++;
+        }
+        print_list(print_creatures);
         std::getline(std::cin, cmd);
 
         if (cmd.find("valid") != std::string::npos) {
-            quit = true;
-        } else if (i > 0) { 
-            if (cmd.find("reset") != std::string::npos) {
-                chosen_opponents = {};
-                std::cout << "Reset reussi" << std::endl;
-            } else {
-                try {
-                    int num = std::stoi(cmd);
-                    if (num > i || num < 0) {
-                        std::cout << "Id invalide" << std::endl;
-
-                        std::cout << "Entrée pour continuer." << std::endl;
-                        std::getline(std::cin, cmd);
-                    } else {
-                        if(contain(possible_opponents[num], chosen_opponents)){
-                            std::cout << num << " deja choisie" << std::endl; 
-                        } else {
-                            std::cout << "Vous venez d'ajouter " << possible_opponents[num]->get_name() << "." << std::endl; 
-                            chosen_opponents.push_back(possible_opponents[num]);
-                        }
-                    }
-                } catch (std::invalid_argument &e) {
-                    std::cout << "Commande Invalide" << std::endl;    
-                }
+            id = 0;
+            print_creatures = {};
+            for(auto& c : returned_creatures) {
+                print_creatures.push_back({std::to_string(id), c->get_name()});
+                id++;
             }
+            if(print_creatures.size() > 0) {
+                print_actions("Vous attaquez avec les créatures suivantes :", print_creatures);
+                print_info();
+            } else {
+                print_info("Vous n'attaquez avec aucune créature.");
+            }
+            break;
+        }
+
+        if (cmd.find("reset") != std::string::npos) {    
+            returned_creatures = {};
+            creatures = {};
+            for(auto& c : possible_creatures)
+                creatures.push_back(c);
+            print_info("Reset réussi.");
         } else {
-            print_info("Aucune action disponible, veuillez saisir \"valid\" pour terminer cette phase");
+            try {
+                int num = std::stoi(cmd);
+                if (num >= (int) creatures.size() || num < 0) {
+                    print_info("Id invalide.");
+                } else {
+                    print_info("Vous venez d'ajouter " + creatures[num]->get_name() + ".");
+                    returned_creatures.push_back(creatures[num]);
+                    creatures.erase(creatures.begin() + num);
+
+                }
+            } catch (std::invalid_argument &e) {
+                print_info("Commande invalide.");
+            }
         }
     }
     bool vigilance_creature = false;
 
-    for (auto card : chosen_opponents) {
+    for (auto card : returned_creatures) {
         // Check the vigilance ability
         for (auto ability_card : card->get_abilities()) {
             if (ability_card == Ability::Vigilance) {
@@ -285,7 +307,7 @@ std::vector<Creature*> Player::attack() {
             card->set_engaged(true);
         }
     }
-    return chosen_opponents;
+    return returned_creatures;
 }
 
 /*
@@ -295,19 +317,14 @@ std::vector<Creature*> Player::attack() {
 */
 
 void Player::choose_defenders(std::vector<Creature*> opponents) {
-
-    std::cout << "Selectionnez les cartes pour défendre :" << std::endl;
-    std::cout << "<id>      : pour défendre avec cette carte." << std::endl;
-    std::cout << "reset     : pour annuler vos choix." << std::endl;
-    //std::cout << "info <id> : pour avoir des informations sur une carte." << std::endl;
-    std::cout << "end       : pour ne pas defendre cette carte." << std::endl << std::endl;
-    // TODO : validation
-    std::cout<< "Attention ! Choisissez vos defenseurs dans l'ordre souhaité"<<std::endl<<std::endl;
-
+    print_actions("Selectionnez les cartes pour défendre :", {
+        {"<id>", "pour défendre avec cette carte"},
+        {"reset", "pour annuler vos choix"},
+        {"end", "pour ne pas défendre contre cette carte"}
+    }, "Attention ! Choisissez vos défenseurs dans l'ordre souhaité !");
     std::vector<Creature*> availabled_creature = m_battlefield->get_available_creatures();
 
     for (auto opponent : opponents) {
-
         std::string cmd;
         int i = 0;
         bool quit = false;
@@ -325,7 +342,6 @@ void Player::choose_defenders(std::vector<Creature*> opponents) {
                 threat_opponent = true;
             }
         }
-
 
         for (auto creature : availabled_creature) {
 

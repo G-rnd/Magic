@@ -6,19 +6,18 @@
 #include "DeckBuild.hpp"
 
 int main() {
-    Game::print_title_screen();
     while(1){
-
         std::string s;
         bool quit = false;
 
         while(!quit){
+            Game::print_title_screen();
             std::getline(std::cin, s);
             
             if(s == "play"){
                 Game g{};
                 g.start();
-                quit = true;
+                cls();
             } else if(s == "load"){
                 // TODO : charger une partie
             } else if(s == "deck-build"){

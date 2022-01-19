@@ -11,12 +11,9 @@
 
 Game::Game() {
     m_player_turn = false;
-    //std::cout << "[Game] : Création de " << this << std::endl;
-    m_player_turn = false;
 }
 
 Game::~Game() {
-    //std::cout << "[Game] : Destruction de " << this << std::endl;
 }
 bool Game::get_player_turn() const {
     return m_player_turn;
@@ -120,6 +117,7 @@ void Game::start() {
         
         // Mélange de la bibliothèque
         m_players[i]->shuffle_library();
+        print_info("Bibliothèque mélangée.");
 
         // Phase de pioche initiale
         for(auto index = 0; index < 7; index++) {
@@ -202,11 +200,18 @@ bool Game::check_defeat() {
 }
 
 void Game::main_phase(bool first) {
+    cls();
+    std::string debut = "Debut de la phase ";
+    debut += (first) ? "principale !" : "secondaire !";
+    print_actions(debut);
+    print_info();
+
     while (true) {
         cls();
         get_current_player()->print();
 
-        std::string s = "arrêter la phase " + (first) ? "principale" : "secondaire"; 
+        std::string s = "arrêter la phase ";
+        s += (first) ? "principale" : "secondaire"; 
         print_actions("Selectionnez une carte à placer", {
             {"<id>", "jouer une carte"},
             {"info <id>", "afficher les caractéristiques d'une carte"},
@@ -217,6 +222,8 @@ void Game::main_phase(bool first) {
         for (Card* c : get_current_player()->get_hand()) {
             hand.push_back(c);
         }
+
+        std::vector<std::pair<std::string, std::string> > available_cards = {};
         int hand_size = hand.size();
         // Vérifications 
         for (int i = 0; i < hand_size; i++) {
@@ -231,8 +238,7 @@ void Game::main_phase(bool first) {
             || (hand[i]->is_class(Card_class::LAND) && (get_current_player()->get_played_land() <= 0))
             || (hand[i]->is_class(Card_class::RITUAL) && get_current_player()->get_battlefield()->is_playable(hand[i]))
             || (hand[i]->is_class(Card_class::ENCHANTEMENT) && get_current_player()->get_battlefield()->is_playable(hand[i]))) {
-                std::cout << std::setfill(' ') << std::setw (hand_size / 10)  << i << " - " << hand[i]->get_name() << std::endl;
-
+                available_cards.push_back({std::to_string(i), hand[i]->get_name()});
             } else {
                 hand.erase(hand.begin() + i);
                 i--;
@@ -245,6 +251,8 @@ void Game::main_phase(bool first) {
             return;
         }
 
+        print_list(available_cards);
+
         std::string cmd;
         std::getline(std::cin, cmd);
 
@@ -256,8 +264,11 @@ void Game::main_phase(bool first) {
                 if (num >= hand_size) {
                     print_info("L'id saisit est invalide, veuillez saisir un id disponible dans la liste des id ci-dessus.");
                 }
-                else
+                else {
+                    cls();
+                    print_info("Vous placez la carte : " + hand[num]->get_name());
                     get_current_player()->play_card(hand[num]);
+                }
             }
             catch (std::invalid_argument &e) {
                 std::string info = "info ";
@@ -283,11 +294,15 @@ void Game::main_phase(bool first) {
 
 void Game::combat_phase() {
     cls();
-    std::vector<Creature*> chosen_opponent =  get_current_player()->attack();
-
-    get_current_player()->print();
-
+    print_actions("Debut de la phase de combat !");
+    print_info();
+    cls();
+    
+    std::vector<Creature*> chosen_opponent = get_current_player()->attack();
+    cls();
+    
     if (!chosen_opponent.empty()) {
+        get_current_player()->print();
 
         std::vector<Creature*> chosen_blockabled_opponent = chosen_opponent;
         
@@ -302,91 +317,152 @@ void Game::combat_phase() {
 
             if (unblockable_opponent)
                 remove(creature, chosen_blockabled_opponent);
-
         }
         
-        // demander à l'adervsaire s'il veut défendre l'attaque
-        if (!chosen_blockabled_opponent.empty()) {
-
-            std::cout << get_current_player()->get_opponent()->get_name() << ", voulez-vous bloquer ces créatures ? " << std::endl;
-            std::cout << "oui       : pour choisir vos bloqueurs." << std::endl;
-            std::cout << "non       : pour laisser l'attaque se faire." << std::endl << std::endl;
-            int i = 0;
-            for (auto creature : chosen_blockabled_opponent) {
-                std::cout << i << " - " << creature->get_name() << std::endl;           
-            }
-        }
-
-        std::string cmd;
         while (true) {
+            // demander à l'adervsaire s'il veut défendre l'attaque
+            if (!chosen_blockabled_opponent.empty()) {
+                print_actions(get_current_player()->get_opponent()->get_name() + ", voulez-vous bloquer ces créatures ?", {
+                    {"0", "Choisir de bloquer les créatures"},
+                    {"1", "Choisir de ne pas bloquer les créatures"}
+                });
+                std::vector<std::pair<std::string, std::string> > creature_list = {};
+                int i = 0;
+                for (auto creature : chosen_blockabled_opponent) {
+                    creature_list.push_back({std::to_string(i), creature->get_name()});
+                    i++;   
+                }
+                print_list(creature_list);
+            }
+            
+            std::string cmd;
             std::getline(std::cin, cmd);
-            if (cmd.find("oui") != std::string::npos) {
-                get_current_player()->get_opponent()->choose_defenders(chosen_blockabled_opponent);
-                break;
-            } else if (cmd.find("non") != std::string::npos) {
-                
-                // directement attaquer l'adervsaire
-                for (auto creature : chosen_blockabled_opponent)
-                    get_current_player()->get_opponent()->set_hp(get_current_player()->get_opponent()->get_hp() - creature->get_power_current());
-                break;
-            } else
-                print_info("Commande Invalide");
+
+            try {
+                int res = stoi(cmd);
+                if (res != 0 && res != 1)
+                    print_info("Commande invalide.");
+                else if (res == 0) {
+                    get_current_player()->get_opponent()->choose_defenders(chosen_blockabled_opponent);
+                    break;
+                } else {
+                    for (auto creature : chosen_blockabled_opponent) {
+                        print_info(get_current_player()->get_opponent()->get_name() + " perd " + std::to_string(creature->get_power_current()) + " PV !");
+                        get_current_player()->get_opponent()->set_hp(get_current_player()->get_opponent()->get_hp() - creature->get_power_current());
+                    }
+                    print_info("Retour aux actions de " + get_current_player()->get_name() + ".");
+                    break;
+                }
+            } catch (std::invalid_argument& e) {
+                print_info("Commande invalide.");
+            }
         }
     }
 }
 
 void Game::turn_end_phase() {
     if ((get_current_player()->get_hand()).size() > 7) {
-        print_info("Phase de défausse de " + get_current_player()->get_name() + ":");
         cls();
-    
-        do {
-            print_actions("Défaussez des cartes, il doit vous en rester 7!", {
-                {"<id>", "pour défausser une carte."},
-                {"reset", "pour réinitialiser vos choix"},
-                {"valid", "pour valider votre choix"}
-            });
-           
-            int i = 0;
-            std::vector<Card*> possible_cards;
-            std::vector<Card*> chosen_cards;
+        print_actions("Phase de défausse de " + get_current_player()->get_name() + ":");
+        print_info();
+        
+        std::vector<Card*> chosen_cards = {};
+        std::vector<Card*> possible_cards;
+        for (auto card : get_current_player()->get_hand()) {
+            possible_cards.push_back(card);
+        }
 
-            for (auto card : get_current_player()->get_hand()) {
-                std::cout << i << " - " << card->get_name() << std::endl;
-                possible_cards.push_back(card);
-                i++;
-            }
+        bool quit = false;
+        while(!quit) {
+            while (true) {
+                cls();
+                print_actions("Vous devez défausser " + std::to_string(get_current_player()->get_hand().size() - 7)+ " cartes !", {
+                    {"<id>", "pour défausser une carte."},
+                    {"reset", "pour réinitialiser vos choix"}
+                });
+            
+                int i = 0;
+                std::vector<std::pair<std::string, std::string> > print_cards = {};
 
-            bool quit = false;
-            std::string cmd;
-            while (!quit) {
-                std::getline(std::cin, cmd);
+                for(auto card : possible_cards) {
+                    print_cards.push_back({std::to_string(i), card->get_name()});
+                    i++;
+                }
+                print_list(print_cards);
                 
-                if (cmd.find("valid") != std::string::npos) {
-                    quit = true;
-                } else if(cmd.find("reset") != std::string::npos) {
+                std::string cmd;
+                std::cin >> cmd;
+                    
+                if(cmd.find("reset") != std::string::npos) {
                     chosen_cards = {};
-                    std::cout<< "Reset reussi" <<std::endl;
+                    possible_cards.clear();
+                    for (auto card : get_current_player()->get_hand()) {
+                        possible_cards.push_back(card);
+                    }
+                    print_info("Reset reussi !");
                 } else {
                     try {
                         int num = std::stoi(cmd);
                         if (num > i || num < 0) {
-                            print_info("Id invalide");
+                            print_info("Id invalide.");
                         } else {
-                            if (contain(possible_cards[num], chosen_cards)) {
-                                std::cout << num <<" deja defaussee." << std::endl; 
-                            } else {
-                                chosen_cards.push_back(possible_cards[num]);
-                            }
+                            print_info("Carte choisie : " + possible_cards[num]->get_name());
+                            chosen_cards.push_back(possible_cards[num]);
+                            possible_cards.erase(possible_cards.begin() + num);
                         }
                     } catch (std::invalid_argument &e) {
                         print_info("Commande invalide.");
                     }
                 }
+
+                if (possible_cards.size() <= 7)
+                    break;
             }
-            for (auto card : chosen_cards)
-                get_current_player()->discard_card(card);
-        } while ((get_current_player()->get_hand()).size() > 7);
+
+            while(true) {
+                cls();
+                std::vector<std::pair<std::string, std::string> > print_cards = {};
+                int i = 0;
+
+                for(auto& c : chosen_cards) {
+                    print_cards.push_back({std::to_string(i), c->get_name()});
+                    i++;
+                }
+
+                print_actions("Voici les cartes que vous voulez défausser :", {
+                    {"0","retourer au choix des cartes à défausser"},
+                    {"1", "valider votre choix"}
+                });
+                print_list(print_cards);
+                try {    
+                    std::string cmd;
+                    std::getline(std::cin, cmd);
+
+                    int num = std::stoi(cmd);
+                    if (num != 0 && num != 1) {
+                        print_info("Id invalide.");
+                    } else {
+                        if (num == 1) {
+                            for (auto card : chosen_cards)
+                            get_current_player()->discard_card(card);
+                            print_info("Défausse réussie !");
+                            quit = true;
+                        } else {
+                            chosen_cards = {};
+                            possible_cards.clear();
+                            for (auto card : get_current_player()->get_hand()) {
+                                possible_cards.push_back(card);
+                            }
+                            print_info("Retour aux choix des cartes à défausser.");
+
+                        }
+                        break;
+                    }
+                } catch (std::invalid_argument &e) {
+                        print_info("Id invalide.");
+                }
+            }
+        }
     }
 }
 

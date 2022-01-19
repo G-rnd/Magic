@@ -23,10 +23,24 @@ void print_info(const std::string& s)  {
 
         std::cout << get_color(Color::BrightBlack) << lign << std::endl << std::endl;
     }
-    std::cout << std::endl << "<Entrée> pour continuer." << get_color(Color::Reset) << std::endl;
+    std::cout << get_color(Color::BrightBlack)  << std::endl << "<Entrée> pour continuer." << get_color(Color::Reset) << std::endl;
 
     std::string cmd;
     std::getline(std::cin, cmd);
+}
+
+void print_list(const std::vector<std::pair<std::string, std::string>>& options, const std::string& separator) {
+    size_t max_title_size = 0;
+    for (auto i : options)
+        if (i.first.size() > max_title_size)
+            max_title_size = i.first.size();
+
+    
+    for(auto i : options) {
+        std::string padding(max_title_size - i.first.size(), ' ');
+        std::cout << get_color(Color::Yellow) << i.first << padding << get_color(Color::BrightBlack) << separator << get_color(Color::Reset) << i.second << std::endl;
+    }
+
 }
 
 void print_actions(const std::string& title, const std::vector<std::pair<std::string, std::string> >& options, const std::string& end_message, bool dot_opt, const std::string& separator) {
@@ -48,14 +62,14 @@ void print_actions(const std::string& title, const std::vector<std::pair<std::st
     }
     
     std::string lign(size, '-');
-    std::cout << lign <<std::endl << std::endl << title << std::endl << lign << std::endl;
+    std::cout << get_color(Color::BrightBlack) << lign <<std::endl << std::endl << get_color(Color::BrightRed) << title << std::endl << get_color(Color::BrightBlack) << lign << get_color(Color::Reset) << std::endl;
     
     bool nl = false;
     if (nb_options > 0) {
         nl = true;
         for(auto i : options) {
             std::string padding(max_option_title_size - i.first.size(), ' ');
-            std::cout << i.first << padding << separator << i.second;
+            std::cout << get_color(Color::Yellow) << i.first << padding << get_color(Color::BrightBlack) << separator << get_color(Color::Reset) << i.second;
             if (dot_opt)
                 std::cout << dot;
             std::cout << std::endl;
@@ -64,10 +78,10 @@ void print_actions(const std::string& title, const std::vector<std::pair<std::st
     if (end_message != "") {
         nl = true;
         std::cout << std::endl;
-        std::cout << end_message << std::endl;
+        std::cout << get_color(Color::BrightWhite) << end_message << get_color(Color::Reset) << std::endl;
     }
     if (nl)
-        std::cout << lign << std::endl;
+        std::cout << get_color(Color::BrightBlack) << lign << get_color(Color::Reset) << std::endl;
 }
 
 void cls() {
