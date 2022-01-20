@@ -14,7 +14,7 @@
     <Entrée> pour continuer
 */
 void print_info(const std::string& s)  {
-    std::cin.clear();
+    //std::cin.clear();
     if (s != "") {    
         std::string lign(s.size(), '-');
         std::cout << std::endl << get_color(Color::BrightBlack) << lign << std::endl << std::endl;

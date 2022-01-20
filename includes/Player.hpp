@@ -62,10 +62,10 @@ class Player {
         void                   disengage_card(BasicCard* bc);
         std::vector<Creature*> attack();
         void                   choose_defenders(std::vector<Creature*> opponents);
-        void                   deflect_attack(Creature opponent, std::vector<Creature*> defenders);
-        void                   battle_creature(Creature opponent, Creature defender);
+        void                   deflect_attack(Creature* opponent, std::vector<Creature*> defenders);
+        void                   battle_creature(Creature* opponent, Creature* defender);
         void                   destroy_card(Card* c);
-        void                   play_ritual(Ritual c);
+        void                   play_ritual(Ritual* c);
    
         void                   print();
         void                   print_hand();
