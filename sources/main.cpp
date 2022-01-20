@@ -5,7 +5,13 @@
 #include "FonctionsAux.hpp"
 #include "DeckBuild.hpp"
 
+#include "CardParser.hpp"
+
 int main() {
+    std::cout << CardParser::parse("data/t0").size() << std::endl;
+
+    return 0;
+
     while(1){
         std::string s;
         bool quit = false;

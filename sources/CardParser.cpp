@@ -334,12 +334,16 @@ std::vector<int> CardParser::parse_int_list(std::string& s) {
 
     std::string delimiter = ", ";
     size_t pos = 0;
-    
+
     while ((pos = s.find(delimiter)) != std::string::npos) {
-        l.push_back(stoi(s.substr(0, pos)));
+        try {
+            l.push_back(stoi(s.substr(0, pos)));
+        } catch (std::invalid_argument& e) {}
         s.erase(0, pos + delimiter.length());
     }
-    l.push_back(stoi(s));
-
+    try {
+        l.push_back(stoi(s));
+    } catch (std::invalid_argument& e) {}
+    
     return l;
 }
