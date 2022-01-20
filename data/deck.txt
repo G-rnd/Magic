@@ -464,6 +464,5 @@
 
 	#EFFECTS: 1, 2, 3, 4
 	#COST: 3, 0, 0, 0, 0, 0
-	#ID: 1
 	#INFO: Blabla enchantement génial
 #END_CARD

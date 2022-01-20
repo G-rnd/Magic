@@ -369,10 +369,408 @@ void DeckBuild::create_land(){
 
 void DeckBuild::create_ritual(){
 
+/*
+#BEGIN_CARD
+	#TYPE_CARD: Ritual
+	#NAME: Spirit Lands
+	#TOKEN: 4
+
+	#EFFECTS: 1
+	#COST: 1, 1, 0, 0, 0, 0
+	#INFO: Take 2 lands in your library and shuffle your library
+#END_CARD
+*/
+
+    // Begin
+    m_file << "#BEGIN_CARD" <<std::endl;
+    m_file << "    #TYPE_CARD: Ritual" <<std::endl;
+
+    // Name
+    std::cout<< "Entrez le nom de votre rituel : " <<std::endl;
+
+    std::string name;
+    std::getline(std::cin, name);
+
+    m_file << "    #NAME: " + name <<std::endl;
+
+    std::cout<<std::endl<<std::endl;;
+
+    // Token
+    std::cout << "0       : Terrain blanche." << std::endl;
+    std::cout << "1       : Terrain bleue." << std::endl;
+    std::cout << "2       : Terrain noire." << std::endl;
+    std::cout << "3       : Terrain rouge." << std::endl;
+    std::cout << "4       : Terrain verte." << std::endl << std::endl;
+
+    std::cout<< "Entrez la couleur de votre rituel : " <<std::endl;
+
+    int token;
+    bool quit = false;
+
+    while(!quit){
+        std::cin>> token;
+        if(token < 5 && token >= 0 ){
+            quit = true;
+        } else{
+            print_info("Commande invalide.");
+        }
+    }
+
+    m_file << "    #TOKEN: " + std::to_string(token) <<std::endl << std::endl;
+
+    // Effects
+    switch (token)
+    {
+    case 0:{
+
+        std::cout << "0       : Gagne 3 points de vie." << std::endl;
+        std::cout << "1       : Ajouter 1 / 1 à une créature pour un tour." << std::endl;
+        std::cout << "2       : Détruire une créature engagée adverse." << std::endl;
+        std::cout << "3       : Détruire un enchantement engagé adverse." << std::endl;
+
+        std::cout << "valid   : valider vos choix." << std::endl;
+        std::cout << "reset   : réinitialiser vos choix." << std::endl<<std::endl;
+
+        std::cout<< "Entrez les effets de votre créature : " <<std::endl;
+
+        std::string cmd;
+        bool quit = false;
+        std::vector<int> effects;
+
+        while (!quit) {
+            std::getline(std::cin, cmd);
+
+            if (cmd.find("valid") != std::string::npos) {
+                quit = true;
+            } else if (cmd.find("reset") != std::string::npos) {
+                effects = {};
+                std::cout<< "Reset reussi" <<std::endl;
+            } else {
+                try {
+                    int num = std::stoi(cmd);
+                    if (num > 3 || num < 0) {
+                        std::cout << "Id invalide" << std::endl;
+
+                        std::cout << "Entrée pour continuer." << std::endl;
+                        std::getline(std::cin, cmd);
+                    } else if (std::find(effects.begin(), effects.end(), num) != effects.end()) {
+                        std::cout << num << " déjà ajouté." << std::endl;
+
+                        std::cout << "Entrée pour continuer." << std::endl;
+                        std::getline(std::cin, cmd);
+                    } else{
+                        effects.push_back(num);
+                    }
+                } catch (std::invalid_argument &e) {
+                    std::cout << "Commande Invalide" << std::endl; //TODO : s'affiche automatiquement
+                }
+            }
+        }
+
+        std::string str_effects = "";
+        for (auto e : effects){
+            if(e == effects[effects.size()-1]){
+                str_effects = str_effects + std::to_string(e);
+            } else {
+                str_effects = str_effects + std::to_string(e) + ", ";
+            }
+        }
+
+        m_file << "    #EFFECTS: " + str_effects <<std::endl << std::endl;  
+    }
+        
+    break;
+
+    case 1:{
+
+        std::cout << "0       : Piocher 2 cartes." << std::endl;
+        std::cout << "1       : Retourner une créature jouée adverse dans sa main." << std::endl;
+
+        std::cout << "valid   : valider vos choix." << std::endl;
+        std::cout << "reset   : réinitialiser vos choix." << std::endl<<std::endl;
+
+        std::cout<< "Entrez les effets de votre créature : " <<std::endl;
+
+        std::string cmd;
+        bool quit = false;
+        std::vector<int> effects;
+
+        while (!quit) {
+            std::getline(std::cin, cmd);
+
+            if (cmd.find("valid") != std::string::npos) {
+                quit = true;
+            } else if (cmd.find("reset") != std::string::npos) {
+                effects = {};
+                std::cout<< "Reset reussi" <<std::endl;
+            } else {
+                try {
+                    int num = std::stoi(cmd);
+                    if (num > 1 || num < 0) {
+                        std::cout << "Id invalide" << std::endl;
+
+                        std::cout << "Entrée pour continuer." << std::endl;
+                        std::getline(std::cin, cmd);
+                    } else if (std::find(effects.begin(), effects.end(), num) != effects.end()) {
+                        std::cout << num << " déjà ajouté." << std::endl;
+
+                        std::cout << "Entrée pour continuer." << std::endl;
+                        std::getline(std::cin, cmd);
+                    } else{
+                        effects.push_back(num);
+                    }
+                } catch (std::invalid_argument &e) {
+                    std::cout << "Commande Invalide" << std::endl; //TODO : s'affiche automatiquement
+                }
+            }
+        }
+
+        std::string str_effects = "";
+        for (auto e : effects){
+            if(e == effects[effects.size()-1]){
+                str_effects = str_effects + std::to_string(e);
+            } else {
+                str_effects = str_effects + std::to_string(e) + ", ";
+            }
+        }
+
+        m_file << "    #EFFECTS: " + str_effects <<std::endl << std::endl;  
+
+    }
+    break;
+
+    case 2:{
+
+        std::cout << "0       : Tuer une créature adverse." << std::endl;
+        std::cout << "1       : Tuer une créature adverse ayant plus de 2 de force." << std::endl;
+        std::cout << "2       : Tuer une créature avderse, hors Ange." << std::endl;
+        std::cout << "3       : Tuer une créature adverse ayant moins de 2 / 2 à ce tour." << std::endl;
+
+        std::cout << "valid   : valider vos choix." << std::endl;
+        std::cout << "reset   : réinitialiser vos choix." << std::endl<<std::endl;
+
+        std::cout<< "Entrez les effets de votre créature : " <<std::endl;
+
+        std::string cmd;
+        bool quit = false;
+        std::vector<int> effects;
+
+        while (!quit) {
+            std::getline(std::cin, cmd);
+
+            if (cmd.find("valid") != std::string::npos) {
+                quit = true;
+            } else if (cmd.find("reset") != std::string::npos) {
+                effects = {};
+                std::cout<< "Reset reussi" <<std::endl;
+            } else {
+                try {
+                    int num = std::stoi(cmd);
+                    if (num > 3 || num < 0) {
+                        std::cout << "Id invalide" << std::endl;
+
+                        std::cout << "Entrée pour continuer." << std::endl;
+                        std::getline(std::cin, cmd);
+                    } else if (std::find(effects.begin(), effects.end(), num) != effects.end()) {
+                        std::cout << num << " déjà ajouté." << std::endl;
+
+                        std::cout << "Entrée pour continuer." << std::endl;
+                        std::getline(std::cin, cmd);
+                    } else{
+                        effects.push_back(num);
+                    }
+                } catch (std::invalid_argument &e) {
+                    std::cout << "Commande Invalide" << std::endl; //TODO : s'affiche automatiquement
+                }
+            }
+        }
+
+        std::string str_effects = "";
+        for (auto e : effects){
+            if(e == effects[effects.size()-1]){
+                str_effects = str_effects + std::to_string(e);
+            } else {
+                str_effects = str_effects + std::to_string(e) + ", ";
+            }
+        }
+
+        m_file << "    #EFFECTS: " + str_effects <<std::endl << std::endl;  
+
+    }
+    break;
+
+    case 3:{
+
+        std::cout << "0       : Infliger 3 dégâts à une créature adverse ou à l'adervsaire." << std::endl;
+        std::cout << "1       : Infliger 4 dégâts à une créature adverse." << std::endl;
+
+        std::cout << "valid   : valider vos choix." << std::endl;
+        std::cout << "reset   : réinitialiser vos choix." << std::endl<<std::endl;
+
+        std::cout<< "Entrez les effets de votre créature : " <<std::endl;
+
+        std::string cmd;
+        bool quit = false;
+        std::vector<int> effects;
+
+        while (!quit) {
+            std::getline(std::cin, cmd);
+
+            if (cmd.find("valid") != std::string::npos) {
+                quit = true;
+            } else if (cmd.find("reset") != std::string::npos) {
+                effects = {};
+                std::cout<< "Reset reussi" <<std::endl;
+            } else {
+                try {
+                    int num = std::stoi(cmd);
+                    if (num > 1 || num < 0) {
+                        std::cout << "Id invalide" << std::endl;
+
+                        std::cout << "Entrée pour continuer." << std::endl;
+                        std::getline(std::cin, cmd);
+                    } else if (std::find(effects.begin(), effects.end(), num) != effects.end()) {
+                        std::cout << num << " déjà ajouté." << std::endl;
+
+                        std::cout << "Entrée pour continuer." << std::endl;
+                        std::getline(std::cin, cmd);
+                    } else{
+                        effects.push_back(num);
+                    }
+                } catch (std::invalid_argument &e) {
+                    std::cout << "Commande Invalide" << std::endl; //TODO : s'affiche automatiquement
+                }
+            }
+        }
+
+        std::string str_effects = "";
+        for (auto e : effects){
+            if(e == effects[effects.size()-1]){
+                str_effects = str_effects + std::to_string(e);
+            } else {
+                str_effects = str_effects + std::to_string(e) + ", ";
+            }
+        }
+
+        m_file << "    #EFFECTS: " + str_effects <<std::endl << std::endl;  
+
+    }
+    break;
+
+    case 4:{
+
+
+        std::cout << "0       : Jouer un autre terrain ce tour-ci." << std::endl;
+        std::cout << "1       : Prendre 2 terrains dans la bibliothèque et la mélanger." << std::endl;
+
+        std::cout << "valid   : valider vos choix." << std::endl;
+        std::cout << "reset   : réinitialiser vos choix." << std::endl<<std::endl;
+
+        std::cout<< "Entrez les effets de votre créature : " <<std::endl;
+
+        std::string cmd;
+        bool quit = false;
+        std::vector<int> effects;
+
+        while (!quit) {
+            std::getline(std::cin, cmd);
+
+            if (cmd.find("valid") != std::string::npos) {
+                quit = true;
+            } else if (cmd.find("reset") != std::string::npos) {
+                effects = {};
+                std::cout<< "Reset reussi" <<std::endl;
+            } else {
+                try {
+                    int num = std::stoi(cmd);
+                    if (num > 1 || num < 0) {
+                        std::cout << "Id invalide" << std::endl;
+
+                        std::cout << "Entrée pour continuer." << std::endl;
+                        std::getline(std::cin, cmd);
+                    } else if (std::find(effects.begin(), effects.end(), num) != effects.end()) {
+                        std::cout << num << " déjà ajouté." << std::endl;
+
+                        std::cout << "Entrée pour continuer." << std::endl;
+                        std::getline(std::cin, cmd);
+                    } else{
+                        effects.push_back(num);
+                    }
+                } catch (std::invalid_argument &e) {
+                    std::cout << "Commande Invalide" << std::endl; //TODO : s'affiche automatiquement
+                }
+            }
+        }
+
+        std::string str_effects = "";
+        for (auto e : effects){
+            if(e == effects[effects.size()-1]){
+                str_effects = str_effects + std::to_string(e);
+            } else {
+                str_effects = str_effects + std::to_string(e) + ", ";
+            }
+        }
+
+        m_file << "    #EFFECTS: " + str_effects <<std::endl;  
+
+    }
+    break;
     
+    default:
+        break;
+    }
+
+    // Cost
+    std::cout<< "Entrez le coût en terrain blanc : " <<std::endl;
+
+    int cost_white;
+    std::cin>> cost_white;
+
+    std::cout<< "Entrez le coût en terrain bleu : " <<std::endl;
+
+    int cost_blue;
+    std::cin>> cost_blue;
+
+    std::cout<< "Entrez le coût en terrain noir : " <<std::endl;
+
+    int cost_black;
+    std::cin>> cost_black;
+
+    std::cout<< "Entrez le coût en terrain rouge : " <<std::endl;
+
+    int cost_red;
+    std::cin>> cost_red;
+
+    std::cout<< "Entrez le coût en terrain vert : " <<std::endl;
+
+    int cost_green;
+    std::cin>> cost_green;
+
+    std::cout<< "Entrez le coût en terrain de n'importe quelle couleur : " <<std::endl;
+
+    int cost_any;
+    std::cin>> cost_any;
+
+    std::string cost;
+    cost = std::to_string(cost_any) + ", " + std::to_string(cost_white) + ", " + std::to_string(cost_blue) + ", " + std::to_string(cost_black) + ", " + std::to_string(cost_red) + ", " + std::to_string(cost_green);
+
+    m_file << "    #COST: " + cost <<std::endl;
+
+    // Info
+    std::cout<< "Entrez les informations de votre rituel: " <<std::endl;
+
+    std::string infos;
+    std::getline(std::cin, infos);
+
+    m_file << "    #INFO: " + infos <<std::endl; //TODO : ne laisse pas le temps de taper
+
+
+    m_file << "#END_CARD" <<std::endl << std::endl;
     
 }
 
 void DeckBuild::create_enchantment(){
     
+
+
 }

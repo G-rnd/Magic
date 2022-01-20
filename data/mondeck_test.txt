@@ -1,0 +1,33 @@
+#BEGIN_CARD
+    #TYPE_CARD: Creature
+    #NAME: Mon nom pref
+    #TOKEN: 3
+
+    #POWER: 2
+    #TOUGHNESS: 56
+    #ABILITIES: 
+
+    #TYPES: 3
+
+    #COST: 5, 3, 4, 1, 0, 0
+#END_CARD
+
+#BEGIN_CARD
+    #TYPE_CARD: Ritual
+    #NAME: mon ritual de ces mortS
+    #TOKEN: 1
+
+    #EFFECTS: 0
+
+    #COST: 1, 0, 4, 6, 2, 1
+    #INFO: 
+#END_CARD
+
+#BEGIN_CARD
+    #TYPE_CARD: Land
+    #NAME: mon teua
+    #TOKEN: 3
+
+    #VALUE: 1
+#END_CARD
+
