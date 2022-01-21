@@ -11,12 +11,9 @@
 
 Game::Game() {
     m_player_turn = false;
-    //std::cout << "[Game] : Création de " << this << std::endl;
-    m_player_turn = false;
 }
 
 Game::~Game() {
-    //std::cout << "[Game] : Destruction de " << this << std::endl;
 }
 bool Game::get_player_turn() const {
     return m_player_turn;
@@ -50,15 +47,18 @@ void Game::start() {
     std::string p_name_1;
     std::string p_name_2;
 
-    std::cout << "Bienvenue dans votre partie." << std::endl << std::endl;;
+    //cls();
+    print_actions("Bienvenue dans votre partie !", {}, "Saisir le nom du premier joueur");
 
-    std::cout << "Le nom du premier joueur :" << std::endl;
     std::cin >> p_name_1;
     Player p1(p_name_1);
-
-    std::cout << "Le nom du second joueur :" << std::endl;
+    
+    //cls();
+    print_actions("Bienvenue dans votre partie !", {}, "Saisir le nom du second joueur");
     std::cin >> p_name_2;
     Player p2(p_name_2);
+    
+    //cls();
 
     p1.set_opponent(&p2);
     p2.set_opponent(&p1);
@@ -67,64 +67,78 @@ void Game::start() {
     m_players.push_back(&p2);
 
     // Choix des decks, mélange des bibliothèques et pioche initiale
+    std::string path = "data/";
+
+    std::vector<std::pair<std::string, std::string > > available_decks = {};
+
+    for (const auto & file : std::filesystem::directory_iterator(path))
+        available_decks.push_back({"", (file.path()).string().substr(path.size())});
+    for(size_t i = 0; i < available_decks.size(); i++) {
+        available_decks[i].first = (available_decks.size() > 10) ? ((i/10 == 1) ? " " : "") : "" + std::to_string(i);
+    }
+
+    if (available_decks.size() == 0) {
+        //cls();
+        print_info("Erreur : Aucun deck n'est disponible !");
+        return;
+    }
     for (size_t i = 0; i < 2; i++) {
-        switch (i) {
-            case 0:
-                std::cout << "Choisir un deck pour le premier joueur :" << std::endl;
-                break;
-            case 1:
-                std::cout << "Choisir un deck pour le second joueur :" << std::endl;
-                break;
-            default:
-                break;
-        }
-        
-        std::string path = "data/";
-        
-        size_t nb_decks = 0;
-        for (const auto & file : std::filesystem::directory_iterator(path)) {
-            std::cout << file.path() << std::endl;
-            nb_decks++;
-        }        
-        if (nb_decks == 0) {
-            print_info("Erreur : Aucun deck n'est disponible !");
-            return;
-        }
+        while (true) {
+            //cls();
+            if (i == 0)
+                print_actions("Choisir un deck pour le premier joueur", available_decks, "", false, " - ");
+            else
+                print_actions("Choisir un deck pour le second joueur", available_decks, "", false, " - ");
 
-        std::string filename = "";
+            try {
+                std::string cmd;
+                std::cin >> cmd;
+                int id = stoi(cmd);
 
-        while(true) {
-            std::cin >> filename;
-            std::cin.ignore();
-            std::ifstream ifile;
-            ifile.open(filename);
+                if (id < 0 || id >= (int) available_decks.size())
+                    print_info("Id invalide !");
+                else {
+                    std::string filename = path + available_decks[id].second;
 
-            if (ifile) {
-                m_players[i]->set_library(CardParser::parse(filename));
-                break;
+                    std::ifstream ifile;
+                    ifile.open(filename);
+
+                    if (ifile) {
+                        m_players[i]->set_library(CardParser::parse(filename));
+                        break;
+                    } else {
+                        print_info("Erreur: le fichier n'existe plus !");
+                    }
+                }
+            } catch (std::invalid_argument& e) {
+                print_info("Id invalide !");
             }
         }
+        
         // Mélange de la bibliothèque
         m_players[i]->shuffle_library();
+        print_info("Bibliothèque mélangée.");
 
         // Phase de pioche initiale
         for(auto index = 0; index < 7; index++) {
             m_players[i]->draw_card();
         }
     }
-    
+
     // Phases de jeu
     while (true) {
+        //cls();
         print_info("C'est au tour de " + get_current_player()->get_name() + " de jouer !");
         get_current_player()->set_played_land(0);
 
         // reset des stats des cartes 
         for (auto p : m_players) {
-            for (auto bc : p->get_battlefield().get_basic_cards()) {
+            for (auto bc : p->get_battlefield()->get_basic_cards()) {
                 if (bc->is_class(Card_class::CREATURE)){
                     Creature* c = dynamic_cast<Creature*>(bc);
                     c->set_power_current(c->get_power());
                     c->set_toughness_current(c->get_toughness());
+                    c->set_is_first_turn(false);
                 }
             }
         }
@@ -134,17 +148,19 @@ void Game::start() {
             victory(*get_current_player()->get_opponent());
             return;
         } else {
+            //cls();
             print_info("Vous piochez la carte : " + get_current_player()->get_library()[0]->get_name());
             get_current_player()->draw_card();
         }
 
         // Phase de désengagement
-        for (auto c : get_current_player()->get_battlefield().get_basic_cards()) {
-            get_current_player()->get_battlefield().disengage_card(c);
+        for (auto c : get_current_player()->get_battlefield()->get_basic_cards()) {
+            get_current_player()->get_battlefield()->disengage_card(c);
         }
+
         // Phase principale
         Game::main_phase(true);
-
+        
         // check if a player has lost
         if (check_defeat())
             return;
@@ -184,20 +200,30 @@ bool Game::check_defeat() {
 }
 
 void Game::main_phase(bool first) {
+    //cls();
+    std::string debut = "Debut de la phase ";
+    debut += (first) ? "principale !" : "secondaire !";
+    print_actions(debut);
+    print_info();
 
     while (true) {
-        std::system("clear");
+        //cls();
         get_current_player()->print();
 
-        std::cout << "Selectionnez une carte à placer :" << std::endl;
-        std::cout << "<id>      : pour jouer une carte." << std::endl;
-        std::cout << "info <id> : pour avoir des informations sur une carte." << std::endl;
-        std::cout << "end       : pour arrêter la phase " << ((first) ? "principale": "secondaire") << "." << std::endl << std::endl;
+        std::string s = "arrêter la phase ";
+        s += (first) ? "principale" : "secondaire"; 
+        print_actions("Selectionnez une carte à placer", {
+            {"<id>", "jouer une carte"},
+            {"info <id>", "afficher les caractéristiques d'une carte"},
+            {"end ", s}
+        });
 
         std::vector<Card*> hand{};
         for (Card* c : get_current_player()->get_hand()) {
             hand.push_back(c);
         }
+
+        std::vector<std::pair<std::string, std::string> > available_cards = {};
         int hand_size = hand.size();
         // Vérifications 
         for (int i = 0; i < hand_size; i++) {
@@ -208,12 +234,11 @@ void Game::main_phase(bool first) {
                 - un rituel jouable
                 - un enchantement jouable
              */
-            if ((hand[i]->is_class(Card_class::CREATURE) && get_current_player()->get_battlefield().is_playable(hand[i])) 
+            if ((hand[i]->is_class(Card_class::CREATURE) && get_current_player()->get_battlefield()->is_playable(hand[i])) 
             || (hand[i]->is_class(Card_class::LAND) && (get_current_player()->get_played_land() <= 0))
-            || (hand[i]->is_class(Card_class::RITUAL) && get_current_player()->get_battlefield().is_playable(hand[i]))
-            || (hand[i]->is_class(Card_class::ENCHANTEMENT) && get_current_player()->get_battlefield().is_playable(hand[i]))) {
-                std::cout << std::setfill(' ') << std::setw (hand_size / 10)  << i << " - " << hand[i]->get_name() << std::endl;
-
+            || (hand[i]->is_class(Card_class::RITUAL) && get_current_player()->get_battlefield()->is_playable(hand[i]))
+            || (hand[i]->is_class(Card_class::ENCHANTEMENT) && get_current_player()->get_battlefield()->is_playable(hand[i]))) {
+                available_cards.push_back({std::to_string(i), hand[i]->get_name()});
             } else {
                 hand.erase(hand.begin() + i);
                 i--;
@@ -221,18 +246,29 @@ void Game::main_phase(bool first) {
             }
         }
 
+        if (hand_size == 0) {
+            print_info("Aucune action disponible pour cette phase.");
+            return;
+        }
+
+        print_list(available_cards);
+
         std::string cmd;
         std::getline(std::cin, cmd);
+
         if (cmd.find("end") != std::string::npos)
             return;
-        else if (hand_size > 0) {
+        else {
             try {
                 int num = std::stoi(cmd);
                 if (num >= hand_size) {
                     print_info("L'id saisit est invalide, veuillez saisir un id disponible dans la liste des id ci-dessus.");
                 }
-                else
+                else {
+                    //cls();
+                    print_info("Vous placez la carte : " + hand[num]->get_name());
                     get_current_player()->play_card(hand[num]);
+                }
             }
             catch (std::invalid_argument &e) {
                 std::string info = "info ";
@@ -244,8 +280,7 @@ void Game::main_phase(bool first) {
                         } else {
                             // todo afficher les cartes
                             hand[num]->print();
-                            std::cout << "Entrée pour continuer." << std::endl;
-                            std::getline(std::cin, cmd);
+                            print_info();
                         }            
                     } catch (std::invalid_argument &e) {
                         print_info("help : info <id>, id est un chiffre disponible dans la liste des ids ci-dessus.");
@@ -253,19 +288,21 @@ void Game::main_phase(bool first) {
                 } else
                     print_info("Commande non reconnue.");
             } 
-        } else {
-            print_info("Aucune action disponible, veuillez saisir \"end\" pour terminer cette phase");
         }
     }
 }
 
 void Game::combat_phase() {
-
-    std::vector<Creature*> chosen_opponent =  get_current_player()->attack();
-
-    get_current_player()->print();
-
+    //cls();
+    print_actions("Debut de la phase de combat !");
+    print_info();
+    //cls();
+    
+    std::vector<Creature*> chosen_opponent = get_current_player()->attack();
+    //cls();
+    
     if (!chosen_opponent.empty()) {
+        get_current_player()->print();
 
         std::vector<Creature*> chosen_blockabled_opponent = chosen_opponent;
         
@@ -280,90 +317,152 @@ void Game::combat_phase() {
 
             if (unblockable_opponent)
                 remove(creature, chosen_blockabled_opponent);
-
         }
         
-        // demander à l'adervsaire s'il veut défendre l'attaque
-        if (!chosen_blockabled_opponent.empty()) {
-
-            std::cout << get_current_player()->get_opponent()->get_name() << ", voulez-vous bloquer ces créatures ? " << std::endl;
-            std::cout << "oui       : pour choisir vos bloqueurs." << std::endl;
-            //std::cout << "info <id> : pour avoir des informations sur une carte." << std::endl;
-            std::cout << "non       : pour laisser l'attaque se faire." << std::endl << std::endl;
-            int i = 0;
-            for (auto creature : chosen_blockabled_opponent){
-                std::cout << i << " - " << creature->get_name() << std::endl;            
-            }
-        }
-
-        bool quit = false;
-        std::string cmd;
-        while (!quit) {
-            std::getline(std::cin, cmd);
-            if (cmd.find("oui") != std::string::npos) {
-                get_current_player()->get_opponent()->choose_defenders(chosen_blockabled_opponent);
-                quit = true;
-            } else if (cmd.find("non") != std::string::npos) {
-                // directement attaquer l'adervsaire
-                for (auto creature : chosen_blockabled_opponent){
-                    get_current_player()->get_opponent()->set_hp(get_current_player()->get_opponent()->get_hp() - creature->get_power_current());
+        while (true) {
+            // demander à l'adervsaire s'il veut défendre l'attaque
+            if (!chosen_blockabled_opponent.empty()) {
+                print_actions(get_current_player()->get_opponent()->get_name() + ", voulez-vous bloquer ces créatures ?", {
+                    {"0", "Choisir de bloquer les créatures"},
+                    {"1", "Choisir de ne pas bloquer les créatures"}
+                });
+                std::vector<std::pair<std::string, std::string> > creature_list = {};
+                int i = 0;
+                for (auto creature : chosen_blockabled_opponent) {
+                    creature_list.push_back({std::to_string(i), creature->get_name()});
+                    i++;   
                 }
-                quit = true;
-            } else
-                std::cout << "Commande Invalide" << std::endl;
+                print_list(creature_list);
+            }
+            
+            std::string cmd;
+            std::getline(std::cin, cmd);
+
+            try {
+                int res = stoi(cmd);
+                if (res != 0 && res != 1)
+                    print_info("Commande invalide.");
+                else if (res == 0) {
+                    get_current_player()->get_opponent()->choose_defenders(chosen_blockabled_opponent);
+                    break;
+                } else {
+                    for (auto creature : chosen_blockabled_opponent) {
+                        print_info(get_current_player()->get_opponent()->get_name() + " perd " + std::to_string(creature->get_power_current()) + " PV !");
+                        get_current_player()->get_opponent()->set_hp(get_current_player()->get_opponent()->get_hp() - creature->get_power_current());
+                    }
+                    print_info("Retour aux actions de " + get_current_player()->get_name() + ".");
+                    break;
+                }
+            } catch (std::invalid_argument& e) {
+                print_info("Commande invalide.");
+            }
         }
     }
 }
 
 void Game::turn_end_phase() {
-
-    while ((get_current_player()->get_hand()).size() > 7) {
-
-        std::cout <<"Défaussez des cartes, il doit vous rester 7."<<std::endl;
-        std::cout << "<id>      : pour defausser une carte." << std::endl;
-        //std::cout << "info <id> : pour avoir des informations sur une carte." << std::endl;
-        std::cout << "reset     : pour reinitialiser vos choix." << std::endl << std::endl;
-        std::cout << "valid     : pour valider votre choix." << std::endl << std::endl;
-
-        int i = 0;
+    if ((get_current_player()->get_hand()).size() > 7) {
+        //cls();
+        print_actions("Phase de défausse de " + get_current_player()->get_name() + ":");
+        print_info();
+        
+        std::vector<Card*> chosen_cards = {};
         std::vector<Card*> possible_cards;
-        std::vector<Card*> chosen_cards;
-
         for (auto card : get_current_player()->get_hand()) {
-            std::cout<< i << " - " << card->get_name()<<std::endl;
             possible_cards.push_back(card);
-            i++;
         }
 
         bool quit = false;
-        std::string cmd;
-        while (!quit) {
-            std::getline(std::cin, cmd);
+        while(!quit) {
+            while (true) {
+                //cls();
+                print_actions("Vous devez défausser " + std::to_string(get_current_player()->get_hand().size() - 7)+ " cartes !", {
+                    {"<id>", "pour défausser une carte."},
+                    {"reset", "pour réinitialiser vos choix"}
+                });
             
-            if (cmd.find("valid") != std::string::npos) {
-                quit = true;
-            } else if(cmd.find("reset") != std::string::npos) {
-                chosen_cards = {};
-                std::cout<< "Reset reussi" <<std::endl;
-            } else {
-                try {
-                    int num = std::stoi(cmd);
-                    if (num > i || num < 0) {
-                        print_info("Id invalide");
-                    } else {
-                        if (contain(possible_cards[num], chosen_cards)) {
-                            std::cout << num <<" deja defaussee." << std::endl; 
+                int i = 0;
+                std::vector<std::pair<std::string, std::string> > print_cards = {};
+
+                for(auto card : possible_cards) {
+                    print_cards.push_back({std::to_string(i), card->get_name()});
+                    i++;
+                }
+                print_list(print_cards);
+                
+                std::string cmd;
+                std::cin >> cmd;
+                    
+                if(cmd.find("reset") != std::string::npos) {
+                    chosen_cards = {};
+                    possible_cards.clear();
+                    for (auto card : get_current_player()->get_hand()) {
+                        possible_cards.push_back(card);
+                    }
+                    print_info("Reset reussi !");
+                } else {
+                    try {
+                        int num = std::stoi(cmd);
+                        if (num > i || num < 0) {
+                            print_info("Id invalide.");
                         } else {
+                            print_info("Carte choisie : " + possible_cards[num]->get_name());
                             chosen_cards.push_back(possible_cards[num]);
+                            possible_cards.erase(possible_cards.begin() + num);
                         }
+                    } catch (std::invalid_argument &e) {
+                        print_info("Commande invalide.");
+                    }
+                }
+
+                if (possible_cards.size() <= 7)
+                    break;
+            }
+
+            while(true) {
+                //cls();
+                std::vector<std::pair<std::string, std::string> > print_cards = {};
+                int i = 0;
+
+                for(auto& c : chosen_cards) {
+                    print_cards.push_back({std::to_string(i), c->get_name()});
+                    i++;
+                }
+
+                print_actions("Voici les cartes que vous voulez défausser :", {
+                    {"0","retourer au choix des cartes à défausser"},
+                    {"1", "valider votre choix"}
+                });
+                print_list(print_cards);
+                try {    
+                    std::string cmd;
+                    std::getline(std::cin, cmd);
+
+                    int num = std::stoi(cmd);
+                    if (num != 0 && num != 1) {
+                        print_info("Id invalide.");
+                    } else {
+                        if (num == 1) {
+                            for (auto card : chosen_cards)
+                            get_current_player()->discard_card(card);
+                            print_info("Défausse réussie !");
+                            quit = true;
+                        } else {
+                            chosen_cards = {};
+                            possible_cards.clear();
+                            for (auto card : get_current_player()->get_hand()) {
+                                possible_cards.push_back(card);
+                            }
+                            print_info("Retour aux choix des cartes à défausser.");
+
+                        }
+                        break;
                     }
                 } catch (std::invalid_argument &e) {
-                    print_info("Commande invalide.");
+                        print_info("Id invalide.");
                 }
             }
         }
-        for (auto card : chosen_cards)
-            get_current_player()->discard_card(card);
     }
 }
 
@@ -384,6 +483,15 @@ void Game::exit() {
 }
 
 void Game::victory(Player p) {
-    std::string text = "Bravo " + p.get_name() + " tu as vaincu " + p.get_opponent()->get_name() + " !";
-    print_info(text);
+    print_info("Bravo " + p.get_name() + "tu as vaincu " + p.get_opponent()->get_name() + " !");
+}
+
+void Game::print_title_screen() {
+    //cls();
+    print_actions("Bienvenue dans une nouvelle édition de Magic The Gathering !", {
+        { "play",         "pour lancer une nouvelle partie" },
+        { "load",         "pour charger une de vos parties" },
+        { "deck-builder", "pour créer votre propre deck" },
+        { "exit",         "pour quitter le jeu." }
+    }, "Choisissez votre mode de jeu :");
 }

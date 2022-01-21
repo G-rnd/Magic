@@ -15,28 +15,55 @@
 #include "Ritual.hpp"
 #include "Enchantment.hpp"
 
-enum Card_class                 { CREATURE, LAND, RITUAL, ENCHANTEMENT };
+namespace Card_class { 
+    enum Card_class                 { CREATURE, LAND, RITUAL, ENCHANTEMENT };
+}
 
-enum Token                      { White, Blue, Black, Red, Green };
+namespace Token { 
+    enum Token                      { White, Blue, Black, Red, Green, Count };
+}
 
-enum Ability                    { Flight, Scope, Vigilance, Touch_of_death, Defender, Initiative, Double_initiative, Haste, Unblockable,
-                                    Life_link, Threat, Trampling, White_protection, Blue_protection, Black_protection, Red_protection, Green_protection };
+namespace Ability { 
+    enum Ability                    { Flight, Scope, Vigilance, Touch_of_death, Defender, Initiative, Double_initiative, Haste, Unblockable,
+                                    Life_link, Threat, Trampling, White_protection, Blue_protection, Black_protection, Red_protection, Green_protection, Count };
+}
+                                    
 
 enum Type					    { Angel, Beast, Human_werewolf, HippoGriff, Kor_warrior, Dinosaur, Humans, Vampire, Spider, Elf, Troll };
 
 // TODO : Destroy détruit complètement la carte : delete
-enum White_ritual_effects	    { More_3_HP, More_1_1_creature_current, Destroy_engaged_creature, Destroy_enchantment };
-enum Blue_ritual_effects	    { Draw_2_cards, Back_hand_creature };
-enum Black_ritual_effects	    { Kill_creature, Kill_creature_2_power, Kill_not_angel, Less_2_2_creature_current };
-enum Red_ritual_effects		    { Damage_3_creature_or_player, Damage_4_creatures };
-enum Green_ritual_effects	    { Play_another_land, Take_2_lands_library_shuffle };
+namespace White_ritual_effects { 
+    enum White_ritual_effects	    { More_3_HP, More_1_1_creature_current, Destroy_engaged_creature, Destroy_enchantment, Count };
+}
+namespace Blue_ritual_effects { 
+    enum Blue_ritual_effects	    { Draw_2_cards, Back_hand_creature, Count };
+}
+namespace Black_ritual_effects { 
+    enum Black_ritual_effects	    { Kill_creature, Kill_creature_2_power, Kill_not_angel, Less_2_2_creature_current, Count };
+}
+namespace Red_ritual_effects { 
+    enum Red_ritual_effects		    { Damage_3_creature_or_player, Damage_4_creatures, Count };
+}
+namespace Green_ritual_effects { 
+    enum Green_ritual_effects	    { Play_another_land, Take_2_lands_library_shuffle, Count };
+}
 
 // TODO : faire les enchantements 
-enum White_enchantment_effects  {Win_1_HP_white, Flight_Life_link};
-enum Blue_enchantment_effects   {Control_creature};
-enum Black_enchantment_effects  {Less_HP_death_creature};
-enum Red_enchantment_effects    {More_1_0_attack_creatures};
-enum Green_enchantment_effects  {More_1_land, More_G_G_creature};
+namespace White_enchantment_effects { 
+    enum White_enchantment_effects  { Win_1_HP_white, Flight_Life_link, Count };
+}
+namespace Blue_enchantment_effects { 
+    enum Blue_enchantment_effects   { Control_creature, Count };
+}
+namespace Black_enchantment_effects { 
+    enum Black_enchantment_effects  { Less_HP_death_creature, Count };
+}
+namespace Red_enchantment_effects { 
+    enum Red_enchantment_effects    { More_1_0_attack_creatures, Count };
+}
+namespace Green_enchantment_effects { 
+    enum Green_enchantment_effects  { More_1_land, More_G_G_creature, Count };
+}
 
 /**
  * @brief return the position of elem into vec
@@ -71,6 +98,31 @@ inline void remove(const T* elem, std::vector<T*>& vec) {
 	vec.erase(vec.begin() + element_position(elem, vec));
 }
 
-#endif
+void print_info(const std::string& s = "");
+void print_list(const std::vector<std::pair<std::string, std::string>>& options, const std::string& separator = " - ");
+void print_actions(const std::string& title, const std::vector<std::pair<std::string, std::string> >& options = {}, const std::string& end_message = "", bool dot_opt = true, const std::string& separator = " : ");
+void cls();
 
-void print_info(const std::string& s);
+enum Color {
+    Reset,
+    Black,
+    Red,
+    Green,
+    Yellow,
+    Blue,
+    Magenta,
+    Cyan,
+    White,
+    BrightBlack,
+    BrightRed,
+    BrightGreen,
+    BrightYellow,
+    BrightBlue,
+    BrightMagenta,
+    BrightCyan,
+    BrightWhite
+};
+
+std::string get_color (Color c);
+
+#endif

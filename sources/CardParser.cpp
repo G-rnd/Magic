@@ -128,34 +128,40 @@ Creature* CardParser::parse_creature(const std::vector<std::string>& data) {
         }
 
         if(s.find(CardParser::token) != std::string::npos) {
-            token = stoi(s.substr(CardParser::token.size()));
-            valid |= 1 << 1;
+            try {
+                token = stoi(s.substr(CardParser::token.size()));
+                valid |= (token < Token::Count) << 1;
+            } catch(std::invalid_argument& e) {}
             continue;
         }
 
         if(s.find(CardParser::power) != std::string::npos) {
-            power = stoi(s.substr(CardParser::power.size()));
-            valid |= 1 << 2;
+            try {
+                power = stoi(s.substr(CardParser::power.size()));
+                valid |= 1 << 2;
+            } catch(std::invalid_argument& e) {}
             continue;
         }
         
         if(s.find(CardParser::toughness) != std::string::npos) {
-            toughness = stoi(s.substr(CardParser::toughness.size()));
-            valid |= 1 << 3;
+            try {
+                toughness = stoi(s.substr(CardParser::toughness.size()));
+                valid |= 1 << 3;
+            } catch(std::invalid_argument& e) {}
             continue;
         }
 
         if(s.find(CardParser::abilities) != std::string::npos) {
             std::string s_list = s.substr(CardParser::abilities.size());
             abilities = parse_int_list(s_list);
-            valid |= 1 << 4;
+            valid |= std::all_of(abilities.begin(), abilities.end(), [] (auto i) { return i < Ability::Count; }) << 4;
             continue;
         }
 
         if(s.find(CardParser::types) != std::string::npos) {
             std::string s_list = s.substr(CardParser::types.size());
             types = parse_int_list(s_list);
-            valid |= 1 << 5;
+            valid |= std::all_of(types.begin(), types.end(), [] (auto i) { return i < Token::Count; }) << 5;
             continue;
         }
 
@@ -169,7 +175,7 @@ Creature* CardParser::parse_creature(const std::vector<std::string>& data) {
     
     if (valid == 0b1111111)
         return new Creature(Card_class::CREATURE, name, token, power, toughness, abilities, types, new Cost(cost[0], cost[1], cost[2], cost[3], cost[4], cost[5]));        
-
+    print_info("Erreur: " + std::to_string(valid) + ": Une créature n'a pas pu être créée !");
     return nullptr;
 }
 
@@ -188,21 +194,25 @@ Land* CardParser::parse_land(const std::vector<std::string>& data) {
         }
 
         if(s.find(CardParser::token) != std::string::npos) {
-            token = stoi(s.substr(CardParser::token.size()));
-            valid |= 1 << 1;
+            try {
+                token = stoi(s.substr(CardParser::token.size()));
+                valid |= (token < Token::Count) << 1;
+            } catch(std::invalid_argument& e) {}
             continue;
         }
 
         if(s.find(CardParser::value) != std::string::npos) {
-            value = stoi(s.substr(CardParser::value.size()));
-            valid |= 1 << 2;
+            try {
+                value = stoi(s.substr(CardParser::value.size()));
+                valid |= (value > 0) << 2;
+            } catch(std::invalid_argument& e) {}
             continue;
         }
     }
 
     if (valid == 0b111)
         return new Land(Card_class::LAND, name, token, value);
-
+    print_info("Erreur: " + std::to_string(valid) + ": Un territoire n'a pas pu être créé !");
     return nullptr;
 }
 
@@ -215,22 +225,26 @@ Enchantment* CardParser::parse_enchantment(const std::vector<std::string>& data)
     std::vector<int> cost {};
     std::vector<int> effects {};
 
-    for(auto& s : data) {
-        if(s.find(CardParser::name) != std::string::npos) {
+    for (auto& s : data) {
+        if (s.find(CardParser::name) != std::string::npos) {
             name = s.substr(CardParser::name.size());
             valid |= 1;
             continue;
         }
 
-        if(s.find(CardParser::token) != std::string::npos) {
-            token = stoi(s.substr(CardParser::token.size()));
-            valid |= 1 << 1;
+        if (s.find(CardParser::token) != std::string::npos) {
+            try {
+                token = stoi(s.substr(CardParser::token.size()));
+                valid |= (token < Token::Count) << 1;
+            } catch(std::invalid_argument& e) {}
             continue;
         }
 
-        if(s.find(CardParser::info) != std::string::npos) {
-            info = s.substr(CardParser::info.size());
-            valid |= 1 << 2;
+        if (s.find(CardParser::info) != std::string::npos) {
+            try {
+                info = s.substr(CardParser::info.size());
+                valid |= 1 << 2;
+            } catch(std::invalid_argument& e) {}
             continue;
         }
 
@@ -244,7 +258,11 @@ Enchantment* CardParser::parse_enchantment(const std::vector<std::string>& data)
         if(s.find(CardParser::effects) != std::string::npos) {
             std::string s_list = s.substr(CardParser::effects.size());
             effects = parse_int_list(s_list);
-            valid |= 1 << 4;
+            valid |= std::all_of(effects.begin(), effects.end(),
+                [] (auto i) {
+                    return i < (White_enchantment_effects::Count + Blue_enchantment_effects::Count + Black_enchantment_effects::Count +
+                    Red_enchantment_effects::Count + Green_enchantment_effects::Count);
+                }) << 4;
             continue;
         }
 
@@ -252,7 +270,7 @@ Enchantment* CardParser::parse_enchantment(const std::vector<std::string>& data)
 
     if (valid == 0b1111)
         return new Enchantment(Card_class::ENCHANTEMENT, name, token, info, new Cost(cost[0], cost[1], cost[2], cost[3], cost[4], cost[5]), effects);
-
+    print_info("Erreur: " + std::to_string(valid) + ": Un enchantement n'a pas pu être créé !");
     return nullptr;
 }
 
@@ -273,8 +291,10 @@ Ritual* CardParser::parse_ritual(const std::vector<std::string>& data) {
         }
 
         if(s.find(CardParser::token) != std::string::npos) {
-            token = stoi(s.substr(CardParser::token.size()));
-            valid |= 1 << 1;
+            try {
+                token = stoi(s.substr(CardParser::token.size()));
+                valid |= (token < Token::Count) << 1;
+            } catch (std::invalid_argument& e) {}
             continue;
         }
 
@@ -294,14 +314,18 @@ Ritual* CardParser::parse_ritual(const std::vector<std::string>& data) {
         if(s.find(CardParser::effects) != std::string::npos) {
             std::string s_list = s.substr(CardParser::effects.size());
             effects = parse_int_list(s_list);
-            valid |= 1 << 4;
+            valid |= std::all_of(effects.begin(), effects.end(),
+                [] (auto i) {
+                    return i < (White_ritual_effects::Count + Blue_ritual_effects::Count + Black_ritual_effects::Count +
+                    Red_ritual_effects::Count + Green_ritual_effects::Count);
+                }) << 4;
             continue;
         }
     }
 
     if (valid == 0b1111)
         return new Ritual(Card_class::RITUAL, name, token, info, new Cost(cost[0], cost[1], cost[2], cost[3], cost[4], cost[5]), effects);
-
+    print_info("Erreur: " + std::to_string(valid) + ": Un rituel n'a pas pu être créé !");
     return nullptr;
 }
 
@@ -310,12 +334,16 @@ std::vector<int> CardParser::parse_int_list(std::string& s) {
 
     std::string delimiter = ", ";
     size_t pos = 0;
-    
+
     while ((pos = s.find(delimiter)) != std::string::npos) {
-        l.push_back(stoi(s.substr(0, pos)));
+        try {
+            l.push_back(stoi(s.substr(0, pos)));
+        } catch (std::invalid_argument& e) {}
         s.erase(0, pos + delimiter.length());
     }
-    l.push_back(stoi(s));
-
+    try {
+        l.push_back(stoi(s));
+    } catch (std::invalid_argument& e) {}
+    
     return l;
 }

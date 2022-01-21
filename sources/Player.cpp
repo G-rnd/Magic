@@ -15,6 +15,7 @@
 
 Player::Player(std::string name): m_name(name) {
     //std::cout << "[Player] : Création de " << this << std::endl;
+    m_battlefield = new Battlefield();
     m_hp = 20;
     m_looser = false;
 }
@@ -39,7 +40,7 @@ int Player::get_played_land() const {
     return m_played_land;
 }
 
-Battlefield Player::get_battlefield() const {
+Battlefield* Player::get_battlefield() const {
     return m_battlefield;
 }
 
@@ -102,9 +103,9 @@ void Player::add_hand(Card* c) {
 
 void Player::remove_battlefield(Card* c) {
     if (c->is_class(Card_class::ENCHANTEMENT)) {
-        m_battlefield.remove_enchantment(dynamic_cast<Enchantment*>(c));
+        m_battlefield->remove_enchantment(dynamic_cast<Enchantment*>(c));
     } else if (c->is_class(Card_class::CREATURE) || c->is_class(Card_class::LAND)) {
-        m_battlefield.remove_basic_card(dynamic_cast<BasicCard*>(c));
+        m_battlefield->remove_basic_card(dynamic_cast<BasicCard*>(c));
     }
 }
 
@@ -155,28 +156,26 @@ void Player::shuffle_library() {
         m_library_copy.erase(m_library_copy.begin() + j);
         i_lib++;
     }
-    
-    print_info("Bibliothèque mélangée.");
 }
 
 void Player::play_card(Card* c) {
 
     if (c->is_class(Card_class::LAND)) {
         add_played_land(1);
-        m_battlefield.place_basic_card(dynamic_cast<BasicCard*>(c));
+        m_battlefield->place_basic_card(dynamic_cast<BasicCard*>(c));
         remove(c, m_hand);
     } else if(c->is_class(Card_class::RITUAL)){
         Ritual* r = dynamic_cast<Ritual*>(c);
-        play_ritual(*r);
-        m_battlefield.engage_lands(r->get_cost());
+        play_ritual(r);
+        m_battlefield->engage_lands(r->get_cost());
     } else if(c->is_class(Card_class::ENCHANTEMENT)){
 
     } else if(c->is_class(Card_class::CREATURE)){
         Creature* cre = dynamic_cast<Creature*>(c);
         cre->set_is_first_turn(true);
-        m_battlefield.place_basic_card(dynamic_cast<BasicCard*>(c));
+        m_battlefield->place_basic_card(dynamic_cast<BasicCard*>(c));
         remove(c, m_hand);
-        m_battlefield.engage_lands(cre->get_cost());
+        m_battlefield->engage_lands(cre->get_cost());
     }
 }
 
@@ -194,22 +193,12 @@ void Player::disengage_card(BasicCard* bc) {
 - Haste
 */
 std::vector<Creature*> Player::attack() {
-
-    std::cout << "Selectionnez les cartes pour attaquer :" << std::endl;
-    std::cout << "<id>      : pour attaquer avec cette carte." << std::endl;
-    std::cout << "reset     : pour annuler vos choix." << std::endl;
-    //std::cout << "info <id> : pour avoir des informations sur une carte." << std::endl;
-    std::cout << "valid      : pour valider vos choix." << std::endl << std::endl;
-
     int i = 0;
-    std::string cmd;
-    bool quit = false;
-    std::vector<Creature*> possible_opponents;
-    std::vector<Creature*> chosen_opponents;
+    std::vector<Creature*> possible_creatures = {};
     
+    std::vector<std::pair<std::string, std::string> > print_creatures = {};
     // List the available creatures
-    for (auto creature : m_battlefield.get_available_creatures()) {
-
+    for (auto creature : m_battlefield->get_available_creatures()) {
         // Etablish abilities
         bool defender_creature = false;
         bool haste_creature = false;
@@ -227,8 +216,8 @@ std::vector<Creature*> Player::attack() {
             if (!creature->get_is_first_turn() || haste_creature) {
                 // Check defender ability
                 if (!defender_creature) {
-                    std::cout << i << " - " << creature->get_name() << std::endl;
-                    possible_opponents.push_back(creature);
+                    print_creatures.push_back({std::to_string(i), creature->get_name()});
+                    possible_creatures.push_back(creature);
                     i++;
                 }
             } else {
@@ -237,42 +226,79 @@ std::vector<Creature*> Player::attack() {
         }
     }
 
+    if (possible_creatures.size() == 0) {
+        print_info("Aucune action disponible pour cette phase.");
+        return possible_creatures;
+    }
+
+    std::vector<Creature*> returned_creatures = {};
+    std::vector<Creature*> creatures = {};
+    for(auto& c : possible_creatures)
+        creatures.push_back(c);
+
+    std::string cmd;
+
     // Interaction with player : choices
-    while (!quit) {
+    while (true) {
+        //cls();
+        print_actions("Sélectionnez les cartes pour attaquer !", {
+            {"<id>", "pour attaquer avec cette carte"},
+            {"reset", "pour annuler vos choix"},
+            {"valid", "pour valider vos choix"}
+        });
+
+        size_t id = 0;
+        print_creatures = {};
+        for(auto& c : creatures) {
+            print_creatures.push_back({std::to_string(id), c->get_name()});
+            id++;
+        }
+        print_list(print_creatures);
         std::getline(std::cin, cmd);
 
         if (cmd.find("valid") != std::string::npos) {
-            quit = true;
-        } else if (cmd.find("reset") != std::string::npos) {
-            chosen_opponents = {};
-            std::cout<< "Reset reussi" <<std::endl;
+            id = 0;
+            print_creatures = {};
+            for(auto& c : returned_creatures) {
+                print_creatures.push_back({std::to_string(id), c->get_name()});
+                id++;
+            }
+            if(print_creatures.size() > 0) {
+                print_actions("Vous attaquez avec les créatures suivantes :", print_creatures);
+                print_info();
+            } else {
+                print_info("Vous n'attaquez avec aucune créature.");
+            }
+            break;
+        }
+
+        if (cmd.find("reset") != std::string::npos) {    
+            returned_creatures = {};
+            creatures = {};
+            for(auto& c : possible_creatures)
+                creatures.push_back(c);
+            print_info("Reset réussi.");
         } else {
             try {
                 int num = std::stoi(cmd);
-                if (num > i || num < 0) {
-                    std::cout << "Id invalide" << std::endl;
-
-                    std::cout << "Entrée pour continuer." << std::endl;
-                    std::getline(std::cin, cmd);
+                if (num >= (int) creatures.size() || num < 0) {
+                    print_info("Id invalide.");
                 } else {
-                    if(contain(possible_opponents[num], chosen_opponents)){
-                        std::cout << num << " deja choisie" << std::endl; 
-                    } else {
-                        std::cout<< "Vous venez d'ajouter " << possible_opponents[num]->get_name() << "." <<std::endl; 
-                        chosen_opponents.push_back(possible_opponents[num]);
-                    }
+                    print_info("Vous venez d'ajouter " + creatures[num]->get_name() + ".");
+                    returned_creatures.push_back(creatures[num]);
+                    creatures.erase(creatures.begin() + num);
                 }
             } catch (std::invalid_argument &e) {
-                std::cout << "Commande Invalide" << std::endl;    
+                print_info("Commande invalide.");
             }
         }
     }
-
     bool vigilance_creature = false;
 
-    for (auto card : chosen_opponents) {
+    for (auto card : returned_creatures) {
         // Check the vigilance ability
         for (auto ability_card : card->get_abilities()) {
+
             if (ability_card == Ability::Vigilance) {
                 vigilance_creature = true;
             }
@@ -281,7 +307,7 @@ std::vector<Creature*> Player::attack() {
             card->set_engaged(true);
         }
     }
-    return chosen_opponents;
+    return returned_creatures;
 }
 
 /*
@@ -292,23 +318,21 @@ std::vector<Creature*> Player::attack() {
 
 void Player::choose_defenders(std::vector<Creature*> opponents) {
 
-    std::cout << "Selectionnez les cartes pour défendre :" << std::endl;
-    std::cout << "<id>      : pour défendre avec cette carte." << std::endl;
-    std::cout << "reset     : pour annuler vos choix." << std::endl;
-    //std::cout << "info <id> : pour avoir des informations sur une carte." << std::endl;
-    std::cout << "end       : pour ne pas defendre cette carte." << std::endl << std::endl;
-    // TODO : validation
-    std::cout<< "Attention ! Choisissez vos defenseurs dans l'ordre souhaité"<<std::endl<<std::endl;
-
-    std::vector<Creature*> availabled_creature = m_battlefield.get_available_creatures();
+    std::vector<Creature*> availabled_creature = m_battlefield->get_available_creatures();
 
     for (auto opponent : opponents) {
+
+        print_actions("Selectionnez les cartes pour défendre " + opponent->get_name() + " :", {
+        {"<id>", "pour défendre avec cette carte"},
+        {"reset", "pour annuler vos choix"},
+        {"valid", "pour valider vos choix"},
+        }, "Attention ! Choisissez vos défenseurs dans l'ordre souhaité !");
 
         std::string cmd;
         int i = 0;
         bool quit = false;
-        std::vector<Creature*> possible_defenders;
-        std::vector<Creature*> chosen_defenders;
+        std::vector<Creature*> possible_defenders = {};
+        std::vector<Creature*> chosen_defenders = {};
 
         // Etablish opponent abilities
         bool threat_opponent = false;
@@ -321,7 +345,6 @@ void Player::choose_defenders(std::vector<Creature*> opponents) {
                 threat_opponent = true;
             }
         }
-
 
         for (auto creature : availabled_creature) {
 
@@ -349,12 +372,17 @@ void Player::choose_defenders(std::vector<Creature*> opponents) {
         while (!quit) {
             std::getline(std::cin, cmd);
             
-            if (cmd.find("end") != std::string::npos) {
+        
+            if (cmd.find("valid") != std::string::npos) {
                 // Check Threat ability is respected
                 if (threat_opponent && (chosen_defenders.size() == 1)) {
                     std::cout << opponent->get_name() << " vous Menace, choississez un autre defenseur ou annulez le blocage : " << std::endl;
                 } else {
                     quit = true;
+                    if (!chosen_defenders.empty()) {
+                        // Deflect attack for each opponent with the possible and chosen defender
+                        this->deflect_attack(opponent, chosen_defenders);
+                    }
                 }
             } else if (cmd.find("reset") != std::string::npos) {
                 chosen_defenders = {};
@@ -380,20 +408,15 @@ void Player::choose_defenders(std::vector<Creature*> opponents) {
                 }
             }
         }
-
-        if (!chosen_defenders.empty()) {
-            // Deflect attack for each opponent with the possible and chosen defender
-            this->deflect_attack(*opponent, chosen_defenders);
-        }
     }
 }
 
-void Player::deflect_attack(Creature opponent, std::vector<Creature*> defenders) {
+void Player::deflect_attack(Creature* opponent, std::vector<Creature*> defenders) {
 
     for (auto defender : defenders) {
         // Check if the opponent is already dead
-        if(contain(dynamic_cast<BasicCard*>(&opponent), m_battlefield.get_basic_cards())) {
-            battle_creature(opponent, *defender);
+        if(contain(dynamic_cast<BasicCard*>(opponent), m_opponent->get_battlefield()->get_basic_cards())) {
+            battle_creature(opponent, defender);
         }
     }
 }
@@ -406,13 +429,13 @@ void Player::deflect_attack(Creature opponent, std::vector<Creature*> defenders)
 - Life link
 */
 // this est le joueur ayant joué defender
-void Player::battle_creature(Creature opponent, Creature defender) {
+void Player::battle_creature(Creature* opponent, Creature* defender) {
 
     bool opponent_dead = false;
     bool defender_dead = false;
 
-    int toughness_defender = defender.get_toughness_current();
-    int toughness_opponent = opponent.get_toughness_current();
+    int toughness_defender = defender->get_toughness_current();
+    int toughness_opponent = opponent->get_toughness_current();
 
     // Etablish abilities
     bool touch_of_death_defender = false;
@@ -429,7 +452,7 @@ void Player::battle_creature(Creature opponent, Creature defender) {
 
     bool trampling_opponent = false;
 
-    for (auto ability_opponent : opponent.get_abilities()) {
+    for (auto ability_opponent : opponent->get_abilities()) {
         if (ability_opponent == Ability::Initiative) {
             initiative_opponent = true;
         } else if (ability_opponent == Ability::Touch_of_death) {
@@ -443,7 +466,7 @@ void Player::battle_creature(Creature opponent, Creature defender) {
         }
     }
 
-    for (auto ability_defender : defender.get_abilities()) {
+    for (auto ability_defender : defender->get_abilities()) {
         if (ability_defender == Ability::Initiative) {
             initiative_defender = true;
         } else if (ability_defender == Ability::Touch_of_death) {
@@ -457,32 +480,32 @@ void Player::battle_creature(Creature opponent, Creature defender) {
 
     // Check initiative ability and double_initiative
     if ((initiative_opponent && !initiative_defender) || (double_initiative_opponent && !double_initiative_defender)) {
-        defender.set_toughness_current(defender.get_toughness_current() - opponent.get_power_current());
+        defender->set_toughness_current(defender->get_toughness_current() - opponent->get_power_current());
         // Check life_link ability
         if (life_link_opponent) {
-            if (toughness_defender >= opponent.get_power_current()) {
-                m_opponent->set_hp(m_opponent->get_hp() + opponent.get_power_current());
+            if (toughness_defender >= opponent->get_power_current()) {
+                m_opponent->set_hp(m_opponent->get_hp() + opponent->get_power_current());
             } else {
                 m_opponent->set_hp(m_opponent->get_hp() + toughness_defender);
             }
         }
-        if (defender.get_toughness_current() <= 0) {
+        if (defender->get_toughness_current() <= 0) {
             defender_dead = true;
-            destroy_card(&defender);
+            destroy_card(defender);
         }
     } else if ((!initiative_opponent && initiative_defender) || (!double_initiative_opponent && double_initiative_defender)) {
-        opponent.set_toughness_current(opponent.get_toughness_current() - defender.get_power_current());
+        opponent->set_toughness_current(opponent->get_toughness_current() - defender->get_power_current());
         // Check life_link ability
         if (life_link_defender) {
-            if (toughness_opponent >= defender.get_power_current()) {
-                this->set_hp(this->get_hp() + defender.get_power_current());
+            if (toughness_opponent >= defender->get_power_current()) {
+                this->set_hp(this->get_hp() + defender->get_power_current());
             } else {
                 this->set_hp(this->get_hp() + toughness_opponent);
             }
         }
-        if (opponent.get_toughness_current() <= 0) {
+        if (opponent->get_toughness_current() <= 0) {
             opponent_dead = true;
-            destroy_card(&opponent);
+            destroy_card(opponent);
         }
     }
     // If the battle continue
@@ -490,31 +513,31 @@ void Player::battle_creature(Creature opponent, Creature defender) {
 
         // Check touch_of_death ability
         if (touch_of_death_opponent) {
-            if (opponent.get_power_current() > 0) {
-                defender.set_toughness_current(0);
+            if (opponent->get_power_current() > 0) {
+                defender->set_toughness_current(0);
                 // TODO : Life link et Touch of death non compatible ?
             } 
         } else if (!initiative_opponent) {
-            defender.set_toughness_current(defender.get_toughness_current() - opponent.get_power_current());
+            defender->set_toughness_current(defender->get_toughness_current() - opponent->get_power_current());
             // Check Life_link ability
             if (life_link_opponent) {
-                if (toughness_defender >= opponent.get_power_current()) {
-                    m_opponent->set_hp(m_opponent->get_hp() + opponent.get_power_current());
+                if (toughness_defender >= opponent->get_power_current()) {
+                    m_opponent->set_hp(m_opponent->get_hp() + opponent->get_power_current());
                 } else {
                     m_opponent->set_hp(m_opponent->get_hp() + toughness_defender);
                 }
             }
         }
         if (touch_of_death_defender) {
-            if (defender.get_power_current() > 0) {
-                opponent.set_toughness_current(0);
+            if (defender->get_power_current() > 0) {
+                opponent->set_toughness_current(0);
             } 
         } else if (!initiative_defender) {
-            opponent.set_toughness_current(opponent.get_toughness_current() - defender.get_power_current());
+            opponent->set_toughness_current(opponent->get_toughness_current() - defender->get_power_current());
             // Check life_link ability
             if (life_link_defender) {
-                if (toughness_opponent >= defender.get_power_current()) {
-                    this->set_hp(this->get_hp() + defender.get_power_current());
+                if (toughness_opponent >= defender->get_power_current()) {
+                    this->set_hp(this->get_hp() + defender->get_power_current());
                 } else {
                     this->set_hp(this->get_hp() + toughness_opponent);
                 }
@@ -522,19 +545,24 @@ void Player::battle_creature(Creature opponent, Creature defender) {
         }
 
         // If the creatures are dead, deplace them into the graveyard
-        if (opponent.get_toughness_current() <= 0) {
+        if (opponent->get_toughness_current() <= 0) {
+
+            std::cout<<"pouypouy"<<std::endl<<std::endl;
             opponent_dead = true;
-            destroy_card(&opponent);
+            m_opponent->destroy_card(opponent); //TODO : on suppr la carte dans le battlefield de l'opponent : à faire partout
+            std::cout<<"pouypouyAHAH"<<std::endl<<std::endl;
         }
-        if (defender.get_toughness_current() <= 0) {
+        if (defender->get_toughness_current() <= 0) {
+            std::cout<<"pouypouy2222222"<<std::endl<<std::endl;
             defender_dead = true;
-            destroy_card(&defender);
+            destroy_card(defender);
+            std::cout<<"pouypouyCULULU"<<std::endl<<std::endl;
         }
     }
 
     // Check Trampling ability
     if (!opponent_dead && trampling_opponent) {
-        this->set_hp(this->get_hp() - opponent.get_power_current());
+        this->set_hp(this->get_hp() - opponent->get_power_current());
     }
 }
 
@@ -542,7 +570,7 @@ void Player::destroy_card(Card* c) {
 
     // If c is a BasicCard, we deplace it into the graveyard
     if (c->is_class(Card_class::LAND) || c->is_class(Card_class::CREATURE)) {
-        m_battlefield.set_basic_cards(dynamic_cast<BasicCard*>(c)->remove(m_battlefield.get_basic_cards()));
+        m_battlefield->set_basic_cards(dynamic_cast<BasicCard*>(c)->remove(m_battlefield->get_basic_cards()));
         m_graveyard.push_back(c);
         // We also deplace the enchantments associated to c
         for (auto e : (dynamic_cast<BasicCard*>(c))->get_enchantments()) {
@@ -556,12 +584,12 @@ void Player::destroy_card(Card* c) {
     }
 }
 
-void Player::play_ritual(Ritual r) {
+void Player::play_ritual(Ritual* r) {
 
-    switch (r.get_token()) {
+    switch (r->get_token()) {
         case Token::White: {
 
-            for (auto effect : r.get_effects()) {
+            for (auto effect : r->get_effects()) {
 
                 switch (effect) {
 
@@ -573,7 +601,7 @@ void Player::play_ritual(Ritual r) {
                     // All the creatures of the player win 1 power and 1 toughness for the turn
                     case White_ritual_effects::More_1_1_creature_current: {
 
-                        for (auto bc : m_battlefield.get_basic_cards()) {
+                        for (auto bc : m_battlefield->get_basic_cards()) {
                             if (bc->is_class(Card_class::CREATURE)) {
                                 Creature creature = *dynamic_cast<Creature*>(bc);
                                 creature.set_power_current(creature.get_power_current() + 1);
@@ -591,7 +619,7 @@ void Player::play_ritual(Ritual r) {
                         bool quit = false;
                         std::vector<Creature*> possible_creatures;
 
-                        for (auto bc : (m_opponent->get_battlefield()).get_basic_cards()) {
+                        for (auto bc : m_opponent->get_battlefield()->get_basic_cards()) {
                             if (bc->is_class(Card_class::CREATURE)) {
                                 Creature creature = *dynamic_cast<Creature*>(bc);
 
@@ -607,7 +635,8 @@ void Player::play_ritual(Ritual r) {
                             std::cin >> res;
                             if (res <= i || res >= 1) {
                                 Creature* chosen_creature = possible_creatures[res - 1];
-                                // TODO : tester si delete suppr des listes de battlefield
+                                // TODO : tester si le delete fonctionne
+                                m_opponent->get_battlefield()->remove_basic_card(chosen_creature);
                                 delete chosen_creature;
                                 quit = true;
                             } else {
@@ -626,14 +655,14 @@ void Player::play_ritual(Ritual r) {
                         std::vector<Enchantment*> possible_enchantments;
 
                         // Each enchantment on the battlefield of the opponent
-                        for (auto e : (m_opponent->get_battlefield()).get_enchantments()) {
+                        for (auto e : m_opponent->get_battlefield()->get_enchantments()) {
                             
                             std::cout<< i << " - " << e->get_name() << " global " <<std::endl;
                             possible_enchantments.push_back(e);
                             i++;
                         }
                         // Each enchantment of a basic card on the battlefield of the opponent
-                        for (auto bc : (m_opponent->get_battlefield()).get_basic_cards()) {
+                        for (auto bc : m_opponent->get_battlefield()->get_basic_cards()) {
                             for (auto e : bc->get_enchantments()) {
                                 
                                 std::cout<< i << " - " << e->get_name() << " : " << bc->get_name() <<std::endl;
@@ -647,7 +676,8 @@ void Player::play_ritual(Ritual r) {
                             std::cin>> res;
                             if(res <= i || res >= 1) {
                                 Enchantment* chosen_enchantment = possible_enchantments[res - 1];
-                                // TODO : tester si delete suppr des listes
+                                // TODO : tester si delete fonctionne
+                                m_opponent->get_battlefield()->remove_enchantment(chosen_enchantment);
                                 delete chosen_enchantment;
                                 quit = true;
                             } else {
@@ -669,7 +699,7 @@ void Player::play_ritual(Ritual r) {
 
         case Token::Blue:
 
-            for (auto effect : r.get_effects()) {
+            for (auto effect : r->get_effects()) {
                 
                 switch (effect) {
                 
@@ -689,7 +719,7 @@ void Player::play_ritual(Ritual r) {
                     bool quit = false;
                     std::vector<Creature*> possible_enchantments;
 
-                    for (auto bc : (m_opponent->get_battlefield()).get_basic_cards()) {
+                    for (auto bc : m_opponent->get_battlefield()->get_basic_cards()) {
                         
                         if (bc->is_class(Card_class::CREATURE)) {
 
@@ -723,7 +753,7 @@ void Player::play_ritual(Ritual r) {
 
         case Token::Black: {
             
-            for (auto effect : r.get_effects()) {
+            for (auto effect : r->get_effects()) {
                 
                 switch (effect){
 
@@ -734,7 +764,7 @@ void Player::play_ritual(Ritual r) {
                     bool quit = false;
                     std::vector<Creature*> possible_creatures;
 
-                    for (auto bc : (m_opponent->get_battlefield()).get_basic_cards()) {
+                    for (auto bc : m_opponent->get_battlefield()->get_basic_cards()) {
                         
                         if (bc->is_class(Card_class::CREATURE)) {
 
@@ -766,7 +796,7 @@ void Player::play_ritual(Ritual r) {
                     bool quit = false;
                     std::vector<Creature*> possible_creatures;
 
-                    for (auto bc : (m_opponent->get_battlefield()).get_basic_cards()) {
+                    for (auto bc : m_opponent->get_battlefield()->get_basic_cards()) {
                         
                         if (bc->is_class(Card_class::CREATURE)) {
 
@@ -800,7 +830,7 @@ void Player::play_ritual(Ritual r) {
                     bool quit = false;
                     std::vector<Creature*> possible_creatures;
 
-                    for (auto bc : (m_opponent->get_battlefield()).get_basic_cards()) {
+                    for (auto bc : m_opponent->get_battlefield()->get_basic_cards()) {
                         
                         if (bc->is_class(Card_class::CREATURE)) {
 
@@ -839,7 +869,7 @@ void Player::play_ritual(Ritual r) {
                     bool quit = false;
                     std::vector<Creature*> possible_creatures;
 
-                    for (auto bc : (m_opponent->get_battlefield()).get_basic_cards()) {
+                    for (auto bc : m_opponent->get_battlefield()->get_basic_cards()) {
                         
                         if (bc->is_class(Card_class::CREATURE)) {
 
@@ -885,7 +915,7 @@ void Player::play_ritual(Ritual r) {
 
         case Token::Red: {
 
-            for (auto effect : r.get_effects()) {
+            for (auto effect : r->get_effects()) {
 
                 switch (effect) {
 
@@ -898,7 +928,7 @@ void Player::play_ritual(Ritual r) {
                     bool quit = false;
                     std::vector<Creature*> possible_creatures;
 
-                    for (auto bc : (m_opponent->get_battlefield()).get_basic_cards()) {
+                    for (auto bc : m_opponent->get_battlefield()->get_basic_cards()) {
                         
                         if (bc->is_class(Card_class::CREATURE)) {
 
@@ -944,7 +974,7 @@ void Player::play_ritual(Ritual r) {
                     std::vector<Creature*> possible_creatures;
                     std::vector<Creature*> chosen_creatures;
 
-                    for (auto bc : (m_opponent->get_battlefield()).get_basic_cards()) {
+                    for (auto bc : m_opponent->get_battlefield()->get_basic_cards()) {
                         
                         if (bc->is_class(Card_class::CREATURE)) {
 
@@ -992,7 +1022,7 @@ void Player::play_ritual(Ritual r) {
 
         case Token::Green: {
 
-            for (auto effect : r.get_effects()) {
+            for (auto effect : r->get_effects()) {
 
                 switch (effect) {
 
@@ -1062,21 +1092,20 @@ void Player::play_ritual(Ritual r) {
             // TODO error
             break;
     }
-    destroy_card(&r);
+    destroy_card(r);
 }
 
-void Player::print(){
-    
+void Player::print() {
     std::cout << std::endl;
     std::cout << m_opponent->get_name() << " : " << m_opponent->get_hp() << " PV" << std::endl;
 
-    m_opponent->get_battlefield().print();
+    m_opponent->get_battlefield()->print();
 
     std::cout<<std::endl;
 
     std::cout<< std::setfill('=') << std::setw(147) << "=" << std::endl << std::endl; 
 
-    m_battlefield.print();
+    m_battlefield->print();
 
     std::cout << std::setfill('-') << std::setw(147) << "-" << std::endl;
 
@@ -1086,10 +1115,6 @@ void Player::print(){
 
     std::cout << m_name << " : " << m_hp << " PV" << std::endl;
     std::cout << "Nb de cartes restantes dans ma bibliothèque : " << m_library.size() << std::endl;
-
-    std::string s;
-    std::cout << "Entrée pour continuer." << std::endl;
-    std::getline(std::cin, s);
 }
 
 void Player::print_hand(){

@@ -18,7 +18,7 @@ class Player {
         std::string           m_name;
         int                   m_hp;
         int                   m_played_land;
-        Battlefield           m_battlefield;
+        Battlefield*          m_battlefield;
         std::vector<Card*>    m_deck;
         std::vector<Card*>    m_graveyard;
         std::vector<Card*>    m_library;
@@ -33,7 +33,7 @@ class Player {
         std::string            get_name() const;
         int                    get_hp() const;
         int                    get_played_land() const;
-        Battlefield            get_battlefield() const;
+        Battlefield*           get_battlefield() const;
         std::vector<Card*>     get_deck() const;
         std::vector<Card*>     get_graveyard() const;
         std::vector<Card*>     get_library() const;
@@ -62,10 +62,10 @@ class Player {
         void                   disengage_card(BasicCard* bc);
         std::vector<Creature*> attack();
         void                   choose_defenders(std::vector<Creature*> opponents);
-        void                   deflect_attack(Creature opponent, std::vector<Creature*> defenders);
-        void                   battle_creature(Creature opponent, Creature defender);
+        void                   deflect_attack(Creature* opponent, std::vector<Creature*> defenders);
+        void                   battle_creature(Creature* opponent, Creature* defender);
         void                   destroy_card(Card* c);
-        void                   play_ritual(Ritual c);
+        void                   play_ritual(Ritual* c);
    
         void                   print();
         void                   print_hand();
