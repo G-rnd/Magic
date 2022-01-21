@@ -145,7 +145,7 @@ void Game::start() {
 
         // Phase de pioche
         if (get_current_player()->get_library().size() == 0) {
-            victory(*get_current_player()->get_opponent());
+            victory(get_current_player()->get_opponent());
             return;
         } else {
             //cls();
@@ -190,10 +190,10 @@ void Game::start() {
 bool Game::check_defeat() {
     // check if a player has lost
     if (get_current_player()->get_looser()) {
-        victory(*get_current_player()->get_opponent());
+        victory(get_current_player()->get_opponent());
         return true;
     } else if ((get_current_player()->get_opponent())->get_looser()) {
-        victory(*get_current_player());
+        victory(get_current_player());
         return true;
     }
     return false;
@@ -482,8 +482,8 @@ void Game::exit() {
     // TODO
 }
 
-void Game::victory(Player p) {
-    print_info("Bravo " + p.get_name() + "tu as vaincu " + p.get_opponent()->get_name() + " !");
+void Game::victory(Player* p) {
+    print_info("Bravo " + p->get_name() + "tu as vaincu " + p->get_opponent()->get_name() + " !");
 }
 
 void Game::print_title_screen() {

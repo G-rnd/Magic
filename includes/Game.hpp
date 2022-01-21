@@ -34,7 +34,7 @@ class Game {
         void                 choose_save();
         void                 load();
         void                 exit();
-        void                 victory(Player p);
+        void                 victory(Player* p);
 
         static void          print_title_screen();
 

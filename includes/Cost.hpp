@@ -33,15 +33,16 @@ class Cost {
 		void	set_green(int);
 		void	set_blue(int);
 
-		void	print() const;
 		bool	is_null();
 		bool	is_color_null();
 		bool	is_any_null();
 		bool	is_white_null();
+		bool	is_blue_null();
 		bool	is_black_null();
 		bool	is_red_null();
 		bool	is_green_null();
-		bool	is_blue_null();
+
+		void	print() const;
 
 		Cost&	operator=(const Cost& o);
 };

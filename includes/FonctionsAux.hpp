@@ -31,7 +31,6 @@ namespace Ability {
 
 enum Type					    { Angel, Beast, Human_werewolf, HippoGriff, Kor_warrior, Dinosaur, Humans, Vampire, Spider, Elf, Troll };
 
-// TODO : Destroy détruit complètement la carte : delete
 namespace White_ritual_effects { 
     enum White_ritual_effects	    { More_3_HP, More_1_1_creature_current, Destroy_engaged_creature, Destroy_enchantment, Count };
 }
