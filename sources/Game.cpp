@@ -47,18 +47,18 @@ void Game::start() {
     std::string p_name_1;
     std::string p_name_2;
 
-    //cls();
+    cls();
     print_actions("Bienvenue dans votre partie !", {}, "Saisir le nom du premier joueur");
 
     std::cin >> p_name_1;
     Player p1(p_name_1);
     
-    //cls();
+    cls();
     print_actions("Bienvenue dans votre partie !", {}, "Saisir le nom du second joueur");
     std::cin >> p_name_2;
     Player p2(p_name_2);
     
-    //cls();
+    cls();
 
     p1.set_opponent(&p2);
     p2.set_opponent(&p1);
@@ -78,13 +78,13 @@ void Game::start() {
     }
 
     if (available_decks.size() == 0) {
-        //cls();
+        cls();
         print_info("Erreur : Aucun deck n'est disponible !");
         return;
     }
     for (size_t i = 0; i < 2; i++) {
         while (true) {
-            //cls();
+            cls();
             if (i == 0)
                 print_actions("Choisir un deck pour le premier joueur", available_decks, "", false, " - ");
             else
@@ -127,7 +127,7 @@ void Game::start() {
 
     // Phases de jeu
     while (true) {
-        //cls();
+        cls();
         print_info("C'est au tour de " + get_current_player()->get_name() + " de jouer !");
         get_current_player()->set_played_land(0);
 
@@ -148,7 +148,7 @@ void Game::start() {
             victory(get_current_player()->get_opponent());
             return;
         } else {
-            //cls();
+            cls();
             print_info("Vous piochez la carte : " + get_current_player()->get_library()[0]->get_name());
             get_current_player()->draw_card();
         }
@@ -200,14 +200,14 @@ bool Game::check_defeat() {
 }
 
 void Game::main_phase(bool first) {
-    //cls();
+    cls();
     std::string debut = "Debut de la phase ";
     debut += (first) ? "principale !" : "secondaire !";
     print_actions(debut);
     print_info();
 
     while (true) {
-        //cls();
+        cls();
         get_current_player()->print();
 
         std::string s = "arrêter la phase ";
@@ -265,7 +265,7 @@ void Game::main_phase(bool first) {
                     print_info("L'id saisit est invalide, veuillez saisir un id disponible dans la liste des id ci-dessus.");
                 }
                 else {
-                    //cls();
+                    cls();
                     print_info("Vous placez la carte : " + hand[num]->get_name());
                     get_current_player()->play_card(hand[num]);
                 }
@@ -293,13 +293,13 @@ void Game::main_phase(bool first) {
 }
 
 void Game::combat_phase() {
-    //cls();
+    cls();
     print_actions("Debut de la phase de combat !");
     print_info();
-    //cls();
+    cls();
     
     std::vector<Creature*> chosen_opponent = get_current_player()->attack();
-    //cls();
+    cls();
     
     if (!chosen_opponent.empty()) {
         get_current_player()->print();
@@ -362,7 +362,7 @@ void Game::combat_phase() {
 
 void Game::turn_end_phase() {
     if ((get_current_player()->get_hand()).size() > 7) {
-        //cls();
+        cls();
         print_actions("Phase de défausse de " + get_current_player()->get_name() + ":");
         print_info();
         
@@ -375,7 +375,7 @@ void Game::turn_end_phase() {
         bool quit = false;
         while(!quit) {
             while (true) {
-                //cls();
+                cls();
                 print_actions("Vous devez défausser " + std::to_string(get_current_player()->get_hand().size() - 7)+ " cartes !", {
                     {"<id>", "pour défausser une carte."},
                     {"reset", "pour réinitialiser vos choix"}
@@ -420,7 +420,7 @@ void Game::turn_end_phase() {
             }
 
             while(true) {
-                //cls();
+                cls();
                 std::vector<std::pair<std::string, std::string> > print_cards = {};
                 int i = 0;
 
@@ -487,7 +487,7 @@ void Game::victory(Player* p) {
 }
 
 void Game::print_title_screen() {
-    //cls();
+    cls();
     print_actions("Bienvenue dans une nouvelle édition de Magic The Gathering !", {
         { "play",         "pour lancer une nouvelle partie" },
         { "load",         "pour charger une de vos parties" },
