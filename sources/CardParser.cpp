@@ -55,12 +55,9 @@ std::vector<std::string> CardParser::get_line_data(const std::string& data) {
     return array;
 }
 
-std::vector<Card*> CardParser::parse(const std::string& filename) {
+std::vector<Card*> CardParser::parse_string(const std::string& read_file) {
     std::vector<Card*> v{};
-
-    std::string read_file;
-	std::getline(std::ifstream(filename), read_file, '\0');
-
+    
     std::vector<std::string> data = get_line_data(read_file);
     CardParser::clean_data(data);
     
@@ -88,6 +85,12 @@ std::vector<Card*> CardParser::parse(const std::string& filename) {
         }    
     }
     return v;
+}
+std::vector<Card*> CardParser::parse(const std::string& filename) {
+    std::string read_file;
+	std::getline(std::ifstream(filename), read_file, '\0');
+
+    return parse_string(read_file);
 }
 
 Card* CardParser::parse_card(const std::vector<std::string>& data) {

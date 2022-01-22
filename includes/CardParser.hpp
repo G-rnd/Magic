@@ -36,6 +36,7 @@ class CardParser {
         static const std::string        ritual;      
 
         static std::vector<Card*>       parse(const std::string& filename);
+        static std::vector<Card*>       parse_string(const std::string& read_file);
         static std::vector<std::string> get_line_data(const std::string& data);
         static void                     clean_data(std::vector<std::string>& data);
         static Card*                    parse_card(const std::vector<std::string>& data);

@@ -31,7 +31,7 @@ class Game {
         void                 combat_phase();
         void                 turn_end_phase();
         void                 save();
-        void                 choose_save();
+        void                 choose_save(std::string& data);
         void                 load();
         void                 exit();
         void                 victory(Player p);

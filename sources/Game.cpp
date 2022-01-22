@@ -470,12 +470,64 @@ void Game::save() {
     // TODO
 }
 
-void Game::choose_save() {
+void Game::choose_save(std::string& data) {
     // TODO
 }
 
 void Game::load() {
-    // TODO
+    std::string path = "saves/";
+
+    std::vector<std::pair<std::string, std::string > > available_saves = {};
+
+    for (const auto & file : std::filesystem::directory_iterator(path))
+        available_saves.push_back({"", (file.path()).string().substr(path.size())});
+    for(size_t i = 0; i < available_saves.size(); i++) {
+        available_saves[i].first = (available_saves.size() > 10) ? ((i/10 == 1) ? " " : "") : "" + std::to_string(i);
+    }
+
+    if (available_saves.size() == 0) {
+        cls();
+        print_info("Aucune partie n'a été sauvegardée.");
+        return;
+    }
+    available_saves.push_back({"back","retourner au menu."});
+
+    while (true) {
+        cls();
+        print_actions("Voici la liste des parties sauvagardées", available_saves, "Saisir l'id de la partie", false);
+
+        std::string cmd;
+        std::getline(std::cin, cmd);
+
+        try {
+            int id = stoi(cmd);
+
+            if (id < 0 || id >= (int) available_saves.size() - 1) {
+                print_info("Id invalide !");
+                continue;
+            } else {
+                std::string filename = path + available_saves[id].second;
+
+                std::ifstream ifile;
+                ifile.open(filename);
+
+                if (ifile) {
+                    std::string read_file = "";
+                    std::getline(std::ifstream(filename), read_file, '\0');
+                    choose_save(read_file);
+                    break;
+                } else {
+                    print_info("Erreur: le fichier n'existe plus !");
+                }
+            }
+        } catch (std::invalid_argument& e) {
+            if (cmd.find("back") != std::string::npos) {
+                print_info("Retour au menu principal.");
+                break;
+            } else
+                print_info("Commande invalide !");
+        }
+    }
 }
 
 void Game::exit() {

@@ -22,6 +22,15 @@ Player::Player(std::string name): m_name(name) {
 
 Player::~Player() {
     //std::cout << "[Player] : Denstruction de " << this << std::endl;
+
+    for(auto c : m_deck)
+        delete c;
+    for(auto c : m_graveyard)
+        delete c;
+    for(auto c : m_library)
+        delete c;
+    for(auto c : m_hand)
+        delete c;
 }
 
 Player* Player::get_opponent() const {

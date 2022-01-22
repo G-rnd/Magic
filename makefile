@@ -24,8 +24,9 @@ $(OBJDIR)/%.o: $(SRCDIR)/%.cpp
 $(EXEPATH): $(OBJ)
 	mkdir -p obj
 	mkdir -p bin
+	mkdir -p data
+	mkdir -p saves
 	$(CXX) $^ -o $@ -I ./$(HPPDIR)/
-
 
 .PHONY: run clean
 
