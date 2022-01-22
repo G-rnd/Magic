@@ -3,6 +3,7 @@
 
 #include <string>
 #include <vector>
+#include <map>
 
 #include "Player.hpp"
 
@@ -11,8 +12,11 @@ class Game {
     private:
         bool                 m_player_turn;
         std::vector<Player*> m_players;
-         
+
     public: 
+
+        static std::map<std::string, std::string> Background_color;
+
         Game(); 
         ~Game(); 
          

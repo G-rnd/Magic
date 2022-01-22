@@ -1,6 +1,8 @@
 #include <string>
 
 #include "FonctionsAux.hpp"
+
+
 /*
     Affiche une chaîne de caractères s au format suivant :
 
@@ -88,6 +90,47 @@ void cls() {
     std::system("clear");
 }
 
+std::string get_background_color(Color c) {
+    switch (c) {
+        case Color::Reset:
+            return "\u001b[0m";
+        case Color::Black:
+            return "\u001b[40m";
+        case Color::Red:
+            return "\u001b[41m";
+        case Color::Green:
+            return "\u001b[42m";
+        case Color::Yellow:
+            return "\u001b[43m";
+        case Color::Blue:
+            return "\u001b[44m";
+        case Color::Magenta:
+            return "\u001b[45m";
+        case Color::Cyan:
+            return "\u001b[46m";
+        case Color::White:
+            return "\u001b[47m";
+        case Color::BrightBlack:
+            return "\u001b[40;1m";
+        case Color::BrightRed:
+            return "\u001b[41;1m";
+        case Color::BrightGreen:
+            return "\u001b[42;1m";
+        case Color::BrightYellow:
+            return "\u001b[43;1m";
+        case Color::BrightBlue:
+            return "\u001b[44;1m";
+        case Color::BrightMagenta:
+            return "\u001b[45;1m";
+        case Color::BrightCyan:
+            return "\u001b[46;1m";
+        case Color::BrightWhite:
+            return "\u001b[47;1m";
+        default:
+            return "";
+    }
+}
+
 std::string get_color(Color c) {
     switch (c) {
         case Color::Reset:
@@ -103,7 +146,7 @@ std::string get_color(Color c) {
         case Color::Blue:
             return "\033[34m";
         case Color::Magenta:
-            return "033[35m";
+            return "\033[35m";
         case Color::Cyan:
             return "\033[36m";
         case Color::White:
@@ -127,4 +170,22 @@ std::string get_color(Color c) {
         default:
             return "";
     }
+}
+
+std::string centered_string(std::string s, int width){
+    int margin = width - s.length();
+    if (margin <= 0){
+        return s.substr(0, width + 1);
+    } else {
+        std::string m = " ";
+        for (int i = 1; i < margin / 2; i++){
+            m.append(" ");
+        }
+        if (margin % 2 == 0){
+            s = m + s + m;
+        } else {
+            s = m + " " + s + m;
+        }
+    }
+    return s;
 }

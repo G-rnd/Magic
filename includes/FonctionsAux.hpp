@@ -6,6 +6,7 @@
 #include <iterator>
 #include <vector>
 #include <string>
+#include <map>
 
 #include "Card.hpp"
 #include "BasicCard.hpp"
@@ -21,6 +22,10 @@ namespace Card_class {
 
 namespace Token { 
     enum Token                      { White, Blue, Black, Red, Green, Count };
+}
+
+namespace State {
+    enum State                      { Normal, Engaged, Enchanted, Engaged_Enchanted};
 }
 
 namespace Ability { 
@@ -122,6 +127,9 @@ enum Color {
     BrightWhite
 };
 
+std::string get_background_color (Color c);
 std::string get_color (Color c);
+
+std::string centered_string(std::string s, int width);
 
 #endif
