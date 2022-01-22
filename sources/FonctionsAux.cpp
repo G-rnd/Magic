@@ -175,10 +175,10 @@ std::string get_color(Color c) {
 std::string centered_string(std::string s, int width){
     int margin = width - s.length();
     if (margin <= 0){
-        return s.substr(0, width + 1);
+        return s.substr(0, width);
     } else {
-        std::string m = " ";
-        for (int i = 1; i < margin / 2; i++){
+        std::string m = "";
+        for (int i = 0; i < margin / 2; i++){
             m.append(" ");
         }
         if (margin % 2 == 0){

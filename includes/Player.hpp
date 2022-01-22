@@ -62,6 +62,7 @@ class Player {
         void                   disengage_card(BasicCard* bc);
         std::vector<Creature*> attack();
         void                   choose_defenders(std::vector<Creature*> opponents);
+        std::vector<Creature*> choose_defenders_orders(std::vector<Creature*> defenders, Creature* opponent);
         void                   deflect_attack(Creature* opponent, std::vector<Creature*> defenders);
         void                   battle_creature(Creature* opponent, Creature* defender);
         void                   destroy_card(Card* c);

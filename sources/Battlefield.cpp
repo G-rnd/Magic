@@ -133,8 +133,8 @@ bool Battlefield::is_playable(Card* card) {
         // Si la carte n'a pas besoin de terrains typés ou que tous ses terrains colorés ont déjà été comptés
         if (c.is_color_null()) {
             c.set_any(c.get_any() - lands[i]->get_value());
-            lands.erase(lands.begin() + i);
-            i--;
+            //lands.erase(lands.begin() + i);
+            //i--;
         } else {
             // On commence par compter les terrains typés
             switch(lands[i]->get_token()){
@@ -177,7 +177,7 @@ bool Battlefield::is_playable(Card* card) {
                     break;
 
             }
-            lands.erase(lands.begin() + i);
+            //lands.erase(lands.begin() + i);
         }
     }
     return c.is_null();
@@ -326,16 +326,16 @@ void Battlefield::print() {
                 Creature* creature = dynamic_cast<Creature*>(m_basic_cards[num_card]);
                 Cost* cost = creature->get_cost();
 
-                std::cout<< left[cards_states[num_card]] << std::setw((wid - 11)/2) << std::setfill(' ') << " ";
+                std::cout<< left[cards_states[j]] << std::setw((wid - 11)/2) << std::setfill(' ') << " ";
 
-                std::cout<< cost->get_any() << "+";
-                std::cout<< get_background_color(Color::White) << get_color(Color::Black) << cost->get_white() << get_color(Color::Reset) << get_background_color(Color::Reset) << "+";
-                std::cout<< get_background_color(Color::Blue) << cost->get_blue() << get_background_color(Color::Reset) << "+";
-                std::cout<< get_background_color(Color::Black) << cost->get_black() << get_background_color(Color::Reset) << "+";
-                std::cout<< get_background_color(Color::Red) << cost->get_red() << get_background_color(Color::Reset) << "+";
+                std::cout<< cost->get_any() << " ";
+                std::cout<< get_background_color(Color::White) << get_color(Color::Black) << cost->get_white() << get_color(Color::Reset) << get_background_color(Color::Reset) << " ";
+                std::cout<< get_background_color(Color::Blue) << cost->get_blue() << get_background_color(Color::Reset) << " ";
+                std::cout<< get_background_color(Color::Black) << cost->get_black() << get_background_color(Color::Reset) << " ";
+                std::cout<< get_background_color(Color::Red) << cost->get_red() << get_background_color(Color::Reset) << " ";
                 std::cout<< get_background_color(Color::Green) << cost->get_green() << get_background_color(Color::Reset);
                 
-                std::cout<< std::setw((wid - 11)/2) << std::setfill(' ') << " " << right[cards_states[num_card]];
+                std::cout<< std::setw((wid - 11)/2) << std::setfill(' ') << " " << right[cards_states[j]];
   
             } else if (m_basic_cards[num_card]->is_class(Card_class::LAND)) {
 
@@ -356,7 +356,7 @@ void Battlefield::print() {
 
             if (m_basic_cards[num_card]->is_class(Card_class::CREATURE)) {
                 Creature* creature = dynamic_cast<Creature*>(m_basic_cards[num_card]);
-                std::vector<std::string> types{"Angel"}; // TODO : mettre à jour
+                std::vector<std::string> types{"Angel", "Beast", "Human_werewolf", "HippoGriff", "Kor_warrior", "Dinosaur", "Humans", "Vampire", "Spider", "Elf", "Troll"}; // TODO : mettre à jour
                 std::vector<int> creat_type = creature->get_types();
                 std::string s = "";
 
@@ -416,7 +416,7 @@ void Battlefield::print() {
                 } else if(abilities_crea.size() == 1){
                     std::cout<< left[cards_states[j]] << centered_string(abilities[abilities_crea[0]], wid) << right[cards_states[j]];
                 } else {
-                    s = abilities[abilities_crea[0]] + abilities[abilities_crea[1]];
+                    s = abilities[abilities_crea[0]] + " " + abilities[abilities_crea[1]];
                     std::cout<< left[cards_states[j]] << centered_string(s, wid) << right[cards_states[j]];
                 }
                 
@@ -447,7 +447,7 @@ void Battlefield::print() {
                 if(abilities_crea.size() == 3){
                     std::cout<< left[cards_states[j]] << centered_string(abilities[abilities_crea[2]], wid) << right[cards_states[j]];
                 } else if(abilities_crea.size() > 3){
-                    s = abilities[abilities_crea[2]] + abilities[abilities_crea[3]];
+                    s = abilities[abilities_crea[2]] + " " +  abilities[abilities_crea[3]];
                     std::cout<< left[cards_states[j]] << centered_string(s, wid) << right[cards_states[j]];
                 } else {
                     std::cout<< left[cards_states[j]] << std::setw(wid) << std::setfill(' ') << " " << right[cards_states[j]];
@@ -606,16 +606,16 @@ void Battlefield::print() {
             Enchantment* enchantment = m_enchantments[num_card];
             Cost* cost = enchantment->get_cost();
 
-            std::cout<< left[cards_states[num_card]] << std::setw((wid - 11)/2) << std::setfill(' ') << " ";
+            std::cout<< left[cards_states[j]] << std::setw((wid - 11)/2) << std::setfill(' ') << " ";
 
-            std::cout<< cost->get_any() << "+";
-            std::cout<< get_background_color(Color::White) << get_color(Color::Black) << cost->get_white() << get_color(Color::Reset) << get_background_color(Color::Reset) << "+";
-            std::cout<< get_background_color(Color::Blue) << cost->get_blue() << get_background_color(Color::Reset) << "+";
-            std::cout<< get_background_color(Color::Black) << cost->get_black() << get_background_color(Color::Reset) << "+";
-            std::cout<< get_background_color(Color::Red) << cost->get_red() << get_background_color(Color::Reset) << "+";
+            std::cout<< cost->get_any() << " ";
+            std::cout<< get_background_color(Color::White) << get_color(Color::Black) << cost->get_white() << get_color(Color::Reset) << get_background_color(Color::Reset) << " ";
+            std::cout<< get_background_color(Color::Blue) << cost->get_blue() << get_background_color(Color::Reset) << " ";
+            std::cout<< get_background_color(Color::Black) << cost->get_black() << get_background_color(Color::Reset) << " ";
+            std::cout<< get_background_color(Color::Red) << cost->get_red() << get_background_color(Color::Reset) << " ";
             std::cout<< get_background_color(Color::Green) << cost->get_green() << get_background_color(Color::Reset);
             
-            std::cout<< std::setw((wid - 11)/2) << std::setfill(' ') << " " << right[cards_states[num_card]];
+            std::cout<< std::setw((wid - 11)/2) << std::setfill(' ') << " " << right[cards_states[j]];
 
 
             if (num_card == m_enchantments.size() - 1 + bc_size)
