@@ -28,12 +28,11 @@ void DeckBuild::create_file(){
 
         print_info("Vous avez créé \n - " + std::to_string(m_crea) + " créatures \n - " + std::to_string(m_land) + " terrains \n - " + std::to_string(m_ritu) + " rituels \n - " + std::to_string(m_ench) + " enchantements");
 
-        std::cout << "crea       : pour créer une créature." << std::endl;
-        std::cout << "land       : pour créer un terrain." << std::endl;
-        std::cout << "ritu       : pour créer un rituel." << std::endl;
-        std::cout << "ench       : pour créer un enchantement." << std::endl << std::endl;
-
-        std::cout << "Choississez votre type de carte : " << std::endl;
+        print_actions("Sélectionnez votre type de carte : ",{
+        {"crea", "pour créer une créature."}, 
+        {"land", "pour créer un terrain."},
+        {"ritu", "pour créer un rituel."},
+        {"ench", "pour créer un enchantement."} }, "Choississez votre type de carte : ");
 
         bool quit = false;
         std::string card;
@@ -76,7 +75,7 @@ void DeckBuild::create_creature(){
     m_file << "    #TYPE_CARD: Creature" <<std::endl;
 
     // Name
-    std::cout<< "Entrez le nom de votre créature : " <<std::endl;
+    std::cout<< std::endl << "Entrez le nom de votre créature : " <<std::endl;
 
     std::string name;
     std::getline(std::cin, name);
@@ -86,13 +85,15 @@ void DeckBuild::create_creature(){
     std::cout<<std::endl<<std::endl;;
 
     // Token
-    std::cout << "0       : Créature blanche." << std::endl;
-    std::cout << "1       : Créature bleue." << std::endl;
-    std::cout << "2       : Créature noire." << std::endl;
-    std::cout << "3       : Créature rouge." << std::endl;
-    std::cout << "4       : Créature verte." << std::endl << std::endl;
+    print_list({
+        {std::to_string(0), "Créature blanche"},
+        {std::to_string(1), "Créature bleue"},
+        {std::to_string(2), "Créature noire"},
+        {std::to_string(3), "Créature rouge"},
+        {std::to_string(4), "Créature verte"},
+    }, " - ");
 
-    std::cout<< "Entrez la couleur de votre créature : " <<std::endl;
+    std::cout<< std::endl << "Entrez la couleur de votre créature : " <<std::endl;
 
     int token;
     bool quit = false;
@@ -108,7 +109,7 @@ void DeckBuild::create_creature(){
 
     m_file << "    #TOKEN: " + std::to_string(token) <<std::endl << std::endl;
 
-    std::cout<<std::endl<<std::endl;;
+    std::cout<<std::endl;
 
     // Power
     std::cout<< "Entrez la force de votre créature : " <<std::endl;
@@ -118,7 +119,7 @@ void DeckBuild::create_creature(){
 
     m_file << "    #POWER: " + std::to_string(power) <<std::endl;
 
-    std::cout<<std::endl<<std::endl;;
+    std::cout<<std::endl;
 
     // Toughness
     std::cout<< "Entrez l'endurance de votre créature : " <<std::endl;
@@ -128,32 +129,32 @@ void DeckBuild::create_creature(){
 
     m_file << "    #TOUGHNESS: " + std::to_string(toughness) <<std::endl;
 
-    std::cout<<std::endl<<std::endl;;
+    std::cout<<std::endl;
 
     // Abilities
-    std::cout << "0       : Vol." << std::endl;
-    std::cout << "1       : Portée." << std::endl;
-    std::cout << "2       : Vigilance." << std::endl;
-    std::cout << "3       : Toucher de mort." << std::endl;
-    std::cout << "4       : Défenseur." << std::endl;
-    std::cout << "5       : Initiative." << std::endl;
-    std::cout << "6       : Double initiative." << std::endl;
-    std::cout << "7       : Hâte." << std::endl;
-    std::cout << "8       : Imblocable." << std::endl;
-    std::cout << "9       : Lien de vie." << std::endl;
-    std::cout << "10      : Menace." << std::endl;
-    std::cout << "11      : Piétinement." << std::endl;
-    std::cout << "12      : Protection contre blanc." << std::endl;
-    std::cout << "13      : Protection contre bleu." << std::endl;
-    std::cout << "14      : Protection contre noir." << std::endl;
-    std::cout << "15      : Protection contre rouge." << std::endl;
-    std::cout << "16      : Protection contre vert." << std::endl <<std::endl;
+    print_list({
+    {"0 ", "Vol."}, 
+    {"1 ", "Portée."},
+    {"2 ", "Vigilance."},
+    {"3 ", "Toucher de mort."},
+    {"4 ", "Défenseur."},
+    {"5 ", "Initiative."},
+    {"6 ", "Double initiative."},
+    {"7 ", "Hâte."},
+    {"8 ", "Imblocable."},
+    {"9 ", "Lien de vie."},
+    {"10", "Menace."},
+    {"11", "Piétinement."},
+    {"12", "Protection contre blanc."},
+    {"13", "Protection contre bleu."}, 
+    {"14", "Protection contre noir."},
+    {"15", "Protection contre rouge."},
+    {"16", "Protection contre vert."}}, " - ");
 
-    std::cout << "valid   : valider vos choix." << std::endl;
-    std::cout << "reset   : réinitialiser vos choix." << std::endl<<std::endl;
-
-    std::cout<< "Entrez les capacités de votre créature : " <<std::endl;
-
+    print_actions("Choix capacités, cf. ci-dessus", {
+    {"valid", "valider vos choix"}, 
+    {"reset", "réinitialiser vos choix"}}, "Entrez les capacités de votre créature : " );
+    
     std::string cmd2;
     bool quit2 = false;
     std::vector<int> abilities;
@@ -166,25 +167,17 @@ void DeckBuild::create_creature(){
             quit2 = true;
         } else if (cmd2.find("reset") != std::string::npos) {
             abilities = {};
-            std::cout<< "Reset reussi" <<std::endl;
+            print_info("Reset reussi !");
         } else {
             try {
+                std::cout << "AAA" << std::endl;
                 int num = std::stoi(cmd2);
                 if (num > 16 || num < 0) {
-                    std::cout << "Id invalide" << std::endl;
-
-                    std::cout << "Entrée pour continuer." << std::endl;
-                    std::getline(std::cin, cmd2);
+                    print_info("Id invalide.");
                 } else if (std::find(abilities.begin(), abilities.end(), num) != abilities.end()) {
-                    std::cout << num << " déjà ajouté." << std::endl;
-
-                    std::cout << "Entrée pour continuer." << std::endl;
-                    std::getline(std::cin, cmd2);
+                    print_info(std::to_string(num) + " déjà ajouté.");
                 } else if ((num > 11 && num < 17) && add_protection ) {
-                    std::cout << "Protection contre une couleur déjà ajoutée." << std::endl;
-
-                    std::cout << "Entrée pour continuer." << std::endl;
-                    std::getline(std::cin, cmd2);
+                    print_info("Protection contre une couleur déjà ajoutée.");
                 } else{
                     if((num > 11 && num < 17)){
                         add_protection = true;
@@ -192,7 +185,7 @@ void DeckBuild::create_creature(){
                     abilities.push_back(num);
                 }
             } catch (std::invalid_argument &e) {
-                std::cout << "Commande Invalide" << std::endl; //TODO : s'affiche automatiquement
+                print_info("Commande invalide."); //TODO : s'affiche automatiquement
             }
         }
     }
@@ -208,31 +201,32 @@ void DeckBuild::create_creature(){
 
     m_file << "    #ABILITIES: " + str_abilities <<std::endl << std::endl;  
 
-    std::cout<<std::endl<<std::endl;;
+    std::cout<<std::endl<<std::endl;
 
     // Types
     // TODO : remplir types
-    std::cout << "0       : ." << std::endl;
-    std::cout << "1       : ." << std::endl;
-    std::cout << "2       : ." << std::endl;
-    std::cout << "3       : ." << std::endl;
-    std::cout << "4       : ." << std::endl;
-    std::cout << "5       : ." << std::endl;
-    std::cout << "6       : ." << std::endl;
-    std::cout << "7       : ." << std::endl;
-    std::cout << "8       : ." << std::endl;
-    std::cout << "9       : ." << std::endl;
-    std::cout << "10      : ." << std::endl;
-    std::cout << "11      : ." << std::endl;
-    std::cout << "12      : ." << std::endl;
-    std::cout << "13      : ." << std::endl;
-    std::cout << "14      : ." << std::endl;
-    std::cout << "15      : ." << std::endl <<std::endl;
+    print_list({
+    {"0 ", "."}, 
+    {"1 ", "."},
+    {"2 ", "."},
+    {"3 ", "  ."},
+    {"4 ", "."},
+    {"5 ", "."},
+    {"6 ", " ."},
+    {"7 ", "."},
+    {"8 ", "."},
+    {"9 ", "  ."},
+    {"10", "."},
+    {"11", "."},
+    {"12", "."},
+    {"13", "."}, 
+    {"14", "  ."},
+    {"15", "  ."},
+    {"16", "  ."}}, " - ");
 
-    std::cout << "valid   : valider vos choix." << std::endl;
-    std::cout << "reset   : réinitialiser vos choix." << std::endl << std::endl;;
-
-    std::cout<< "Entrez les types de votre créature : " <<std::endl;
+    print_actions("Choix types, cf. ci-dessus", {
+    {"valid", "valider vos choix"}, 
+    {"reset", "réinitialiser vos choix"}}, "Entrez les types de votre créature : " );
 
     std::string cmd3;
     bool quit3 = false;
@@ -245,25 +239,20 @@ void DeckBuild::create_creature(){
             quit3 = true;
         } else if (cmd3.find("reset") != std::string::npos) {
             types = {};
-            std::cout<< "Reset reussi" <<std::endl;
+            print_info("Reset reussi !");
         } else {
             try {
+                std::cout << "ABAA" << std::endl;
                 int num = std::stoi(cmd3);
                 if (num > 15 || num < 0) {
-                    std::cout << "Id invalide" << std::endl;
-
-                    std::cout << "Entrée pour continuer." << std::endl;
-                    std::getline(std::cin, cmd3);
+                    print_info("Id invalide.");
                 } else if (std::find(types.begin(), types.end(), num) != types.end()) {
-                    std::cout << num << " déjà ajouté." << std::endl;
-
-                    std::cout << "Entrée pour continuer." << std::endl;
-                    std::getline(std::cin, cmd3);
+                    print_info(std::to_string(num) + " déjà ajouté.");
                 } else{
                     types.push_back(num);
                 }
             } catch (std::invalid_argument &e) {
-                std::cout << "Commande Invalide" << std::endl;    
+                print_info("Commande invalide.");   
             }
         }
     }
@@ -279,7 +268,7 @@ void DeckBuild::create_creature(){
 
     m_file << "    #TYPES: " + str_types <<std::endl << std::endl;
 
-    std::cout<<std::endl<<std::endl;;
+    std::cout<<std::endl<<std::endl;
 
     // Cost
     std::cout<< "Entrez le coût en terrain blanc : " <<std::endl;
@@ -287,27 +276,27 @@ void DeckBuild::create_creature(){
     int cost_white;
     std::cin>> cost_white;
 
-    std::cout<< "Entrez le coût en terrain bleu : " <<std::endl;
+    std::cout<< std::endl << "Entrez le coût en terrain bleu : " <<std::endl;
 
     int cost_blue;
     std::cin>> cost_blue;
 
-    std::cout<< "Entrez le coût en terrain noir : " <<std::endl;
+    std::cout<< std::endl << "Entrez le coût en terrain noir : " <<std::endl;
 
     int cost_black;
     std::cin>> cost_black;
 
-    std::cout<< "Entrez le coût en terrain rouge : " <<std::endl;
+    std::cout<< std::endl << "Entrez le coût en terrain rouge : " <<std::endl;
 
     int cost_red;
     std::cin>> cost_red;
 
-    std::cout<< "Entrez le coût en terrain vert : " <<std::endl;
+    std::cout<< std::endl <<"Entrez le coût en terrain vert : " <<std::endl;
 
     int cost_green;
     std::cin>> cost_green;
 
-    std::cout<< "Entrez le coût en terrain de n'importe quelle couleur : " <<std::endl;
+    std::cout<< std::endl << "Entrez le coût en terrain de n'importe quelle couleur : " <<std::endl;
 
     int cost_any;
     std::cin>> cost_any;
@@ -329,7 +318,7 @@ void DeckBuild::create_land(){
     m_file << "    #TYPE_CARD: Land" <<std::endl;
 
     // Name
-    std::cout<< "Entrez le nom de votre terrain : " <<std::endl;
+    std::cout<< std::endl <<  "Entrez le nom de votre terrain : " <<std::endl;
 
     std::string name;
     std::getline(std::cin, name);
@@ -339,13 +328,15 @@ void DeckBuild::create_land(){
     std::cout<<std::endl<<std::endl;;
 
     // Token
-    std::cout << "0       : Terrain blanche." << std::endl;
-    std::cout << "1       : Terrain bleue." << std::endl;
-    std::cout << "2       : Terrain noire." << std::endl;
-    std::cout << "3       : Terrain rouge." << std::endl;
-    std::cout << "4       : Terrain verte." << std::endl << std::endl;
+    print_list({
+        {std::to_string(0), "Terrain blanc"},
+        {std::to_string(1), "Terrain bleu"},
+        {std::to_string(2), "Terrain noir"},
+        {std::to_string(3), "Terrain rouge"},
+        {std::to_string(4), "Terrain vert"},
+    }, " - ");
 
-    std::cout<< "Entrez la couleur de votre terrain : " <<std::endl;
+    std::cout<< std::endl << "Entrez la couleur de votre terrain : " <<std::endl;
 
     int token;
     bool quit = false;
@@ -369,24 +360,12 @@ void DeckBuild::create_land(){
 
 void DeckBuild::create_ritual(){
 
-/*
-#BEGIN_CARD
-	#TYPE_CARD: Ritual
-	#NAME: Spirit Lands
-	#TOKEN: 4
-
-	#EFFECTS: 1
-	#COST: 1, 1, 0, 0, 0, 0
-	#INFO: Take 2 lands in your library and shuffle your library
-#END_CARD
-*/
-
     // Begin
     m_file << "#BEGIN_CARD" <<std::endl;
     m_file << "    #TYPE_CARD: Ritual" <<std::endl;
 
     // Name
-    std::cout<< "Entrez le nom de votre rituel : " <<std::endl;
+    std::cout<< std::endl <<  "Entrez le nom de votre rituel : " <<std::endl;
 
     std::string name;
     std::getline(std::cin, name);
@@ -396,13 +375,15 @@ void DeckBuild::create_ritual(){
     std::cout<<std::endl<<std::endl;;
 
     // Token
-    std::cout << "0       : Terrain blanche." << std::endl;
-    std::cout << "1       : Terrain bleue." << std::endl;
-    std::cout << "2       : Terrain noire." << std::endl;
-    std::cout << "3       : Terrain rouge." << std::endl;
-    std::cout << "4       : Terrain verte." << std::endl << std::endl;
+    print_list({
+        {std::to_string(0), "Rituel blanc"},
+        {std::to_string(1), "Rituel bleu"},
+        {std::to_string(2), "Rituel noir"},
+        {std::to_string(3), "Rituel rouge"},
+        {std::to_string(4), "Rituel vert"},
+    }, " - ");
 
-    std::cout<< "Entrez la couleur de votre rituel : " <<std::endl;
+    std::cout<< std::endl << "Entrez la couleur de votre rituel : " <<std::endl;
 
     int token;
     bool quit = false;
@@ -423,15 +404,15 @@ void DeckBuild::create_ritual(){
     {
     case 0:{
 
-        std::cout << "0       : Gagne 3 points de vie." << std::endl;
-        std::cout << "1       : Ajouter 1 / 1 à une créature pour un tour." << std::endl;
-        std::cout << "2       : Détruire une créature engagée adverse." << std::endl;
-        std::cout << "3       : Détruire un enchantement engagé adverse." << std::endl;
+        print_list({
+        {"0", "Gagne 3 points de vie."},
+        {"1", "Ajouter 1 / 1 à une créature pour un tour."},
+        {"2", "Détruire une créature engagée adverse."},
+        {"3", "Détruire un enchantement engagé adverse."} });
 
-        std::cout << "valid   : valider vos choix." << std::endl;
-        std::cout << "reset   : réinitialiser vos choix." << std::endl<<std::endl;
-
-        std::cout<< "Entrez les effets de votre créature : " <<std::endl;
+        print_actions("Choix effets, cf. ci-dessus", {
+        {"valid", "valider vos choix"}, 
+        {"reset", "réinitialiser vos choix"}}, "Entrez les effets de votre rituel : " );
 
         std::string cmd;
         bool quit = false;
@@ -444,25 +425,19 @@ void DeckBuild::create_ritual(){
                 quit = true;
             } else if (cmd.find("reset") != std::string::npos) {
                 effects = {};
-                std::cout<< "Reset reussi" <<std::endl;
+                print_info("Reset reussi !");
             } else {
                 try {
                     int num = std::stoi(cmd);
                     if (num > 3 || num < 0) {
-                        std::cout << "Id invalide" << std::endl;
-
-                        std::cout << "Entrée pour continuer." << std::endl;
-                        std::getline(std::cin, cmd);
+                        print_info("Id invalide.");
                     } else if (std::find(effects.begin(), effects.end(), num) != effects.end()) {
-                        std::cout << num << " déjà ajouté." << std::endl;
-
-                        std::cout << "Entrée pour continuer." << std::endl;
-                        std::getline(std::cin, cmd);
+                        print_info(std::to_string(num) + " déjà ajouté.");
                     } else{
                         effects.push_back(num);
                     }
                 } catch (std::invalid_argument &e) {
-                    std::cout << "Commande Invalide" << std::endl; //TODO : s'affiche automatiquement
+                    print_info("Commande invalide."); //TODO : s'affiche automatiquement
                 }
             }
         }
@@ -483,13 +458,14 @@ void DeckBuild::create_ritual(){
 
     case 1:{
 
-        std::cout << "0       : Piocher 2 cartes." << std::endl;
-        std::cout << "1       : Retourner une créature jouée adverse dans sa main." << std::endl;
 
-        std::cout << "valid   : valider vos choix." << std::endl;
-        std::cout << "reset   : réinitialiser vos choix." << std::endl<<std::endl;
+        print_list({
+        {"0", "Piocher 2 cartes."},
+        {"1", "Retourner une créature jouée adverse dans sa main."} });
 
-        std::cout<< "Entrez les effets de votre créature : " <<std::endl;
+        print_actions("Choix effets, cf. ci-dessus", {
+        {"valid", "valider vos choix"}, 
+        {"reset", "réinitialiser vos choix"}}, "Entrez les effets de votre rituel : " );
 
         std::string cmd;
         bool quit = false;
@@ -502,25 +478,19 @@ void DeckBuild::create_ritual(){
                 quit = true;
             } else if (cmd.find("reset") != std::string::npos) {
                 effects = {};
-                std::cout<< "Reset reussi" <<std::endl;
+                print_info("Reset reussi !");
             } else {
                 try {
                     int num = std::stoi(cmd);
                     if (num > 1 || num < 0) {
-                        std::cout << "Id invalide" << std::endl;
-
-                        std::cout << "Entrée pour continuer." << std::endl;
-                        std::getline(std::cin, cmd);
+                        print_info("Id invalide.");
                     } else if (std::find(effects.begin(), effects.end(), num) != effects.end()) {
-                        std::cout << num << " déjà ajouté." << std::endl;
-
-                        std::cout << "Entrée pour continuer." << std::endl;
-                        std::getline(std::cin, cmd);
+                        print_info(std::to_string(num) + " déjà ajouté.");
                     } else{
                         effects.push_back(num);
                     }
                 } catch (std::invalid_argument &e) {
-                    std::cout << "Commande Invalide" << std::endl; //TODO : s'affiche automatiquement
+                    print_info("Commande invalide."); //TODO : s'affiche automatiquement
                 }
             }
         }
@@ -541,15 +511,15 @@ void DeckBuild::create_ritual(){
 
     case 2:{
 
-        std::cout << "0       : Tuer une créature adverse." << std::endl;
-        std::cout << "1       : Tuer une créature adverse ayant plus de 2 de force." << std::endl;
-        std::cout << "2       : Tuer une créature avderse, hors Ange." << std::endl;
-        std::cout << "3       : Tuer une créature adverse ayant moins de 2 / 2 à ce tour." << std::endl;
+        print_list({
+        {"0", "Tuer une créature adverse"},
+        {"1", "ATuer une créature adverse ayant plus de 2 de force."},
+        {"2", "Tuer une créature avderse, hors Ange."},
+        {"3", "Tuer une créature adverse ayant moins de 2 / 2 à ce tour."} });
 
-        std::cout << "valid   : valider vos choix." << std::endl;
-        std::cout << "reset   : réinitialiser vos choix." << std::endl<<std::endl;
-
-        std::cout<< "Entrez les effets de votre créature : " <<std::endl;
+        print_actions("Choix effets, cf. ci-dessus", {
+        {"valid", "valider vos choix"}, 
+        {"reset", "réinitialiser vos choix"}}, "Entrez les effets de votre rituel : " );
 
         std::string cmd;
         bool quit = false;
@@ -562,25 +532,19 @@ void DeckBuild::create_ritual(){
                 quit = true;
             } else if (cmd.find("reset") != std::string::npos) {
                 effects = {};
-                std::cout<< "Reset reussi" <<std::endl;
+                print_info("Reset reussi !");
             } else {
                 try {
                     int num = std::stoi(cmd);
                     if (num > 3 || num < 0) {
-                        std::cout << "Id invalide" << std::endl;
-
-                        std::cout << "Entrée pour continuer." << std::endl;
-                        std::getline(std::cin, cmd);
+                        print_info("Id invalide.");
                     } else if (std::find(effects.begin(), effects.end(), num) != effects.end()) {
-                        std::cout << num << " déjà ajouté." << std::endl;
-
-                        std::cout << "Entrée pour continuer." << std::endl;
-                        std::getline(std::cin, cmd);
+                        print_info(std::to_string(num) + " déjà ajouté.");
                     } else{
                         effects.push_back(num);
                     }
                 } catch (std::invalid_argument &e) {
-                    std::cout << "Commande Invalide" << std::endl; //TODO : s'affiche automatiquement
+                    print_info("Commande invalide."); //TODO : s'affiche automatiquement
                 }
             }
         }
@@ -601,13 +565,13 @@ void DeckBuild::create_ritual(){
 
     case 3:{
 
-        std::cout << "0       : Infliger 3 dégâts à une créature adverse ou à l'adervsaire." << std::endl;
-        std::cout << "1       : Infliger 4 dégâts à une créature adverse." << std::endl;
+        print_list({
+        {"0", "Infliger 3 dégâts à une créature adverse ou à l'adervsaire."},
+        {"1", "Infliger 4 dégâts à une créature adverse."} });
 
-        std::cout << "valid   : valider vos choix." << std::endl;
-        std::cout << "reset   : réinitialiser vos choix." << std::endl<<std::endl;
-
-        std::cout<< "Entrez les effets de votre créature : " <<std::endl;
+        print_actions("Choix effets, cf. ci-dessus", {
+        {"valid", "valider vos choix"}, 
+        {"reset", "réinitialiser vos choix"}}, "Entrez les effets de votre rituel : " );
 
         std::string cmd;
         bool quit = false;
@@ -620,25 +584,19 @@ void DeckBuild::create_ritual(){
                 quit = true;
             } else if (cmd.find("reset") != std::string::npos) {
                 effects = {};
-                std::cout<< "Reset reussi" <<std::endl;
+                print_info("Reset reussi !");
             } else {
                 try {
                     int num = std::stoi(cmd);
                     if (num > 1 || num < 0) {
-                        std::cout << "Id invalide" << std::endl;
-
-                        std::cout << "Entrée pour continuer." << std::endl;
-                        std::getline(std::cin, cmd);
+                        print_info("Id invalide.");
                     } else if (std::find(effects.begin(), effects.end(), num) != effects.end()) {
-                        std::cout << num << " déjà ajouté." << std::endl;
-
-                        std::cout << "Entrée pour continuer." << std::endl;
-                        std::getline(std::cin, cmd);
+                        print_info(std::to_string(num) + " déjà ajouté.");
                     } else{
                         effects.push_back(num);
                     }
                 } catch (std::invalid_argument &e) {
-                    std::cout << "Commande Invalide" << std::endl; //TODO : s'affiche automatiquement
+                    print_info("Commande invalide."); //TODO : s'affiche automatiquement
                 }
             }
         }
@@ -659,14 +617,13 @@ void DeckBuild::create_ritual(){
 
     case 4:{
 
+        print_list({
+        {"0", "Jouer un autre terrain ce tour-ci."},
+        {"1", "Prendre 2 terrains dans la bibliothèque et la mélanger."} });
 
-        std::cout << "0       : Jouer un autre terrain ce tour-ci." << std::endl;
-        std::cout << "1       : Prendre 2 terrains dans la bibliothèque et la mélanger." << std::endl;
-
-        std::cout << "valid   : valider vos choix." << std::endl;
-        std::cout << "reset   : réinitialiser vos choix." << std::endl<<std::endl;
-
-        std::cout<< "Entrez les effets de votre créature : " <<std::endl;
+        print_actions("Choix effets, cf. ci-dessus", {
+        {"valid", "valider vos choix"}, 
+        {"reset", "réinitialiser vos choix"}}, "Entrez les effets de votre rituel : " );
 
         std::string cmd;
         bool quit = false;
@@ -679,25 +636,19 @@ void DeckBuild::create_ritual(){
                 quit = true;
             } else if (cmd.find("reset") != std::string::npos) {
                 effects = {};
-                std::cout<< "Reset reussi" <<std::endl;
+                print_info("Reset reussi !");
             } else {
                 try {
                     int num = std::stoi(cmd);
                     if (num > 1 || num < 0) {
-                        std::cout << "Id invalide" << std::endl;
-
-                        std::cout << "Entrée pour continuer." << std::endl;
-                        std::getline(std::cin, cmd);
+                        print_info("Id invalide.");
                     } else if (std::find(effects.begin(), effects.end(), num) != effects.end()) {
-                        std::cout << num << " déjà ajouté." << std::endl;
-
-                        std::cout << "Entrée pour continuer." << std::endl;
-                        std::getline(std::cin, cmd);
+                        print_info(std::to_string(num) + " déjà ajouté.");
                     } else{
                         effects.push_back(num);
                     }
                 } catch (std::invalid_argument &e) {
-                    std::cout << "Commande Invalide" << std::endl; //TODO : s'affiche automatiquement
+                    print_info("Commande invalide."); //TODO : s'affiche automatiquement
                 }
             }
         }
@@ -721,32 +672,32 @@ void DeckBuild::create_ritual(){
     }
 
     // Cost
-    std::cout<< "Entrez le coût en terrain blanc : " <<std::endl;
+    std::cout<< std::endl << "Entrez le coût en terrain blanc : " <<std::endl;
 
     int cost_white;
     std::cin>> cost_white;
 
-    std::cout<< "Entrez le coût en terrain bleu : " <<std::endl;
+    std::cout<< std::endl << "Entrez le coût en terrain bleu : " <<std::endl;
 
     int cost_blue;
     std::cin>> cost_blue;
 
-    std::cout<< "Entrez le coût en terrain noir : " <<std::endl;
+    std::cout<< std::endl << "Entrez le coût en terrain noir : " <<std::endl;
 
     int cost_black;
     std::cin>> cost_black;
 
-    std::cout<< "Entrez le coût en terrain rouge : " <<std::endl;
+    std::cout<< std::endl << "Entrez le coût en terrain rouge : " <<std::endl;
 
     int cost_red;
     std::cin>> cost_red;
 
-    std::cout<< "Entrez le coût en terrain vert : " <<std::endl;
+    std::cout<< std::endl << "Entrez le coût en terrain vert : " <<std::endl;
 
     int cost_green;
     std::cin>> cost_green;
 
-    std::cout<< "Entrez le coût en terrain de n'importe quelle couleur : " <<std::endl;
+    std::cout<< std::endl << "Entrez le coût en terrain de n'importe quelle couleur : " <<std::endl;
 
     int cost_any;
     std::cin>> cost_any;
@@ -762,7 +713,7 @@ void DeckBuild::create_ritual(){
     std::string infos;
     std::getline(std::cin, infos);
 
-    m_file << "    #INFO: " + infos <<std::endl; //TODO : ne laisse pas le temps de taper
+    m_file << "    #INFO:" + infos <<std::endl; //TODO : ne laisse pas le temps de taper
 
 
     m_file << "#END_CARD" <<std::endl << std::endl;
@@ -771,6 +722,356 @@ void DeckBuild::create_ritual(){
 
 void DeckBuild::create_enchantment(){
     
+    // Begin
+    m_file << "#BEGIN_CARD" <<std::endl;
+    m_file << "    #TYPE_CARD: Ritual" <<std::endl;
 
+    // Name
+    std::cout<< std::endl <<  "Entrez le nom de votre enchantement : " <<std::endl;
+
+    std::string name;
+    std::getline(std::cin, name);
+
+    m_file << "    #NAME: " + name <<std::endl;
+
+    std::cout<<std::endl<<std::endl;;
+
+    // Token
+    print_list({
+        {std::to_string(0), "Enchantement blanc"},
+        {std::to_string(1), "Enchantement bleu"},
+        {std::to_string(2), "Enchantement noir"},
+        {std::to_string(3), "Enchantement rouge"},
+        {std::to_string(4), "Enchantement vert"},
+    }, " - ");
+
+    std::cout<< std::endl << "Entrez la couleur de votre enchantement : " <<std::endl;
+
+    int token;
+    bool quit = false;
+
+    while(!quit){
+        std::cin>> token;
+        if(token < 5 && token >= 0 ){
+            quit = true;
+        } else{
+            print_info("Commande invalide.");
+        }
+    }
+
+    m_file << "    #TOKEN: " + std::to_string(token) <<std::endl << std::endl;
+
+    // Effects
+    switch (token)
+    {
+    case 0:{
+
+        print_list({
+        {"0", "Gagne un point de vie à chaque fois que tu joues une carte blanche."},
+        {"1", "La créature enchantés à le vol et le lien de vie."}, });
+
+        print_actions("Choix effets, cf. ci-dessus", {
+        {"valid", "valider vos choix"}, 
+        {"reset", "réinitialiser vos choix"}}, "Entrez les effets de votre enchantement : " );
+
+        std::string cmd;
+        bool quit = false;
+        std::vector<int> effects;
+
+        while (!quit) {
+            std::getline(std::cin, cmd);
+
+            if (cmd.find("valid") != std::string::npos) {
+                quit = true;
+            } else if (cmd.find("reset") != std::string::npos) {
+                effects = {};
+                print_info("Reset reussi !");
+            } else {
+                try {
+                    int num = std::stoi(cmd);
+                    if (num > 1 || num < 0) {
+                        print_info("Id invalide.");
+                    } else if (std::find(effects.begin(), effects.end(), num) != effects.end()) {
+                        print_info(std::to_string(num) + " déjà ajouté.");
+                    } else{
+                        effects.push_back(num);
+                    }
+                } catch (std::invalid_argument &e) {
+                    print_info("Commande invalide."); //TODO : s'affiche automatiquement
+                }
+            }
+        }
+
+        std::string str_effects = "";
+        for (auto e : effects){
+            if(e == effects[effects.size()-1]){
+                str_effects = str_effects + std::to_string(e);
+            } else {
+                str_effects = str_effects + std::to_string(e) + ", ";
+            }
+        }
+
+        m_file << "    #EFFECTS: " + str_effects <<std::endl << std::endl;  
+    }
+        
+    break;
+
+    case 1:{
+
+
+        print_list({
+        {"0", "Prendre le contrôle d'une créature tant qu'elle est en jeu."}, });
+
+        print_actions("Choix effets, cf. ci-dessus", {
+        {"valid", "valider vos choix"}, 
+        {"reset", "réinitialiser vos choix"}}, "Entrez les effets de votre enchantement : " );
+
+        std::string cmd;
+        bool quit = false;
+        std::vector<int> effects;
+
+        while (!quit) {
+            std::getline(std::cin, cmd);
+
+            if (cmd.find("valid") != std::string::npos) {
+                quit = true;
+            } else if (cmd.find("reset") != std::string::npos) {
+                effects = {};
+                print_info("Reset reussi !");
+            } else {
+                try {
+                    int num = std::stoi(cmd);
+                    if (num > 0 || num < 0) {
+                        print_info("Id invalide.");
+                    } else if (std::find(effects.begin(), effects.end(), num) != effects.end()) {
+                        print_info(std::to_string(num) + " déjà ajouté.");
+                    } else{
+                        effects.push_back(num);
+                    }
+                } catch (std::invalid_argument &e) {
+                    print_info("Commande invalide."); //TODO : s'affiche automatiquement
+                }
+            }
+        }
+
+        std::string str_effects = "";
+        for (auto e : effects){
+            if(e == effects[effects.size()-1]){
+                str_effects = str_effects + std::to_string(e);
+            } else {
+                str_effects = str_effects + std::to_string(e) + ", ";
+            }
+        }
+
+        m_file << "    #EFFECTS: " + str_effects <<std::endl << std::endl;  
+
+    }
+    break;
+
+    case 2:{
+
+        print_list({
+        {"0", "Chaque fois qu'une créature meurt, l'aversaire perd un point de vie"}, });
+
+        print_actions("Choix effets, cf. ci-dessus", {
+        {"valid", "valider vos choix"}, 
+        {"reset", "réinitialiser vos choix"}}, "Entrez les effets de votre enchantement : " );
+
+        std::string cmd;
+        bool quit = false;
+        std::vector<int> effects;
+
+        while (!quit) {
+            std::getline(std::cin, cmd);
+
+            if (cmd.find("valid") != std::string::npos) {
+                quit = true;
+            } else if (cmd.find("reset") != std::string::npos) {
+                effects = {};
+                print_info("Reset reussi !");
+            } else {
+                try {
+                    int num = std::stoi(cmd);
+                    if (num > 0 || num < 0) {
+                        print_info("Id invalide.");
+                    } else if (std::find(effects.begin(), effects.end(), num) != effects.end()) {
+                        print_info(std::to_string(num) + " déjà ajouté.");
+                    } else{
+                        effects.push_back(num);
+                    }
+                } catch (std::invalid_argument &e) {
+                    print_info("Commande invalide."); //TODO : s'affiche automatiquement
+                }
+            }
+        }
+
+        std::string str_effects = "";
+        for (auto e : effects){
+            if(e == effects[effects.size()-1]){
+                str_effects = str_effects + std::to_string(e);
+            } else {
+                str_effects = str_effects + std::to_string(e) + ", ";
+            }
+        }
+
+        m_file << "    #EFFECTS: " + str_effects <<std::endl << std::endl;  
+
+    }
+    break;
+
+    case 3:{
+
+        print_list({
+        {"0", "Créatures gagne 1 / 0 à chaque phase d'attaque."}, });
+
+        print_actions("Choix effets, cf. ci-dessus", {
+        {"valid", "valider vos choix"}, 
+        {"reset", "réinitialiser vos choix"}}, "Entrez les effets de votre enchantement : " );
+
+        std::string cmd;
+        bool quit = false;
+        std::vector<int> effects;
+
+        while (!quit) {
+            std::getline(std::cin, cmd);
+
+            if (cmd.find("valid") != std::string::npos) {
+                quit = true;
+            } else if (cmd.find("reset") != std::string::npos) {
+                effects = {};
+                print_info("Reset reussi !");
+            } else {
+                try {
+                    int num = std::stoi(cmd);
+                    if (num > 0 || num < 0) {
+                        print_info("Id invalide.");
+                    } else if (std::find(effects.begin(), effects.end(), num) != effects.end()) {
+                        print_info(std::to_string(num) + " déjà ajouté.");
+                    } else{
+                        effects.push_back(num);
+                    }
+                } catch (std::invalid_argument &e) {
+                    print_info("Commande invalide."); //TODO : s'affiche automatiquement
+                }
+            }
+        }
+
+        std::string str_effects = "";
+        for (auto e : effects){
+            if(e == effects[effects.size()-1]){
+                str_effects = str_effects + std::to_string(e);
+            } else {
+                str_effects = str_effects + std::to_string(e) + ", ";
+            }
+        }
+
+        m_file << "    #EFFECTS: " + str_effects <<std::endl << std::endl;  
+
+    }
+    break;
+
+    case 4:{
+
+        print_list({
+        {"0", "Terrain enchanté rapporte 2 ressources au lieu d'une."},
+        {"1", "Créature enchantée gagne X / X, X le nombre de forêt contrôlées."} });
+
+        print_actions("Choix effets, cf. ci-dessus", {
+        {"valid", "valider vos choix"}, 
+        {"reset", "réinitialiser vos choix"}}, "Entrez les effets de votre enchantement : " );
+
+        std::string cmd;
+        bool quit = false;
+        std::vector<int> effects;
+
+        while (!quit) {
+            std::getline(std::cin, cmd);
+
+            if (cmd.find("valid") != std::string::npos) {
+                quit = true;
+            } else if (cmd.find("reset") != std::string::npos) {
+                effects = {};
+                print_info("Reset reussi !");
+            } else {
+                try {
+                    int num = std::stoi(cmd);
+                    if (num > 1 || num < 0) {
+                        print_info("Id invalide.");
+                    } else if (std::find(effects.begin(), effects.end(), num) != effects.end()) {
+                        print_info(std::to_string(num) + " déjà ajouté.");
+                    } else{
+                        effects.push_back(num);
+                    }
+                } catch (std::invalid_argument &e) {
+                    print_info("Commande invalide."); //TODO : s'affiche automatiquement
+                }
+            }
+        }
+
+        std::string str_effects = "";
+        for (auto e : effects){
+            if(e == effects[effects.size()-1]){
+                str_effects = str_effects + std::to_string(e);
+            } else {
+                str_effects = str_effects + std::to_string(e) + ", ";
+            }
+        }
+
+        m_file << "    #EFFECTS: " + str_effects <<std::endl;  
+
+    }
+    break;
+    
+    default:
+        break;
+    }
+
+    // Cost
+    std::cout<< std::endl << "Entrez le coût en terrain blanc : " <<std::endl;
+
+    int cost_white;
+    std::cin>> cost_white;
+
+    std::cout<< std::endl << "Entrez le coût en terrain bleu : " <<std::endl;
+
+    int cost_blue;
+    std::cin>> cost_blue;
+
+    std::cout<< std::endl << "Entrez le coût en terrain noir : " <<std::endl;
+
+    int cost_black;
+    std::cin>> cost_black;
+
+    std::cout<< std::endl << "Entrez le coût en terrain rouge : " <<std::endl;
+
+    int cost_red;
+    std::cin>> cost_red;
+
+    std::cout<< std::endl << "Entrez le coût en terrain vert : " <<std::endl;
+
+    int cost_green;
+    std::cin>> cost_green;
+
+    std::cout<< std::endl << "Entrez le coût en terrain de n'importe quelle couleur : " <<std::endl;
+
+    int cost_any;
+    std::cin>> cost_any;
+
+    std::string cost;
+    cost = std::to_string(cost_any) + ", " + std::to_string(cost_white) + ", " + std::to_string(cost_blue) + ", " + std::to_string(cost_black) + ", " + std::to_string(cost_red) + ", " + std::to_string(cost_green);
+
+    m_file << "    #COST: " + cost <<std::endl;
+
+    // Info
+    std::cout<< std::endl << "Entrez les informations de votre enchantement: " <<std::endl;
+
+    std::string infos;
+    std::getline(std::cin, infos);
+
+    m_file << "    #INFO: " + infos <<std::endl; //TODO : ne laisse pas le temps de taper
+
+
+    m_file << "#END_CARD" <<std::endl << std::endl;
+    
 
 }

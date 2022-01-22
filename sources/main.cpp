@@ -8,9 +8,6 @@
 #include "CardParser.hpp"
 
 int main() {
-    std::cout << CardParser::parse("data/t0").size() << std::endl;
-
-    return 0;
 
     while(1){
         std::string s;
@@ -26,7 +23,7 @@ int main() {
                 cls();
             } else if(s == "load"){
                 // TODO : charger une partie
-            } else if(s == "deck-build"){
+            } else if(s == "deck-builder"){
                 DeckBuild db;
                 db.create_file();
             } else if(s == "exit"){
