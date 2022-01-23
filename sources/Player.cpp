@@ -223,6 +223,7 @@ void Player::play_card(Card* c) {
     } else if(c->is_class(Card_class::RITUAL)){
         Ritual* r = dynamic_cast<Ritual*>(c);
         play_ritual(r);
+        remove(c, m_hand);
         m_battlefield->engage_lands(r->get_cost());
     } else if(c->is_class(Card_class::ENCHANTEMENT)){
 
@@ -772,6 +773,8 @@ void Player::play_ritual(Ritual* r) {
                         int i = 1;
                         std::vector<Creature*> possible_creatures;
 
+                        print_info("Selectionnez une creature pour le detruire de la partie :");
+
                         for (auto bc : m_opponent->get_battlefield()->get_basic_cards()) {
                             if (bc->is_class(Card_class::CREATURE)) {
                                 Creature creature = *dynamic_cast<Creature*>(bc);
@@ -813,6 +816,8 @@ void Player::play_ritual(Ritual* r) {
 
                         int i = 1;
                         std::vector<Enchantment*> possible_enchantments;
+
+                        print_info("Selectionnez un enchantement pour le detruire de la partie :");
 
                         // Each enchantment on the battlefield of the opponent
                         for (auto e : m_opponent->get_battlefield()->get_enchantments()) {
@@ -885,6 +890,8 @@ void Player::play_ritual(Ritual* r) {
                     int i = 1;
                     std::vector<Creature*> possible_creatures;
 
+                    print_info("Selectionnez une creature pour la renvoyer dans la main de votre adversaire :");
+
                     for (auto bc : m_opponent->get_battlefield()->get_basic_cards()) {
                         
                         if (bc->is_class(Card_class::CREATURE)) {
@@ -937,6 +944,8 @@ void Player::play_ritual(Ritual* r) {
                     int i = 1;
                     std::vector<Creature*> possible_creatures;
 
+                    print_info("Selectionnez une creature pour la tuer : ");
+
                     for (auto bc : m_opponent->get_battlefield()->get_basic_cards()) {
                         
                         if (bc->is_class(Card_class::CREATURE)) {
@@ -975,6 +984,8 @@ void Player::play_ritual(Ritual* r) {
 
                     int i = 1;
                     std::vector<Creature*> possible_creatures;
+
+                    print_info("Selectionnez une creature avec plus de 2 de force pour la tuer : ");
 
                     for (auto bc : m_opponent->get_battlefield()->get_basic_cards()) {
                         
@@ -1018,6 +1029,8 @@ void Player::play_ritual(Ritual* r) {
 
                     int i = 1;
                     std::vector<Creature*> possible_creatures;
+
+                    print_info("Selectionnez une creature qui n'est pas un Ange pour la tuer : ");
 
                     for (auto bc : m_opponent->get_battlefield()->get_basic_cards()) {
                         
@@ -1064,6 +1077,8 @@ void Player::play_ritual(Ritual* r) {
 
                     int i = 1;
                     std::vector<Creature*> possible_creatures;
+
+                    print_info("Selectionnez une creature pour lui infligez -2 / -2 :");
 
                     for (auto bc : m_opponent->get_battlefield()->get_basic_cards()) {
                         
@@ -1191,13 +1206,14 @@ void Player::play_ritual(Ritual* r) {
                 
                 case Red_ritual_effects::Damage_4_creatures: {
 
-                    std::cout << " Tapez 0 pour reinitialiser vos choix " << std::endl;
-
                     int i = 1;
-                    int res;
-                    bool quit = false;
                     std::vector<Creature*> possible_creatures;
                     std::vector<Creature*> chosen_creatures;
+
+                    print_actions(m_name + ", selectionnez au plus 4 créatures pour leur infliger 1 dégâts (doublons acceptés) :", {
+                            {"<id>", "pour choisir cette carte"},
+                            {"reset", "pour annuler vos choix"},
+                            {"valid", "pour valider vos choix"} });
 
                     for (auto bc : m_opponent->get_battlefield()->get_basic_cards()) {
                         
@@ -1211,26 +1227,39 @@ void Player::play_ritual(Ritual* r) {
                         }
                     }
 
-                    while (!quit) {
-                        std::cin >> res;
-                        if (res <= i || res >= 1) {
-                            chosen_creatures.push_back(possible_creatures[res - 1]);
+                    std::string cmd;
 
-                            if (chosen_creatures.size() == 4)
-                                quit = true;
-
-                        } else if (res == 0) {
-
+                    while (true) {
+                            
+                        std::getline(std::cin, cmd);
+                    
+                        if (cmd.find("valid") != std::string::npos) {
+                            for (auto creature : chosen_creatures) {
+                                print_info("Vous infligez 1 dégât à " + creature->get_name() + " ! ");
+                                creature->set_toughness_current(creature->get_toughness_current() - 1);
+                            }
+                            break;
+                        } else if (cmd.find("reset") != std::string::npos) {
                             chosen_creatures = {};
-                            std::cout<< "Vos choix sont reinitialisés "<<std::endl;
-
+                            print_info("Reset reussi");
                         } else {
-                            std::cout<< " -- Creature non disponible -- "<<std::endl;
-                        }
-                    }
+                            try {
+                                int num = std::stoi(cmd);
+                                if (num > i || num < 0) {
+                                    print_info("Id invalide");
+                                } else {
+                                    if (contain(possible_creatures[num - 1], chosen_creatures)) {
+                                        print_info(std::to_string(num) + " deja choisie"); 
+                                    } else {
+                                        chosen_creatures.push_back(possible_creatures[num - 1]);
+                                        print_info("Vous avez ajouté " + possible_creatures[num-1]->get_name() + " !");
 
-                    for (auto creature : chosen_creatures) {
-                        creature->set_toughness_current(creature->get_toughness_current() - 1);
+                                    }
+                                }
+                            } catch (std::invalid_argument &e) {
+                                print_info("Commande Invalide");    
+                            }
+                        }
                     }
 
                 }
@@ -1254,19 +1283,21 @@ void Player::play_ritual(Ritual* r) {
                 // We can play 2 lands this turn
                 case Green_ritual_effects::Play_another_land:
                     
+                    print_info("Vous pouvez jouer un terrain de plus ce tour-ci ! ");
                     add_played_land(-1);
                 
                 break;
 
                 case Green_ritual_effects::Take_2_lands_library_shuffle: {
 
-                    std::cout << " Tapez 0 pour reinitialiser vos choix " << std::endl;
-
                     int i = 1;
-                    int res;
-                    bool quit = false;
                     std::vector<Land*> possible_lands;
                     std::vector<Land*> chosen_lands;
+
+                    print_actions(m_name + ", selectionnez 2 terrains de votre bibliotheque :", {
+                            {"<id>", "pour choisir cette carte"},
+                            {"reset", "pour annuler vos choix"},
+                            {"valid", "pour valider vos choix"} });
 
                     for (auto c : m_library) {
                         
@@ -1280,29 +1311,44 @@ void Player::play_ritual(Ritual* r) {
                         }
                     }
 
-                    while (!quit) {
-                        std::cin>> res;
-                        if(res <= i || res >= 1) {
-                            chosen_lands.push_back(possible_lands[res - 1]);
+                    std::string cmd;
 
-                            if(chosen_lands.size() == 2)
-                                quit = true;
-
-                        } else if (res == 0) {
-
+                    while (true) {
+                            
+                        std::getline(std::cin, cmd);
+                    
+                        if (cmd.find("valid") != std::string::npos) {
+                            if(chosen_lands.size() < 3){
+                                print_info("Vous n'avez pas choisi 2 terrains, continuez ! ");
+                            } else {
+                                for (auto land : chosen_lands) {
+                                    print_info("Vous ajoutez " + land->get_name() + " dans votre main !");
+                                    m_hand.push_back(land);
+                                    remove( dynamic_cast<Card*>(land), m_library);
+                                }
+                                shuffle_library();
+                                break;
+                            }
+                        } else if (cmd.find("reset") != std::string::npos) {
                             chosen_lands = {};
-                            std::cout<< "Vos choix sont reinitialisés "<<std::endl;
-
+                            print_info("Reset reussi");
                         } else {
-                            std::cout<< " -- Terrain non disponible -- "<<std::endl;
+                            try {
+                                int num = std::stoi(cmd);
+                                if (num > i || num < 0) {
+                                    print_info("Id invalide");
+                                } else {
+                                    if(chosen_lands.size() == 2){
+                                        print_info("Vous avez deja fait 2 choix, tapez valid ou reset.");
+                                    }
+                                    chosen_lands.push_back(possible_lands[num - 1]);                            
+                                }
+                            } catch (std::invalid_argument &e) {
+                                print_info("Commande Invalide");    
+                            }
                         }
                     }
 
-                    for (auto land : chosen_lands) {
-                        m_hand.push_back(land);
-                        remove( dynamic_cast<Card*>(land), m_library);
-                    }
-                    shuffle_library();
                 }
                 break;
                 

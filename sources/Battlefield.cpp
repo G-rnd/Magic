@@ -131,7 +131,7 @@ void Battlefield::disengage_card(BasicCard* bc) {
     bc->set_engaged(false);
 }
 
-// Renvoie vrai si le terrain comporte assez de cartes terrains pour jouer la carte c
+// Renvoie vrai si le champ de bataille comporte assez de cartes terrains pour jouer la carte c
 bool Battlefield::is_playable(Card* card) {
     Cost c = Cost(0, 0, 0, 0, 0, 0);
     switch (card->get_class()) {
