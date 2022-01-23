@@ -794,7 +794,7 @@ void Player::play_ritual(Ritual* r) {
                                 if (num > i || num < 0) {
                                     print_info("Id invalide.");
                                 } else {
-                                    Creature* chosen_creature = possible_creatures[res - 1];
+                                    Creature* chosen_creature = possible_creatures[num - 1];
                                     // TODO : tester si le delete fonctionne
                                     m_opponent->get_battlefield()->remove_basic_card(chosen_creature);
                                     print_info("Vous venez de détruire " + chosen_creature->get_name() + ".");
@@ -842,7 +842,7 @@ void Player::play_ritual(Ritual* r) {
                                 if (num > i || num < 0) {
                                     print_info("Id invalide.");
                                 } else {
-                                    Enchantment* chosen_enchantment = possible_enchantments[res - 1];
+                                    Enchantment* chosen_enchantment = possible_enchantments[num - 1];
                                     // TODO : tester si delete fonctionne
                                     m_opponent->get_battlefield()->remove_enchantment(chosen_enchantment);
                                     print_info("Vous venez de détruire " + chosen_enchantment->get_name() + ".");
@@ -907,7 +907,7 @@ void Player::play_ritual(Ritual* r) {
                             if (num > i || num < 0) {
                                 print_info("Id invalide.");
                             } else {
-                                Creature* chosen_creature = possible_creatures[res - 1];
+                                Creature* chosen_creature = possible_creatures[num - 1];
                                 m_opponent->add_hand(chosen_creature);
                                 m_opponent->remove_battlefield(chosen_creature);
                                 print_info("Vous venez de retourner " + chosen_creature->get_name() + " dans la main de votre adversaire.");
@@ -959,9 +959,9 @@ void Player::play_ritual(Ritual* r) {
                             if (num > i || num < 0) {
                                 print_info("Id invalide.");
                             } else {
-                                Creature* chosen_creature = possible_creatures[res - 1];
+                                Creature* chosen_creature = possible_creatures[num - 1];
                                 destroy_card(chosen_creature);
-                                print_info("Vous venez de placer " + chosen_creature->get_name() + " dans le cimetière de votre adversaire ! ")
+                                print_info("Vous venez de placer " + chosen_creature->get_name() + " dans le cimetière de votre adversaire ! ");
                                 break;
                             }
                         } catch (std::invalid_argument &e) {
@@ -1000,9 +1000,9 @@ void Player::play_ritual(Ritual* r) {
                             if (num > i || num < 0) {
                                 print_info("Id invalide.");
                             } else {
-                                Creature* chosen_creature = possible_creatures[res - 1];
+                                Creature* chosen_creature = possible_creatures[num - 1];
                                 destroy_card(chosen_creature);
-                                print_info("Vous venez de placer " + chosen_creature->get_name() + " dans le cimetière de votre adversaire ! ")
+                                print_info("Vous venez de placer " + chosen_creature->get_name() + " dans le cimetière de votre adversaire ! ");
                                 break;
                             }
                         } catch (std::invalid_argument &e) {
@@ -1048,9 +1048,9 @@ void Player::play_ritual(Ritual* r) {
                             if (num > i || num < 0) {
                                 print_info("Id invalide.");
                             } else {
-                                Creature* chosen_creature = possible_creatures[res - 1];
+                                Creature* chosen_creature = possible_creatures[num - 1];
                                 destroy_card(chosen_creature);
-                                print_info("Vous venez de placer " + chosen_creature->get_name() + " dans le cimetière de votre adversaire ! ")
+                                print_info("Vous venez de placer " + chosen_creature->get_name() + " dans le cimetière de votre adversaire ! ");
                                 break;
                             }
                         } catch (std::invalid_argument &e) {
@@ -1087,7 +1087,7 @@ void Player::play_ritual(Ritual* r) {
                             if (num > i || num < 0) {
                                 print_info("Id invalide.");
                             } else {
-                                Creature* chosen_creature = possible_creatures[res - 1];
+                                Creature* chosen_creature = possible_creatures[num - 1];
 
                                 if (chosen_creature->get_power_current() < 3) {
                                     chosen_creature->set_power_current(0);
@@ -1101,7 +1101,7 @@ void Player::play_ritual(Ritual* r) {
                                     chosen_creature->set_toughness_current(chosen_creature->get_toughness_current() - 2);
                                 }
 
-                                print_info("Vous venez d'affecter -2 / -2 à " + chosen_creature->get_name() + ".")
+                                print_info("Vous venez d'affecter -2 / -2 à " + chosen_creature->get_name() + ".");
                                 break;
                             }
                         } catch (std::invalid_argument &e) {
@@ -1133,13 +1133,14 @@ void Player::play_ritual(Ritual* r) {
                         print_actions("Faites votre choix !", {
                             {"crea", "pour infliger 3 dégâts à une créature"},
                             {"player", "pour infliger 3 dégâts à votre adversaire"} });
+                            
                         std::getline(std::cin, cmd);
 
                         if (cmd == "player") {
                             m_opponent->set_hp(m_opponent->get_hp() - 3);
                             print_info("Vous venez d'infliger 3 dégâts à votre adversaire ! ");
                             break;
-                        } else if (cmd == "crea" {
+                        } else if (cmd == "crea") {
                             int i = 1;
                             std::vector<Creature*> possible_creatures;
 
@@ -1163,7 +1164,7 @@ void Player::play_ritual(Ritual* r) {
                                     if (num > i || num < 0) {
                                         print_info("Id invalide.");
                                     } else {
-                                        Creature* chosen_creature = possible_creatures[res - 1];
+                                        Creature* chosen_creature = possible_creatures[num - 1];
 
                                         if (chosen_creature->get_toughness_current() < 4) {
                                             destroy_card(chosen_creature);
