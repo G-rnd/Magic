@@ -1,4 +1,5 @@
 #include <iostream>
+#include <fstream>
 #include <string>
 
 #include "Game.hpp"
@@ -8,16 +9,6 @@
 #include "CardParser.hpp"
 
 int main() {
-
-/*
-    std::string s = "hello world";
-    std::cout << get_color(Color::Magenta) << s << std::endl;
-
-    std::cout << get_color(Color::Yellow) << s << get_color(Color::BrightRed) << std::endl;
-
-    std::cout << get_background_color(Color::Magenta) << s << get_background_color(Color::Reset) << std::endl;
-    
-    return 0;*/
 
     while(1){
         std::string s;

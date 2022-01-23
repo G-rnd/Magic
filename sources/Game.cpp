@@ -67,7 +67,7 @@ void Game::start() {
     m_players.push_back(&p2);
 
     // Choix des decks, mélange des bibliothèques et pioche initiale
-    std::string path = "data/";
+    std::string path = "data/complet";
 
     std::vector<std::pair<std::string, std::string > > available_decks = {};
 

@@ -16,33 +16,40 @@ void DeckBuild::create_file(){
 
     print_info("Bienvenue dans le mode création de deck");
 
+// TODO : load deck
     std::cout<< "Choisissez une nom de deck : "<<std::endl;
 
     std::string name;
     std::cin.clear();
-            std::getline(std::cin, name); // TODO verif caractères
+    std::getline(std::cin, name);
 
-    std::string path = "data/" + name + ".txt";
+    std::string path = "data/in_construction" + name + ".txt";
     m_filename = path;
 
-    m_file.open(m_filename, std::ios::out);
+    std::ofstream flux(m_filename.c_str(), std::ios::app);
+
+    m_file.open(m_filename, std::ios::app);
+
+    bool saved = false;
     
-    while(m_nb_cards != get_nb_cards_current()){
-
-        cls();
-
-        print_info("Vous avez créé \n - " + std::to_string(m_crea) + " créatures \n - " + std::to_string(m_land) + " terrains \n - " + std::to_string(m_ritu) + " rituels \n - " + std::to_string(m_ench) + " enchantements");
-
-        print_actions("Sélectionnez votre type de carte : ",{
-        {"crea", "pour créer une créature."}, 
-        {"land", "pour créer un terrain."},
-        {"ritu", "pour créer un rituel."},
-        {"ench", "pour créer un enchantement."} }, "Choississez votre type de carte : ");
+    while(m_nb_cards != get_nb_cards_current() || saved){
 
         bool quit = false;
         std::string card;
 
         while(!quit){
+
+            cls();
+
+            print_info("Vous avez créé \n - " + std::to_string(m_crea) + " créatures \n - " + std::to_string(m_land) + " terrains \n - " + std::to_string(m_ritu) + " rituels \n - " + std::to_string(m_ench) + " enchantements");
+
+            print_actions("Sélectionnez votre type de carte : ",{
+            {"crea", "pour créer une créature."}, 
+            {"land", "pour créer un terrain."},
+            {"ritu", "pour créer un rituel."},
+            {"ench", "pour créer un enchantement."},
+            {"save", "pour enregistrer l'état actuel du deck et le continuer plus tard."} }, "Choississez votre type de carte : ");
+
             std::cin.clear();
             std::getline(std::cin, card);
             if(card == "crea"){
@@ -69,6 +76,9 @@ void DeckBuild::create_file(){
                 create_enchantment();
                 m_ench += 1;
                 quit = true;
+            } else if(card == "save"){
+                quit = true;
+                saved = true;
             } else{
                 print_info("Commande invalide.");
             }
@@ -77,8 +87,15 @@ void DeckBuild::create_file(){
 
     }
 
-    print_info("Votre deck est complet, il a été créé avec succès !");
-    m_file.close();
+    if(saved){
+        print_info("Votre deck " + name + " de " + std::to_string(get_nb_cards_current()) + " est sauvegardé avec succès !");
+        m_file.close();
+    } else {
+        print_info("Votre deck " + name + " est complet, il a été créé avec succès !");
+        std::string new_name = "data/complet/" + name + ".txt";
+        rename(m_filename.c_str(), new_name.c_str());
+        m_file.close();
+    }
 
 }
 

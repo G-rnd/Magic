@@ -160,3 +160,4 @@
 	// cost : <any>, <white>, <black>, <red>, <blue>, <green>
 	#COST: 1, 0, 0, 0, 0, 0
 #END_CARD
+coucoubibou
