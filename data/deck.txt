@@ -462,7 +462,7 @@
 	#TOKEN: 1
 
 
-	#EFFECTS: 1, 2, 3, 4
+	#EFFECTS: 0
 	#COST: 3, 0, 0, 0, 0, 0
 	#INFO: Blabla enchantement génial
 #END_CARD
