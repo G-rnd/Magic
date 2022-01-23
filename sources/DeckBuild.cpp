@@ -707,15 +707,6 @@ void DeckBuild::create_ritual(){
 
     m_file << "    #COST: " + cost <<std::endl;
 
-    // Info
-    std::cout<< "Entrez les informations de votre rituel: " <<std::endl;
-
-    std::string infos;
-    std::getline(std::cin, infos);
-
-    m_file << "    #INFO:" + infos <<std::endl; //TODO : ne laisse pas le temps de taper
-
-
     m_file << "#END_CARD" <<std::endl << std::endl;
     
 }
@@ -1061,15 +1052,6 @@ void DeckBuild::create_enchantment(){
     cost = std::to_string(cost_any) + ", " + std::to_string(cost_white) + ", " + std::to_string(cost_blue) + ", " + std::to_string(cost_black) + ", " + std::to_string(cost_red) + ", " + std::to_string(cost_green);
 
     m_file << "    #COST: " + cost <<std::endl;
-
-    // Info
-    std::cout<< std::endl << "Entrez les informations de votre enchantement: " <<std::endl;
-
-    std::string infos;
-    std::getline(std::cin, infos);
-
-    m_file << "    #INFO: " + infos <<std::endl; //TODO : ne laisse pas le temps de taper
-
 
     m_file << "#END_CARD" <<std::endl << std::endl;
     
