@@ -70,6 +70,7 @@ class Player {
         void                   battle_creature(Creature* opponent, Creature* defender);
         void                   destroy_card(Card* c);
         void                   play_ritual(Ritual* c);
+        void                   play_enchantment(Enchantment* e);
    
         void                   print();
         void                   print_hand();

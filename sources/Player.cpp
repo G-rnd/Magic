@@ -216,6 +216,17 @@ void Player::shuffle_library() {
 
 void Player::play_card(Card* c) {
 
+    if(c->get_token() == Token::White){
+        for (auto e : m_battlefield->get_enchantments()){
+            for (auto effect : e->get_effects()) {
+                if(effect == White_enchantment_effects::Win_1_HP_white){
+                    m_hp ++;
+                    print_info("Vous gagnez 1 point de vie pour avoir joué une carte blanche !");
+                }
+            }
+        }
+    }
+
     if (c->is_class(Card_class::LAND)) {
         add_played_land(1);
         m_battlefield->place_basic_card(dynamic_cast<BasicCard*>(c));
@@ -226,7 +237,9 @@ void Player::play_card(Card* c) {
         remove(c, m_hand);
         m_battlefield->engage_lands(r->get_cost());
     } else if(c->is_class(Card_class::ENCHANTEMENT)){
-
+        Enchantment* e = dynamic_cast<Enchantment*>(c);
+        play_enchantment(e);
+        remove(e, m_hand);
     } else if(c->is_class(Card_class::CREATURE)){
         Creature* cre = dynamic_cast<Creature*>(c);
         cre->set_is_first_turn(true);
@@ -1291,6 +1304,7 @@ void Player::play_ritual(Ritual* r) {
                 case Green_ritual_effects::Take_2_lands_library_shuffle: {
 
                     cls();
+                    print();
 
                     int i = 0;
                     std::vector<Land*> possible_lands;
@@ -1369,6 +1383,135 @@ void Player::play_ritual(Ritual* r) {
     }
     destroy_card(r);
 }
+
+void Player::play_enchantment(Enchantment* e){
+    
+    switch (e->get_token()) {
+        case Token::White: {
+
+            for (auto effect : e->get_effects()) {
+
+                switch (effect) {
+
+                    case White_enchantment_effects::Win_1_HP_white:{
+                        m_battlefield->place_enchantment(e);
+                        print_info("Pour chaque carte blanche jouée, vous gagnerez un point de vie !");
+                    }
+                    break;
+
+                    case White_enchantment_effects::Flight_Life_link:{
+
+                        int i = 0;
+                        std::vector<Creature*> possible_creatures;
+                        std::vector<std::pair<std::string, std::string>> print_creatures;
+
+                        std::string cmd;
+
+                        while (true) {
+
+                            cls();
+                            print();
+
+                            print_actions(m_name + ", selectionnez votre creature à enchanter pour lui ajouter Vol et Lien de vie :", {
+                                {"<id>", "pour choisir cette carte"} });
+
+                            for (auto creature : m_battlefield->get_basic_cards()){
+                                if(creature->is_class(Card_class::CREATURE)){
+                                    print_creatures.push_back({std::to_string(i), creature->get_name()});
+                                    possible_creatures.push_back(creature);
+                                    i++;
+                                }
+                            }
+                                
+                            std::getline(std::cin, cmd);
+                        
+                            try {
+                                int num = std::stoi(cmd);
+                                if (num > i || num < 0) {
+                                    print_info("Id invalide");
+                                } else {
+                                    possible_creatures[num]->add_enchantment(e);
+                                    possible_creatures[num]->add_ability(Ability::Flight);
+                                    possible_creatures[num]->add_ability(Ability::Life_link);
+                                    print_info(possible_creatures[num] + " a obtenue les capacités : Vol et Lien de vie ! ");
+                                    break;
+                                }
+                            } catch (std::invalid_argument &e) {
+                                print_info("Commande Invalide");    
+                            }
+                            
+                        }                        
+
+                    }
+                    break;
+
+                    default:
+                    break;
+                } 
+            }
+        }
+        break;
+
+        case Token::Blue {
+                    
+            for (auto effect : e->get_effects()) {
+
+                switch (effect) {
+                
+                    case Blue_enchantment_effects::Control_creature:{
+
+                        int i = 0;
+                        std::vector<Creature*> possible_creatures;
+                        std::vector<std::pair<std::string, std::string>> print_creatures;
+
+                        std::string cmd;
+
+                        while (true) {
+
+                            cls();
+                            print();
+
+                            print_actions(m_name + ", selectionnez votre creature à enchanter pour lui ajouter Vol et Lien de vie :", {
+                                {"<id>", "pour choisir cette carte"} });
+
+                            for (auto creature : m_opponent->get_battlefield()->get_basic_cards()){
+                                if(creature->is_class(Card_class::CREATURE)){
+                                    print_creatures.push_back({std::to_string(i), creature->get_name()});
+                                    possible_creatures.push_back(creature);
+                                    i++;
+                                }
+                            }
+                                
+                            std::getline(std::cin, cmd);
+                        
+                            try {
+                                int num = std::stoi(cmd);
+                                if (num > i || num < 0) {
+                                    print_info("Id invalide");
+                                } else {
+                                    possible_creatures[num]->add_enchantment(e);
+                                    m_opponent->remove_battlefield(possible_creatures[num]);
+                                    m_battlefield->add_basic_card(possible_creatures[num]);
+                                    print_info(possible_creatures[num] + " a obtenue les capacités : Vol et Lien de vie ! ");
+                                    break;
+                                }
+                            } catch (std::invalid_argument &e) {
+                                print_info("Commande Invalide");    
+                            }
+                            
+                        }   
+                    }                     
+
+                }
+            break;
+
+            default:
+            break;
+        } 
+        }
+    }
+}
+
 
 void Player::print() {
     std::cout << std::endl;

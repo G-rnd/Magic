@@ -123,6 +123,11 @@ void Battlefield::place_basic_card(BasicCard* bc) {
         m_basic_cards.push_back(bc);
 }
 
+void Battlefield::place_enchantment(Enchantment* e) {
+    if(e != nullptr)
+        m_enchantments.push_back(e);
+}
+
 void Battlefield::disengage_card(BasicCard* bc) {
     if(bc->is_class(Card_class::CREATURE)){
         Creature* c = dynamic_cast<Creature*>(bc);

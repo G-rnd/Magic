@@ -32,6 +32,7 @@ class Battlefield {
 		
 		
 		void						place_basic_card(BasicCard* bc);
+		void 						place_enchantment(Enchantment* e);
 		std::vector<Creature*>		get_engaged_creatures();
 		std::vector<Creature*>		get_available_creatures();
 		std::vector<Land*>			get_available_lands();
