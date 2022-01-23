@@ -29,7 +29,7 @@ std::string Ritual::to_string() {
     s += SaveParser::name + get_name() + "\n";
     s += SaveParser::token + std::to_string(get_token()) + "\n";
     s += SaveParser::effects + list_int_to_string(get_effects()) + "\n";
-    s += get_cost()->to_string() + "\n";
+    s += SaveParser::cost + get_cost()->to_string() + "\n";
     s += SaveParser::end_card + "\n";
     
     return s;

@@ -154,6 +154,7 @@ void Game::start() {
 void Game::phases() {
     // Phases de jeu
     while (true) {
+        // todo changer le m_phase : repioche quand load
         if (m_phase == 0) {
             cls();
             print_info("C'est au tour de " + get_current_player()->get_name() + " de jouer !");
@@ -534,10 +535,11 @@ std::string Game::to_string() {
 
 void Game::choose_save(std::string& data) {
     Game* g = SaveParser::load(data);
+
     if (g != nullptr) {
         g->phases();
+        delete g;
     }
-    delete g;
 }
 
 void Game::load() {
