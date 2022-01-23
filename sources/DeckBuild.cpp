@@ -12,12 +12,15 @@ int DeckBuild::get_nb_cards_current() const{
 
 void DeckBuild::create_file(){
 
+    cls();
+
     print_info("Bienvenue dans le mode création de deck");
 
     std::cout<< "Choisissez une nom de deck : "<<std::endl;
 
     std::string name;
-    std::getline(std::cin, name); // TODO verif caractères
+    std::cin.clear();
+            std::getline(std::cin, name); // TODO verif caractères
 
     std::string path = "data/" + name + ".txt";
     m_filename = path;
@@ -25,6 +28,8 @@ void DeckBuild::create_file(){
     m_file.open(m_filename, std::ios::out);
     
     while(m_nb_cards != get_nb_cards_current()){
+
+        cls();
 
         print_info("Vous avez créé \n - " + std::to_string(m_crea) + " créatures \n - " + std::to_string(m_land) + " terrains \n - " + std::to_string(m_ritu) + " rituels \n - " + std::to_string(m_ench) + " enchantements");
 
@@ -38,20 +43,29 @@ void DeckBuild::create_file(){
         std::string card;
 
         while(!quit){
+            std::cin.clear();
             std::getline(std::cin, card);
             if(card == "crea"){
+                cls();
+                print_actions("Créez une créature ! ");
                 create_creature();
                 m_crea += 1;
                 quit = true;
             } else if(card == "land"){
+                cls();
+                print_actions("Créez un terrain ! ");
                 create_land();
                 m_land += 1;
                 quit = true;
             } else if(card == "ritu"){
+                cls();
+                print_actions("Créez un rituel ! ");
                 create_ritual();
                 m_ritu += 1;
                 quit = true;
             } else if(card == "ench"){
+                cls();
+                print_actions("Créez un enchantement ! ");
                 create_enchantment();
                 m_ench += 1;
                 quit = true;
@@ -78,6 +92,7 @@ void DeckBuild::create_creature(){
     std::cout<< std::endl << "Entrez le nom de votre créature : " <<std::endl;
 
     std::string name;
+    std::cin.clear();
     std::getline(std::cin, name);
 
     m_file << "    #NAME: " + name <<std::endl;
@@ -100,6 +115,7 @@ void DeckBuild::create_creature(){
 
     while(!quit){
         std::cin>> token;
+        std::cin.ignore();
         if(token < 5 && token >= 0 ){
             quit = true;
         } else{
@@ -116,6 +132,7 @@ void DeckBuild::create_creature(){
 
     int power;
     std::cin>> power;
+    std::cin.ignore();
 
     m_file << "    #POWER: " + std::to_string(power) <<std::endl;
 
@@ -126,6 +143,7 @@ void DeckBuild::create_creature(){
 
     int toughness;
     std::cin>> toughness;
+    std::cin.ignore();
 
     m_file << "    #TOUGHNESS: " + std::to_string(toughness) <<std::endl;
 
@@ -161,6 +179,7 @@ void DeckBuild::create_creature(){
     bool add_protection = false;
 
     while (!quit2) {
+        std::cin.clear();
         std::getline(std::cin, cmd2);
 
         if (cmd2.find("valid") != std::string::npos) {
@@ -170,7 +189,6 @@ void DeckBuild::create_creature(){
             print_info("Reset reussi !");
         } else {
             try {
-                std::cout << "AAA" << std::endl;
                 int num = std::stoi(cmd2);
                 if (num > 16 || num < 0) {
                     print_info("Id invalide.");
@@ -234,16 +252,20 @@ void DeckBuild::create_creature(){
     std::vector<int> types;
 
     while (!quit3) {
+        std::cin.clear();
         std::getline(std::cin, cmd3);
 
         if (cmd3.find("valid") != std::string::npos) {
-            quit3 = true;
+            if(types.empty()){
+                print_info("Votre créature doit avoir au moins un type ! ");
+            } else {
+                quit3 = true;
+            }
         } else if (cmd3.find("reset") != std::string::npos) {
             types = {};
             print_info("Reset reussi !");
         } else {
             try {
-                std::cout << "ABAA" << std::endl;
                 int num = std::stoi(cmd3);
                 if (num > 15 || num < 0) {
                     print_info("Id invalide.");
@@ -276,31 +298,37 @@ void DeckBuild::create_creature(){
 
     int cost_white;
     std::cin>> cost_white;
+    std::cin.ignore();
 
     std::cout<< std::endl << "Entrez le coût en terrain bleu : " <<std::endl;
 
     int cost_blue;
     std::cin>> cost_blue;
+    std::cin.ignore();
 
     std::cout<< std::endl << "Entrez le coût en terrain noir : " <<std::endl;
 
     int cost_black;
     std::cin>> cost_black;
+    std::cin.ignore();
 
     std::cout<< std::endl << "Entrez le coût en terrain rouge : " <<std::endl;
 
     int cost_red;
     std::cin>> cost_red;
+    std::cin.ignore();
 
     std::cout<< std::endl <<"Entrez le coût en terrain vert : " <<std::endl;
 
     int cost_green;
     std::cin>> cost_green;
+    std::cin.ignore();
 
     std::cout<< std::endl << "Entrez le coût en terrain de n'importe quelle couleur : " <<std::endl;
 
     int cost_any;
     std::cin>> cost_any;
+    std::cin.ignore();
 
     std::string cost;
     cost = std::to_string(cost_any) + ", " + std::to_string(cost_white) + ", " + std::to_string(cost_blue) + ", " + std::to_string(cost_black) + ", " + std::to_string(cost_red) + ", " + std::to_string(cost_green);
@@ -322,6 +350,7 @@ void DeckBuild::create_land(){
     std::cout<< std::endl <<  "Entrez le nom de votre terrain : " <<std::endl;
 
     std::string name;
+    std::cin.clear();
     std::getline(std::cin, name);
 
     m_file << "    #NAME: " + name <<std::endl;
@@ -344,6 +373,7 @@ void DeckBuild::create_land(){
 
     while(!quit){
         std::cin>> token;
+        std::cin.ignore();
         if(token < 5 && token >= 0 ){
             quit = true;
         } else{
@@ -369,11 +399,12 @@ void DeckBuild::create_ritual(){
     std::cout<< std::endl <<  "Entrez le nom de votre rituel : " <<std::endl;
 
     std::string name;
+    std::cin.clear();
     std::getline(std::cin, name);
 
     m_file << "    #NAME: " + name <<std::endl;
 
-    std::cout<<std::endl<<std::endl;;
+    std::cout<<std::endl;
 
     // Token
     print_list({
@@ -389,8 +420,11 @@ void DeckBuild::create_ritual(){
     int token;
     bool quit = false;
 
+    std::cout<<std::endl;
+
     while(!quit){
         std::cin>> token;
+        std::cin.ignore();
         if(token < 5 && token >= 0 ){
             quit = true;
         } else{
@@ -420,10 +454,15 @@ void DeckBuild::create_ritual(){
         std::vector<int> effects;
 
         while (!quit) {
+            std::cin.clear();
             std::getline(std::cin, cmd);
 
             if (cmd.find("valid") != std::string::npos) {
-                quit = true;
+                if(effects.empty()){
+                    print_info("Votre rituel doit avoir au moins un effet");
+                } else{
+                    quit = true;
+                }
             } else if (cmd.find("reset") != std::string::npos) {
                 effects = {};
                 print_info("Reset reussi !");
@@ -473,6 +512,7 @@ void DeckBuild::create_ritual(){
         std::vector<int> effects;
 
         while (!quit) {
+            std::cin.clear();
             std::getline(std::cin, cmd);
 
             if (cmd.find("valid") != std::string::npos) {
@@ -527,6 +567,7 @@ void DeckBuild::create_ritual(){
         std::vector<int> effects;
 
         while (!quit) {
+            std::cin.clear();
             std::getline(std::cin, cmd);
 
             if (cmd.find("valid") != std::string::npos) {
@@ -579,6 +620,7 @@ void DeckBuild::create_ritual(){
         std::vector<int> effects;
 
         while (!quit) {
+            std::cin.clear();
             std::getline(std::cin, cmd);
 
             if (cmd.find("valid") != std::string::npos) {
@@ -631,6 +673,7 @@ void DeckBuild::create_ritual(){
         std::vector<int> effects;
 
         while (!quit) {
+            std::cin.clear();
             std::getline(std::cin, cmd);
 
             if (cmd.find("valid") != std::string::npos) {
@@ -677,31 +720,37 @@ void DeckBuild::create_ritual(){
 
     int cost_white;
     std::cin>> cost_white;
+    std::cin.ignore();
 
     std::cout<< std::endl << "Entrez le coût en terrain bleu : " <<std::endl;
 
     int cost_blue;
     std::cin>> cost_blue;
+    std::cin.ignore();
 
     std::cout<< std::endl << "Entrez le coût en terrain noir : " <<std::endl;
 
     int cost_black;
     std::cin>> cost_black;
+    std::cin.ignore();
 
     std::cout<< std::endl << "Entrez le coût en terrain rouge : " <<std::endl;
 
     int cost_red;
     std::cin>> cost_red;
+    std::cin.ignore();
 
     std::cout<< std::endl << "Entrez le coût en terrain vert : " <<std::endl;
 
     int cost_green;
     std::cin>> cost_green;
+    std::cin.ignore();
 
     std::cout<< std::endl << "Entrez le coût en terrain de n'importe quelle couleur : " <<std::endl;
 
     int cost_any;
     std::cin>> cost_any;
+    std::cin.ignore();
 
     std::string cost;
     cost = std::to_string(cost_any) + ", " + std::to_string(cost_white) + ", " + std::to_string(cost_blue) + ", " + std::to_string(cost_black) + ", " + std::to_string(cost_red) + ", " + std::to_string(cost_green);
@@ -722,11 +771,12 @@ void DeckBuild::create_enchantment(){
     std::cout<< std::endl <<  "Entrez le nom de votre enchantement : " <<std::endl;
 
     std::string name;
+    std::cin.clear();
     std::getline(std::cin, name);
 
     m_file << "    #NAME: " + name <<std::endl;
 
-    std::cout<<std::endl<<std::endl;;
+    std::cout<<std::endl;
 
     // Token
     print_list({
@@ -744,6 +794,7 @@ void DeckBuild::create_enchantment(){
 
     while(!quit){
         std::cin>> token;
+        std::cin.ignore();
         if(token < 5 && token >= 0 ){
             quit = true;
         } else{
@@ -752,6 +803,8 @@ void DeckBuild::create_enchantment(){
     }
 
     m_file << "    #TOKEN: " + std::to_string(token) <<std::endl << std::endl;
+
+    std::cout<<std::endl;
 
     // Effects
     switch (token)
@@ -771,10 +824,15 @@ void DeckBuild::create_enchantment(){
         std::vector<int> effects;
 
         while (!quit) {
+            std::cin.clear();
             std::getline(std::cin, cmd);
 
             if (cmd.find("valid") != std::string::npos) {
-                quit = true;
+                if(effects.empty()){
+                    print_info("Votre enchantement doit avoir au moins un effet");
+                } else{
+                    quit = true;
+                }
             } else if (cmd.find("reset") != std::string::npos) {
                 effects = {};
                 print_info("Reset reussi !");
@@ -823,10 +881,15 @@ void DeckBuild::create_enchantment(){
         std::vector<int> effects;
 
         while (!quit) {
+            std::cin.clear();
             std::getline(std::cin, cmd);
 
             if (cmd.find("valid") != std::string::npos) {
-                quit = true;
+                if(effects.empty()){
+                    print_info("Votre enchantement doit avoir au moins un effet");
+                } else{
+                    quit = true;
+                }
             } else if (cmd.find("reset") != std::string::npos) {
                 effects = {};
                 print_info("Reset reussi !");
@@ -874,10 +937,15 @@ void DeckBuild::create_enchantment(){
         std::vector<int> effects;
 
         while (!quit) {
+            std::cin.clear();
             std::getline(std::cin, cmd);
 
             if (cmd.find("valid") != std::string::npos) {
-                quit = true;
+                if(effects.empty()){
+                    print_info("Votre enchantement doit avoir au moins un effet");
+                } else{
+                    quit = true;
+                }
             } else if (cmd.find("reset") != std::string::npos) {
                 effects = {};
                 print_info("Reset reussi !");
@@ -925,10 +993,15 @@ void DeckBuild::create_enchantment(){
         std::vector<int> effects;
 
         while (!quit) {
+            std::cin.clear();
             std::getline(std::cin, cmd);
 
             if (cmd.find("valid") != std::string::npos) {
-                quit = true;
+                if(effects.empty()){
+                    print_info("Votre enchantement doit avoir au moins un effet");
+                } else{
+                    quit = true;
+                }
             } else if (cmd.find("reset") != std::string::npos) {
                 effects = {};
                 print_info("Reset reussi !");
@@ -977,10 +1050,15 @@ void DeckBuild::create_enchantment(){
         std::vector<int> effects;
 
         while (!quit) {
+            std::cin.clear();
             std::getline(std::cin, cmd);
 
             if (cmd.find("valid") != std::string::npos) {
-                quit = true;
+                if(effects.empty()){
+                    print_info("Votre enchantement doit avoir au moins un effet");
+                } else{
+                    quit = true;
+                }
             } else if (cmd.find("reset") != std::string::npos) {
                 effects = {};
                 print_info("Reset reussi !");
@@ -1023,31 +1101,37 @@ void DeckBuild::create_enchantment(){
 
     int cost_white;
     std::cin>> cost_white;
+    std::cin.ignore();
 
     std::cout<< std::endl << "Entrez le coût en terrain bleu : " <<std::endl;
 
     int cost_blue;
     std::cin>> cost_blue;
+    std::cin.ignore();
 
     std::cout<< std::endl << "Entrez le coût en terrain noir : " <<std::endl;
 
     int cost_black;
     std::cin>> cost_black;
+    std::cin.ignore();
 
     std::cout<< std::endl << "Entrez le coût en terrain rouge : " <<std::endl;
 
     int cost_red;
     std::cin>> cost_red;
+    std::cin.ignore();
 
     std::cout<< std::endl << "Entrez le coût en terrain vert : " <<std::endl;
 
     int cost_green;
     std::cin>> cost_green;
+    std::cin.ignore();
 
     std::cout<< std::endl << "Entrez le coût en terrain de n'importe quelle couleur : " <<std::endl;
 
     int cost_any;
     std::cin>> cost_any;
+    std::cin.ignore();
 
     std::string cost;
     cost = std::to_string(cost_any) + ", " + std::to_string(cost_white) + ", " + std::to_string(cost_blue) + ", " + std::to_string(cost_black) + ", " + std::to_string(cost_red) + ", " + std::to_string(cost_green);
