@@ -192,6 +192,7 @@ void DeckBuild::create_creature(){
 
     std::string str_abilities = "";
     for (auto a : abilities){
+        str_abilities.append(" ");
         if(a == abilities[abilities.size()-1]){
             str_abilities = str_abilities + std::to_string(a);
         } else {
@@ -199,7 +200,7 @@ void DeckBuild::create_creature(){
         }
     }
 
-    m_file << "    #ABILITIES: " + str_abilities <<std::endl << std::endl;  
+    m_file << "    #ABILITIES:" + str_abilities <<std::endl << std::endl;  
 
     std::cout<<std::endl<<std::endl;
 
