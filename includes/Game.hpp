@@ -33,7 +33,7 @@ class Game {
         void                 start();
         void                 phases();
         bool                 check_defeat();
-        void                 main_phase(bool first);
+        bool                 main_phase(bool first);
         void                 combat_phase();
         void                 turn_end_phase();
         void                 save(const std::string& name);

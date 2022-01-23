@@ -83,6 +83,7 @@ std::string Player::to_string() {
     s += SaveParser::played_land + std::to_string(m_played_land) + "\n";
 
     s += SaveParser::begin_library + "\n";
+    
     for(auto c : m_library)
         s += c->to_string();
     s += SaveParser::end_library + "\n";

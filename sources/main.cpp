@@ -15,9 +15,9 @@ int main() {
             std::getline(std::cin, s);
             
             if(s == "play"){
-                Game g{};
-                g.start();
-                cls();
+                Game* g = new Game();
+                g->start();
+                delete g;
             } else if(s == "load"){
                 Game::load();
                 cls();
@@ -28,11 +28,8 @@ int main() {
                 return EXIT_SUCCESS;
             } else {
                 print_info("Commande non reconnue.");
-                Game::print_title_screen();
             }
-
         }
-
     }
 
     return 0;

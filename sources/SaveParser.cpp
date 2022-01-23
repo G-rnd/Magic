@@ -136,7 +136,7 @@ Player* SaveParser::extract_player(std::vector<std::string>& data) {
     }
 
     int played_land = extract_int(SaveParser::played_land, extract_line(SaveParser::played_land, data));
-    if (played_land < 0) {
+    if (played_land < -1) {
         print_err("Erreur dans la lecture de played_land : " + std::to_string(played_land));
         return nullptr;
     }
@@ -336,12 +336,14 @@ Enchantment* SaveParser::extract_enchantment(std::vector<std::string>& data) {
 std::vector<Card*> SaveParser::extract_cards(std::vector<std::string>& data) {
     std::vector<Card*> v{};
     std::vector<std::string> cropped_data;
+    size_t length;
     do {
         cropped_data = crop(SaveParser::begin_card, SaveParser::end_card, data);
+        length = cropped_data.size();
         auto res = extract_card(cropped_data);
         if (res != nullptr)
             v.push_back(res);
-    } while (cropped_data.size() > 0);
+    } while (length > 0);
     return v;
 }
 
