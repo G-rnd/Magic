@@ -40,11 +40,12 @@ class Creature : public virtual BasicCard{
         void              set_power_current(int i);
         void              set_toughness_current(int i);
         virtual void      set_is_first_turn(bool b);
-              
+
         void              add_ability(int i);
         void              add_type(int i);
     
-        virtual void      print();
+        void              print();
+        std::string       to_string();
 };
 
 #endif

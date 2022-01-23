@@ -25,6 +25,7 @@ class SpecialCard : public virtual Card {
         virtual void             set_info(std::string s);
      
         virtual void             print() = 0;
+        virtual std::string		 to_string() = 0;
 
 };
 

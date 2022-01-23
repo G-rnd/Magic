@@ -19,8 +19,7 @@ int main() {
                 g.start();
                 cls();
             } else if(s == "load"){
-                Game g{};
-                g.load();
+                Game::load();
                 cls();
             } else if(s == "deck-builder"){
                 DeckBuild db;

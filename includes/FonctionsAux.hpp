@@ -99,6 +99,7 @@ inline void remove(const T* elem, std::vector<T*>& vec) {
 }
 
 void print_info(const std::string& s = "");
+void print_err(const std::string& s = "");
 void print_list(const std::vector<std::pair<std::string, std::string>>& options, const std::string& separator = " - ");
 void print_actions(const std::string& title, const std::vector<std::pair<std::string, std::string> >& options = {}, const std::string& end_message = "", bool dot_opt = true, const std::string& separator = " : ");
 void cls();
@@ -124,5 +125,7 @@ enum Color {
 };
 
 std::string get_color (Color c);
+
+std::string list_int_to_string(std::vector<int> l);
 
 #endif

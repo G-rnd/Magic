@@ -8,6 +8,8 @@
 #include "Enchantment.hpp"
 #include "Land.hpp"
 #include "Cost.hpp"
+#include "SaveParser.hpp"
+#include "FonctionsAux.hpp"
 
 Creature::Creature(int c, std::string name, int token, int power, int toughness, std::vector<int> abilities, std::vector<int> types, Cost* cost): 
 Card(c, name, token), BasicCard(c, name, token), m_power(power), m_toughness(toughness), m_power_current(power), m_toughness_current(toughness), m_abilities(abilities), m_types(types), m_cost(cost) {
@@ -81,6 +83,29 @@ void Creature::add_type(int type) {
     if(std::find(m_types.begin(), m_types.end(), type) == m_types.end()) {
         m_types.push_back(type);
     }
+}
+
+std::string Creature::to_string() {
+    std::string s = "";
+    s += SaveParser::begin_card + "\n";
+    s += SaveParser::classcard + std::to_string(Card_class::CREATURE) + "\n";
+    s += SaveParser::name + get_name() + "\n";
+    s += SaveParser::token + std::to_string(get_token()) + "\n";
+    s += SaveParser::engaged + (get_engaged() ? "1" : "0") + "\n";
+
+    s += SaveParser::begin_enchantments + "\n";
+    for(auto e : get_enchantments())
+        s += e->to_string();
+    s += SaveParser::end_enchantments + "\n";
+    
+    s += SaveParser::power_toughness + std::to_string(m_power) + ", " + std::to_string(m_toughness) + ", " + std::to_string(m_power_current) + ", " + std::to_string(m_toughness_current) + "\n";
+    s += SaveParser::abilities + list_int_to_string(m_abilities) + "\n";
+    s += SaveParser::types + list_int_to_string(m_types) + "\n";
+    s += SaveParser::cost + m_cost->to_string() + "\n";
+    s += SaveParser::first_turn + (m_is_first_turn ? "1" : "0") + "\n";
+    s += SaveParser::end_card + "\n";
+
+    return s;
 }
 
 void Creature::print(){

@@ -16,6 +16,7 @@ class Battlefield {
 
 	public:
 		Battlefield();
+		Battlefield(const std::vector<Card*>& basic_cards, const std::vector<Enchantment*>& enchantments);
 		~Battlefield();
 
 		std::vector<BasicCard*>		get_basic_cards() const;
@@ -41,6 +42,7 @@ class Battlefield {
         void                        engage_lands(Cost* c);
 
 		void						print();
+		std::string					to_string();
 
 };
 
