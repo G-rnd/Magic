@@ -8,6 +8,19 @@
 
 int main() {
 
+    std::vector<std::pair<std::string, std::string > > available_decks = {};
+
+    for (const auto & file : std::filesystem::directory_iterator(path))
+        available_decks.push_back({"", (file.path()).string().substr(path.size())});
+
+    for (auto deck : available_decks)
+    {
+        std::cout<< deck<<std::endl;
+    }
+
+    return 0;
+    
+
     while(1){
         std::string s;
         bool quit = false;

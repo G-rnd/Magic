@@ -16,15 +16,61 @@ void DeckBuild::create_file(){
 
     print_info("Bienvenue dans le mode création de deck");
 
-// TODO : load deck
-    std::cout<< "Choisissez une nom de deck : "<<std::endl;
+    // Load a deck or create a new deck
 
+    std::string path = "data/in_construction";
     std::string name;
-    std::cin.clear();
-    std::getline(std::cin, name);
 
-    std::string path = "data/in_construction" + name + ".txt";
-    m_filename = path;
+    while (true) {
+        cls();
+
+        print_actions("Selectionnez ce que vous souhaitez faire : ",{
+        {"new", "pour créer un nouveau deck."}, 
+        {"load", "pour charger un commencé."} });
+
+        std::string cmd;
+        std::cin >> cmd;
+
+        if(cmd == "new"){
+            cls();
+            print_actions("Choisissez une nom de deck : ");
+
+            std::cin.clear();
+            std::getline(std::cin, name);
+
+            path = "data/in_construction" + name + ".txt";
+            m_filename = path;
+            break;
+        } else if(cmd == "load"){
+            cls();
+
+            std::vector<std::pair<std::string, std::string > > available_decks = {};
+
+            for (const auto & file : std::filesystem::directory_iterator(path))
+                available_decks.push_back({"", (file.path()).string().substr(path.size())});
+            for(size_t i = 0; i < available_decks.size(); i++) {
+                available_decks[i].first = (available_decks.size() > 10) ? ((i/10 == 1) ? " " : "") : "" + std::to_string(i);
+            }
+
+            if (available_decks.size() == 0) {
+                cls();
+                print_info("Erreur : Aucun deck n'est disponible !");
+                return;
+            }
+
+            print_actions("Sélectionnez votre deck à compléter : ",{
+            {"crea", "pour créer une créature."}, 
+            {"land", "pour créer un terrain."},
+            {"ritu", "pour créer un rituel."},
+            {"ench", "pour créer un enchantement."},
+            {"save", "pour enregistrer l'état actuel du deck et le continuer plus tard."} }, "Choississez votre type de carte : ");
+
+            break;
+        } else {
+            print_info("Commande invalide.");
+        }
+
+    }
 
     std::ofstream flux(m_filename.c_str(), std::ios::app);
 
@@ -220,7 +266,7 @@ void DeckBuild::create_creature(){
                     abilities.push_back(num);
                 }
             } catch (std::invalid_argument &e) {
-                print_info("Commande invalide."); //TODO : s'affiche automatiquement
+                print_info("Commande invalide."); 
             }
         }
     }
@@ -494,7 +540,7 @@ void DeckBuild::create_ritual(){
                         effects.push_back(num);
                     }
                 } catch (std::invalid_argument &e) {
-                    print_info("Commande invalide."); //TODO : s'affiche automatiquement
+                    print_info("Commande invalide."); 
                 }
             }
         }
@@ -548,7 +594,7 @@ void DeckBuild::create_ritual(){
                         effects.push_back(num);
                     }
                 } catch (std::invalid_argument &e) {
-                    print_info("Commande invalide."); //TODO : s'affiche automatiquement
+                    print_info("Commande invalide."); 
                 }
             }
         }
@@ -603,7 +649,7 @@ void DeckBuild::create_ritual(){
                         effects.push_back(num);
                     }
                 } catch (std::invalid_argument &e) {
-                    print_info("Commande invalide."); //TODO : s'affiche automatiquement
+                    print_info("Commande invalide."); 
                 }
             }
         }
@@ -656,7 +702,7 @@ void DeckBuild::create_ritual(){
                         effects.push_back(num);
                     }
                 } catch (std::invalid_argument &e) {
-                    print_info("Commande invalide."); //TODO : s'affiche automatiquement
+                    print_info("Commande invalide."); 
                 }
             }
         }
@@ -709,7 +755,7 @@ void DeckBuild::create_ritual(){
                         effects.push_back(num);
                     }
                 } catch (std::invalid_argument &e) {
-                    print_info("Commande invalide."); //TODO : s'affiche automatiquement
+                    print_info("Commande invalide."); 
                 }
             }
         }
@@ -864,7 +910,7 @@ void DeckBuild::create_enchantment(){
                         effects.push_back(num);
                     }
                 } catch (std::invalid_argument &e) {
-                    print_info("Commande invalide."); //TODO : s'affiche automatiquement
+                    print_info("Commande invalide."); 
                 }
             }
         }
@@ -921,7 +967,7 @@ void DeckBuild::create_enchantment(){
                         effects.push_back(num);
                     }
                 } catch (std::invalid_argument &e) {
-                    print_info("Commande invalide."); //TODO : s'affiche automatiquement
+                    print_info("Commande invalide."); 
                 }
             }
         }
@@ -977,7 +1023,7 @@ void DeckBuild::create_enchantment(){
                         effects.push_back(num);
                     }
                 } catch (std::invalid_argument &e) {
-                    print_info("Commande invalide."); //TODO : s'affiche automatiquement
+                    print_info("Commande invalide."); 
                 }
             }
         }
@@ -1033,7 +1079,7 @@ void DeckBuild::create_enchantment(){
                         effects.push_back(num);
                     }
                 } catch (std::invalid_argument &e) {
-                    print_info("Commande invalide."); //TODO : s'affiche automatiquement
+                    print_info("Commande invalide."); 
                 }
             }
         }
@@ -1090,7 +1136,7 @@ void DeckBuild::create_enchantment(){
                         effects.push_back(num);
                     }
                 } catch (std::invalid_argument &e) {
-                    print_info("Commande invalide."); //TODO : s'affiche automatiquement
+                    print_info("Commande invalide."); 
                 }
             }
         }
