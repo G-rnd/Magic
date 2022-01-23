@@ -239,7 +239,7 @@ void Player::play_card(Card* c) {
     } else if(c->is_class(Card_class::ENCHANTEMENT)){
         Enchantment* e = dynamic_cast<Enchantment*>(c);
         play_enchantment(e);
-        remove(e, m_hand);
+        remove(c, m_hand);
     } else if(c->is_class(Card_class::CREATURE)){
         Creature* cre = dynamic_cast<Creature*>(c);
         cre->set_is_first_turn(true);
@@ -1415,8 +1415,9 @@ void Player::play_enchantment(Enchantment* e){
                             print_actions(m_name + ", selectionnez votre creature à enchanter pour lui ajouter Vol et Lien de vie :", {
                                 {"<id>", "pour choisir cette carte"} });
 
-                            for (auto creature : m_battlefield->get_basic_cards()){
-                                if(creature->is_class(Card_class::CREATURE)){
+                            for (auto card : m_battlefield->get_basic_cards()){
+                                if(card->is_class(Card_class::CREATURE)){
+                                    Creature* creature = dynamic_cast<Creature*>(card);
                                     print_creatures.push_back({std::to_string(i), creature->get_name()});
                                     possible_creatures.push_back(creature);
                                     i++;
@@ -1433,7 +1434,7 @@ void Player::play_enchantment(Enchantment* e){
                                     possible_creatures[num]->add_enchantment(e);
                                     possible_creatures[num]->add_ability(Ability::Flight);
                                     possible_creatures[num]->add_ability(Ability::Life_link);
-                                    print_info(possible_creatures[num] + " a obtenue les capacités : Vol et Lien de vie ! ");
+                                    print_info(possible_creatures[num]->get_name() + " a obtenue les capacités : Vol et Lien de vie ! ");
                                     break;
                                 }
                             } catch (std::invalid_argument &e) {
@@ -1452,7 +1453,7 @@ void Player::play_enchantment(Enchantment* e){
         }
         break;
 
-        case Token::Blue {
+        case Token::Blue:{
                     
             for (auto effect : e->get_effects()) {
 
@@ -1471,11 +1472,12 @@ void Player::play_enchantment(Enchantment* e){
                             cls();
                             print();
 
-                            print_actions(m_name + ", selectionnez votre creature à enchanter pour lui ajouter Vol et Lien de vie :", {
+                            print_actions(m_name + ", selectionnez votre creature à enchanter pour la controler :", {
                                 {"<id>", "pour choisir cette carte"} });
 
-                            for (auto creature : m_opponent->get_battlefield()->get_basic_cards()){
-                                if(creature->is_class(Card_class::CREATURE)){
+                            for (auto card : m_opponent->get_battlefield()->get_basic_cards()){
+                                if(card->is_class(Card_class::CREATURE)){
+                                    Creature* creature = dynamic_cast<Creature*>(card);
                                     print_creatures.push_back({std::to_string(i), creature->get_name()});
                                     possible_creatures.push_back(creature);
                                     i++;
@@ -1491,8 +1493,8 @@ void Player::play_enchantment(Enchantment* e){
                                 } else {
                                     possible_creatures[num]->add_enchantment(e);
                                     m_opponent->remove_battlefield(possible_creatures[num]);
-                                    m_battlefield->add_basic_card(possible_creatures[num]);
-                                    print_info(possible_creatures[num] + " a obtenue les capacités : Vol et Lien de vie ! ");
+                                    m_battlefield->place_basic_card(possible_creatures[num]);
+                                    print_info(possible_creatures[num]->get_name() + " est sous votre controle desormais ! ");
                                     break;
                                 }
                             } catch (std::invalid_argument &e) {
@@ -1503,12 +1505,12 @@ void Player::play_enchantment(Enchantment* e){
                     }                     
 
                 }
-            break;
-
-            default:
-            break;
-        } 
+            }
         }
+        break;
+        
+        default:
+        break;
     }
 }
 
