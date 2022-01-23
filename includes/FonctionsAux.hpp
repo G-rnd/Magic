@@ -6,6 +6,7 @@
 #include <iterator>
 #include <vector>
 #include <string>
+#include <map>
 
 #include "Card.hpp"
 #include "BasicCard.hpp"
@@ -23,15 +24,18 @@ namespace Token {
     enum Token                      { White, Blue, Black, Red, Green, Count };
 }
 
+namespace State {
+    enum State                      { Normal, Engaged, Enchanted, Engaged_Enchanted};
+}
+
 namespace Ability { 
     enum Ability                    { Flight, Scope, Vigilance, Touch_of_death, Defender, Initiative, Double_initiative, Haste, Unblockable,
                                     Life_link, Threat, Trampling, White_protection, Blue_protection, Black_protection, Red_protection, Green_protection, Count };
 }
                                     
 
-enum Type					    { Angel, Beast, Human_werewolf, HippoGriff, Kor_warrior, Dinosaur, Humans, Vampire, Spider, Elf, Troll };
+enum Type					    { Angel, Beast, Human_werewolf, HippoGriff, Kor_warrior, Dinosaur, Humans, Vampire, Spider, Elf, Troll, Count };
 
-// TODO : Destroy détruit complètement la carte : delete
 namespace White_ritual_effects { 
     enum White_ritual_effects	    { More_3_HP, More_1_1_creature_current, Destroy_engaged_creature, Destroy_enchantment, Count };
 }
@@ -124,8 +128,10 @@ enum Color {
     BrightWhite
 };
 
+std::string get_background_color (Color c);
 std::string get_color (Color c);
 
 std::string list_int_to_string(std::vector<int> l);
+std::string centered_string(std::string s, int width);
 
 #endif

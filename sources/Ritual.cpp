@@ -8,8 +8,8 @@
 #include "FonctionsAux.hpp"
 #include "SaveParser.hpp"
 
-Ritual::Ritual(int c, std::string name, int token, std::string info, Cost* cost, std::vector<int> effects): 
-Card(c, name, token), SpecialCard(c, name, token, info, cost, effects) {
+Ritual::Ritual(int c, std::string name, int token, Cost* cost, std::vector<int> effects): 
+Card(c, name, token), SpecialCard(c, name, token, cost, effects) {
     //std::cout << "[Ritual] : Création de " << this << std::endl;
 }
 

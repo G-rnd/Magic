@@ -2,6 +2,7 @@
 #include <algorithm>
 #include <string>
 #include <iomanip> 
+#include <map>
 
 #include "Battlefield.hpp"
 #include "BasicCard.hpp"
@@ -9,6 +10,7 @@
 #include "Land.hpp"
 #include "Enchantment.hpp"
 #include "SaveParser.hpp"
+#include "Game.hpp"
 #include "FonctionsAux.hpp"
 
 Battlefield::Battlefield() {
@@ -151,8 +153,8 @@ bool Battlefield::is_playable(Card* card) {
         // Si la carte n'a pas besoin de terrains typés ou que tous ses terrains colorés ont déjà été comptés
         if (c.is_color_null()) {
             c.set_any(c.get_any() - lands[i]->get_value());
-            lands.erase(lands.begin() + i);
-            i--;
+            //lands.erase(lands.begin() + i);
+            //i--;
         } else {
             // On commence par compter les terrains typés
             switch(lands[i]->get_token()){
@@ -195,7 +197,7 @@ bool Battlefield::is_playable(Card* card) {
                     break;
 
             }
-            lands.erase(lands.begin() + i);
+            //lands.erase(lands.begin() + i);
         }
     }
     return c.is_null();
@@ -237,38 +239,46 @@ std::string Battlefield::to_string() {
 void Battlefield::print() {
 
     sort_basic_cards();
-
-    std::string tokens[5] = { "White", "Blue", "Black", "Red", "Green" };
     
     std::string delimiter = "     ";
-    std::string empty_case = "              ";
+    std::string empty_case = "                 ";
+    int wid = 15; // width of a card
+    std::string top_card_basic  = "┌─────────────────┐";
+    std::string down_card_basic = "└─────────────────┘";
+    std::string top_card_ench   = "╔═════════════════╗";
+    std::string down_card_ench  = "╚═════════════════╝";
+    std::vector<std::string> left = {"│ ", "│╳", "║ ", "║╳"};
+    std::vector<std::string> right = {" │", "╳│", " ║", "╳║"};
+
     size_t num_card;
     int n = (m_basic_cards.size() % 8 == 0) ? 0 : 1 ; // gérer le nb de lignes
 
     // print les basics_cards
     for (size_t i = 0; i < (m_basic_cards.size() / 8) + n ; i++) {
 
-        // print les numéros de cartes
+        std::vector<int> cards_states = {}; // represents the state of each card of a line of the battlefield
+
+        // print header of the card
         for (size_t j = 0; j < 8; j++) {
 
             num_card = i*8 + j;
 
-            //std::cout<< m_basic_cards[num_card] << " : " << num_card << std::endl;
-
             if (m_basic_cards[num_card]->get_enchantments().empty()) {
-                if (m_basic_cards[num_card]->get_engaged() || (m_basic_cards[num_card]->is_class(Card_class::CREATURE)
-                && dynamic_cast<Creature*>(m_basic_cards[num_card])->get_is_first_turn())) {
-                    std::cout<< "[*" << std::setfill(' ') << std::setw(10) << num_card << "*]";
+                if(m_basic_cards[num_card]->get_engaged() || (m_basic_cards[num_card]->is_class(Card_class::CREATURE)
+                && dynamic_cast<Creature*>(m_basic_cards[num_card])->get_is_first_turn())){
+                    cards_states.push_back(State::Engaged);
                 } else {
-                    std::cout<< "[" << std::setfill(' ') << std::setw(12) << num_card << "]";
+                    cards_states.push_back(State::Normal);
                 }
+                std::cout<< top_card_basic;
             } else {
-                if (m_basic_cards[num_card]->get_engaged() || (m_basic_cards[num_card]->is_class(Card_class::CREATURE)
-                && dynamic_cast<Creature*>(m_basic_cards[num_card])->get_is_first_turn())) {
-                    std::cout<< "{*" << std::setfill(' ') << std::setw(10) << num_card << "*}";
+                if(m_basic_cards[num_card]->get_engaged() || (m_basic_cards[num_card]->is_class(Card_class::CREATURE)
+                && dynamic_cast<Creature*>(m_basic_cards[num_card])->get_is_first_turn())){
+                    cards_states.push_back(State::Engaged_Enchanted);
                 } else {
-                    std::cout<< "{" << std::setfill(' ') << std::setw(12) << num_card << "}";
+                    cards_states.push_back(State::Enchanted);
                 }
+                std::cout<< top_card_ench;
             }
 
             if (num_card == m_basic_cards.size() - 1)
@@ -276,47 +286,51 @@ void Battlefield::print() {
             std::cout << delimiter;
         }
 
-        std::cout << std::endl;
+        std::cout<< std::endl;
 
-        // print type de carte
+        // print les numéros de cartes && type de carte
         for (size_t j = 0; j < 8; j++) {
 
             num_card = i*8 + j;
+            int diff = num_card > 9 ? 2:1;
 
+            // print the token on the first line background
+            std::string token;
+            switch (m_basic_cards[num_card]->get_token())
+            {
+            case 0:
+                token = get_background_color(Color::White);
+            break;
+            case 1:
+                token = get_background_color(Color::Blue);
+            break;
+            case 2:
+                token = get_background_color(Color::Black);
+            break;
+            case 3:
+                token = get_background_color(Color::Red);
+            break;
+            case 4:
+                token = get_background_color(Color::Green);
+            break;
+            default:
+                break;
+            }
+            
             if (m_basic_cards[num_card]->is_class(Card_class::CREATURE)) {
-
-                Creature* creature = dynamic_cast<Creature*>(m_basic_cards[num_card]);
-                if (creature->get_enchantments().empty()){
-                    if(creature->get_engaged() || creature->get_is_first_turn()) {
-                        std::cout<< "[*" << std::setw(10) << "Creature" << "*]";
-                    } else {
-                        std::cout<< "[" << std::setw(12) << "Creature" << "]";
-                    }
+                if(m_basic_cards[num_card]->get_token() == 0){
+                    std::cout << left[cards_states[j]]<< get_color(Color::Black) << token << num_card << std::setw(wid-diff) << std::setfill(' ') << "Creature" << get_color(Color::Reset) << get_background_color(Color::Reset) << right[cards_states[j]];
                 } else {
-                    if (m_basic_cards[num_card]->get_engaged() || (creature->is_class(Card_class::CREATURE)
-                    && dynamic_cast<Creature*>(m_basic_cards[num_card])->get_is_first_turn())) {
-                        std::cout<< "{*" << std::setw(10) << "Creature" << "*}";
-                    } else{
-                        std::cout<< "{" << std::setw(12) << "Creature" << "}";
-                    }
+                    std::cout << left[cards_states[j]]<< token << num_card << std::setw(wid-diff) << std::setfill(' ') << "Creature" << get_background_color(Color::Reset) << right[cards_states[j]];
                 }
             } else if (m_basic_cards[num_card]->is_class(Card_class::LAND)) {
-
-                Land* land = dynamic_cast<Land*>(m_basic_cards[num_card]);
-                if (land->get_enchantments().empty()) {
-                    if (land->get_engaged()) {
-                        std::cout<< "[*" << std::setw(10) << "Land" << "*]";
-                    } else {
-                        std::cout<< "[" << std::setw(12) << "Land" << "]";
-                    }
+                if(m_basic_cards[num_card]->get_token() == 0){
+                    std::cout << left[cards_states[j]]<< get_color(Color::Black) << token << num_card << std::setw(wid-diff) << std::setfill(' ') << "Land" << get_color(Color::Reset) << get_background_color(Color::Reset) << right[cards_states[j]];
                 } else {
-                    if(m_basic_cards[num_card]->get_engaged()){
-                        std::cout<< "{*" << std::setw(10) << "Land" << "*}";
-                    } else{
-                        std::cout<< "{" << std::setw(12) << "Land" << "}";
-                    }
-                }
-            }
+                    std::cout << left[cards_states[j]]<< token << num_card << std::setw(wid-diff) << std::setfill(' ') << "Land" << get_background_color(Color::Reset) << right[cards_states[j]];
+                } 
+           }
+
             if(num_card == m_basic_cards.size() - 1)
                 break;
             std::cout << delimiter;
@@ -329,113 +343,72 @@ void Battlefield::print() {
 
             num_card = i*8 + j;
 
-            std::string s = (m_basic_cards[num_card]->get_name()).substr(0, 12);
+            std::cout << left[cards_states[j]] << centered_string(m_basic_cards[num_card]->get_name(), wid) << right[cards_states[j]];
 
-            if(m_basic_cards[num_card]->get_enchantments().empty()) {
-                if (m_basic_cards[num_card]->get_engaged() || (m_basic_cards[num_card]->is_class(Card_class::CREATURE)
-                && dynamic_cast<Creature*>(m_basic_cards[num_card])->get_is_first_turn())) {
-                    std::cout << "[*" << std::setw(10) << s.substr(0, 10) << "*]";
-                } else{
-                    std::cout << "[" << std::setw(12) <<  s << "]";
-                }
-            } else {
-                if (m_basic_cards[num_card]->get_engaged()) {
-                    std::cout << "{*" << std::setw(10) <<  s.substr(0, 10) << "*}";
-                } else {
-                    std::cout << "{" << std::setw(12) <<  s << "}";
-                }
-            }
             if(num_card == m_basic_cards.size() - 1)
                 break;
             std::cout << delimiter;
         }
 
         std::cout << std::endl;
-
-        // print token
+        
+        // print cost pour creature
         for (size_t j = 0; j < 8; j++) {
 
             num_card = i*8 + j;
 
-            int token = m_basic_cards[num_card]->get_token();
-            if(m_basic_cards[num_card]->get_enchantments().empty()){
-                if(m_basic_cards[num_card]->get_engaged() || (m_basic_cards[num_card]->is_class(Card_class::CREATURE)
-                && dynamic_cast<Creature*>(m_basic_cards[num_card])->get_is_first_turn())) {
-                    std::cout<< "[*" << std::setw(10) << tokens[token] << "*]";
-                } else {
-                    std::cout<< "[" << std::setw(12) << tokens[token] << "]";
-                }
-            } else {
-                if (m_basic_cards[num_card]->get_engaged() || (m_basic_cards[num_card]->is_class(Card_class::CREATURE)
-                && dynamic_cast<Creature*>(m_basic_cards[num_card])->get_is_first_turn())) {
-                    std::cout<< "{*" << std::setw(10) << tokens[token]  << "*}";
-                } else{
-                    std::cout<< "{" << std::setw(12) << tokens[token]  << "}";
-                }
+            if (m_basic_cards[num_card]->is_class(Card_class::CREATURE)) {
+                Creature* creature = dynamic_cast<Creature*>(m_basic_cards[num_card]);
+                Cost* cost = creature->get_cost();
+
+                std::cout<< left[cards_states[j]] << std::setw((wid - 11)/2) << std::setfill(' ') << " ";
+
+                std::cout<< cost->get_any() << " ";
+                std::cout<< get_background_color(Color::White) << get_color(Color::Black) << cost->get_white() << get_color(Color::Reset) << get_background_color(Color::Reset) << " ";
+                std::cout<< get_background_color(Color::Blue) << cost->get_blue() << get_background_color(Color::Reset) << " ";
+                std::cout<< get_background_color(Color::Black) << cost->get_black() << get_background_color(Color::Reset) << " ";
+                std::cout<< get_background_color(Color::Red) << cost->get_red() << get_background_color(Color::Reset) << " ";
+                std::cout<< get_background_color(Color::Green) << cost->get_green() << get_background_color(Color::Reset);
+                
+                std::cout<< std::setw((wid - 11)/2) << std::setfill(' ') << " " << right[cards_states[j]];
+  
+            } else if (m_basic_cards[num_card]->is_class(Card_class::LAND)) {
+
+                std::cout << left[cards_states[j]] << std::setw(wid) << " " << right[cards_states[j]];
             }
 
             if(num_card == m_basic_cards.size() - 1)
                 break;
             std::cout << delimiter;
+
         }
 
-        std::cout << std::endl;
-        // TODO le segfault est ici
+        std::cout<< std::endl;
 
-        // print type pour creature et value pour land
+        // print type pour creature
         for (size_t j = 0; j < 8; j++) {
             num_card = i*8 + j;
 
             if (m_basic_cards[num_card]->is_class(Card_class::CREATURE)) {
                 Creature* creature = dynamic_cast<Creature*>(m_basic_cards[num_card]);
-                std::vector<std::string> types{"Angel"};
+                std::vector<std::string> types{"Angel", "Beast", "Human_werewolf", "HippoGriff", "Kor_warrior", "Dinosaur", "Humans", "Vampire", "Spider", "Elf", "Troll"}; // TODO : mettre à jour
                 std::vector<int> creat_type = creature->get_types();
                 std::string s = "";
 
-                for (auto t : creat_type) {
-                    if ((size_t) t < types.size()) {
-                        s += types[t].substr(0, 3);
-                        s += "-";
-                    }
-                }
-
-                s = s.substr(0, s.size() - 2);
-
-                if (m_basic_cards[num_card]->get_enchantments().empty()) {
-                    if(m_basic_cards[num_card]->get_engaged() || (m_basic_cards[num_card]->is_class(Card_class::CREATURE) 
-                    && dynamic_cast<Creature*>(m_basic_cards[num_card])->get_is_first_turn())) {
-                        std::cout<< "[*" << std::setw(10) << s.substr(0, 10) << "*]";
-                    } else {
-                        std::cout<< "[" << std::setw(12) << s.substr(0,12) << "]";
-                    }
+                if(creat_type.empty()){
+                    std::cout<< left[cards_states[j]] << std::setw(wid) << std::setfill(' ') << " " << right[cards_states[j]];
+                } else if(creat_type.size() == 1){
+                    std::cout<< left[cards_states[j]] << centered_string(types[creat_type[0]], wid) << right[cards_states[j]];
+                } else if(creat_type.size() == 2){
+                    s = types[creat_type[0]] + types[creat_type[1]];
+                    std::cout<< left[cards_states[j]] << centered_string(s, wid) << right[cards_states[j]];
                 } else {
-                    if (m_basic_cards[num_card]->get_engaged() || (m_basic_cards[num_card]->is_class(Card_class::CREATURE) 
-                    && dynamic_cast<Creature*>(m_basic_cards[num_card])->get_is_first_turn())) {
-                        std::cout<< "{*" << std::setw(10) << s.substr(0, 10)  << "*}";
-                    } else {
-                        std::cout<< "{" << std::setw(12) << s.substr(0,12) << "}";
-                    }
+                    // TODO
                 }
+
+                
             } else if (m_basic_cards[num_card]->is_class(Card_class::LAND)) {
-
-                Land* land = dynamic_cast<Land*>(m_basic_cards[num_card]);
-                int val = land->get_value();
-
-                if (m_basic_cards[num_card]->get_enchantments().empty()) {
-                    if (m_basic_cards[num_card]->get_engaged() || (m_basic_cards[num_card]->is_class(Card_class::CREATURE) 
-                    && dynamic_cast<Creature*>(m_basic_cards[num_card])->get_is_first_turn())) {
-                        std::cout<< "[*" << std::setw(10) << val << "*]";
-                    } else {
-                        std::cout<< "[" << std::setw(12) << val << "]";
-                    }
-                } else {
-                    if (m_basic_cards[num_card]->get_engaged() || (m_basic_cards[num_card]->is_class(Card_class::CREATURE)
-                    && dynamic_cast<Creature*>(m_basic_cards[num_card])->get_is_first_turn())) {
-                        std::cout<< "{*" << std::setw(10) << val  << "*}";
-                    } else {
-                        std::cout<< "{" << std::setw(12) << val << "}";
-                    }
-                }
+                std::cout<< left[cards_states[j]] << std::setw(wid) << std::setfill(' ') << " " << right[cards_states[j]];
             }
 
             if (num_card == m_basic_cards.size() - 1)
@@ -446,38 +419,11 @@ void Battlefield::print() {
 
         std::cout<<std::endl;
 
-        // print power/toughness
+        // print empty line
         for (size_t j = 0; j < 8; j++) {
-
             num_card = i*8 + j;
 
-            if (m_basic_cards[num_card]->is_class(Card_class::CREATURE)) {
-
-                Creature* creature = dynamic_cast<Creature*>(m_basic_cards[num_card]);
-                int pow = creature->get_power_current();
-                int tough = creature->get_toughness_current();
-
-                std::string s = std::to_string(pow) + " / " + std::to_string(tough);
-        
-                if (m_basic_cards[num_card]->get_enchantments().empty()){
-                    if (m_basic_cards[num_card]->get_engaged() || (m_basic_cards[num_card]->is_class(Card_class::CREATURE)
-                    && dynamic_cast<Creature*>(m_basic_cards[num_card])->get_is_first_turn())) {
-                        std::cout<< "[*" << std::setw(10) << s.substr(0, 10) << "*]";
-                    } else {
-                        std::cout<< "[" << std::setw(12) << s.substr(0,12) << "]";
-                    }
-                } else {
-                    if (m_basic_cards[num_card]->get_engaged() || (m_basic_cards[num_card]->is_class(Card_class::CREATURE)
-                    && dynamic_cast<Creature*>(m_basic_cards[num_card])->get_is_first_turn())) {
-                        std::cout<< "{*" << std::setw(10) << s.substr(0, 10)  << "*}";
-                    } else {
-                        std::cout<< "{" << std::setw(12) << s.substr(0,12) << "}";
-                    }
-                }
-
-            } else {
-                std::cout << empty_case;
-            }
+            std::cout<< left[cards_states[j]] << std::setw(wid) << std::setfill(' ') << " " << right[cards_states[j]];
 
             if (num_card == m_basic_cards.size() - 1)
                 break;
@@ -485,7 +431,7 @@ void Battlefield::print() {
 
         }
 
-        std::cout << std::endl;
+        std::cout<<std::endl;
 
         // print abilities
         for (size_t j = 0; j < 8; j++) {
@@ -499,35 +445,105 @@ void Battlefield::print() {
                            "Unblockable", "Life_link", "Threat", "Trampling", "White_protection", "Blue_protection", "Black_protection", "Red_protection", "Green_protection"};
                 std::vector<int> abilities_crea =  creature->get_abilities();
                 std::string s = "";
-                for (auto a : abilities_crea) {
-                    s += abilities[a].substr(0, 3);
-                    s += "-";
-                }
-                s = s.substr(0, s.size() - 2);
-        
-                if(m_basic_cards[num_card]->get_enchantments().empty()) {
-                    if(m_basic_cards[num_card]->get_engaged() || (m_basic_cards[num_card]->is_class(Card_class::CREATURE)
-                    && dynamic_cast<Creature*>(m_basic_cards[num_card])->get_is_first_turn())) {
-                        std::cout << "[*" << std::setw(10) << s.substr(0, 10) << "*]";
-                    } else {
-                        std::cout << "[" << std::setw(12) << s.substr(0,12) << "]";
-                    }
+                
+                if(abilities_crea.empty()){
+                    std::cout<< left[cards_states[j]] << std::setw(wid) << std::setfill(' ') << " " << right[cards_states[j]];
+                } else if(abilities_crea.size() == 1){
+                    std::cout<< left[cards_states[j]] << centered_string(abilities[abilities_crea[0]], wid) << right[cards_states[j]];
                 } else {
-                    if(m_basic_cards[num_card]->get_engaged() || (m_basic_cards[num_card]->is_class(Card_class::CREATURE)
-                    && dynamic_cast<Creature*>(m_basic_cards[num_card])->get_is_first_turn())) {
-                        std::cout << "{*" << std::setw(10) << s.substr(0, 10)  << "*}";
-                    } else {
-                        std::cout << "{" << std::setw(12) << s.substr(0,12) << "}";
-                    }
+                    s = abilities[abilities_crea[0]] + " " + abilities[abilities_crea[1]];
+                    std::cout<< left[cards_states[j]] << centered_string(s, wid) << right[cards_states[j]];
                 }
-            } else {
-                std::cout << empty_case;
+                
+            } else if (m_basic_cards[num_card]->is_class(Card_class::LAND)) {
+                std::cout<< left[cards_states[j]] << std::setw(wid) << std::setfill(' ') << " " << right[cards_states[j]];
             }
 
             if(num_card == m_basic_cards.size() - 1)
                 break;
             std::cout << delimiter;
         }
+
+        std::cout<<std::endl;
+
+        // print abilities
+        for (size_t j = 0; j < 8; j++) {
+
+            num_card = i*8 + j;
+
+            if (m_basic_cards[num_card]->is_class(Card_class::CREATURE)) {
+
+                Creature* creature = dynamic_cast<Creature*>(m_basic_cards[num_card]);
+                std::string abilities[] = {"Flight", "Scope", "Vigilance", "Touch_of_death", "Defender", "Initiative", "Double_initiative", "Haste", 
+                           "Unblockable", "Life_link", "Threat", "Trampling", "White_protection", "Blue_protection", "Black_protection", "Red_protection", "Green_protection"};
+                std::vector<int> abilities_crea =  creature->get_abilities();
+                std::string s = "";
+                
+                if(abilities_crea.size() == 3){
+                    std::cout<< left[cards_states[j]] << centered_string(abilities[abilities_crea[2]], wid) << right[cards_states[j]];
+                } else if(abilities_crea.size() > 3){
+                    s = abilities[abilities_crea[2]] + " " +  abilities[abilities_crea[3]];
+                    std::cout<< left[cards_states[j]] << centered_string(s, wid) << right[cards_states[j]];
+                } else {
+                    std::cout<< left[cards_states[j]] << std::setw(wid) << std::setfill(' ') << " " << right[cards_states[j]];
+                }
+                
+            } else if (m_basic_cards[num_card]->is_class(Card_class::LAND)) {
+                std::cout<< left[cards_states[j]] << std::setw(wid) << std::setfill(' ') << " " << right[cards_states[j]];
+            }
+
+            if(num_card == m_basic_cards.size() - 1)
+                break;
+            std::cout << delimiter;
+        }
+
+        std::cout<<std::endl;
+
+        // print power/toughness for creatures and value for lands
+        for (size_t j = 0; j < 8; j++) {
+
+            num_card = i*8 + j;
+
+            if (m_basic_cards[num_card]->is_class(Card_class::CREATURE)) {
+
+                Creature* creature = dynamic_cast<Creature*>(m_basic_cards[num_card]);
+                int pow = creature->get_power_current();
+                int tough = creature->get_toughness_current();
+
+                std::string s = std::to_string(pow) + " / " + std::to_string(tough);
+
+                std::cout<< left[cards_states[j]] << std::setw(wid) << s << right[cards_states[j]];
+
+            } else if (m_basic_cards[num_card]->is_class(Card_class::LAND)){
+                Land* land = dynamic_cast<Land*>(m_basic_cards[num_card]);
+                
+                std::cout<< left[cards_states[j]] << std::setw(wid) << land->get_value() << right[cards_states[j]];
+            }
+
+            if (num_card == m_basic_cards.size() - 1)
+                break;
+            std::cout << delimiter;
+
+        }
+
+        std::cout << std::endl;
+
+        // print bottom of the card
+        for (size_t j = 0; j < 8; j++) {
+
+            num_card = i*8 + j;
+
+            if (m_basic_cards[num_card]->get_enchantments().empty()) {
+                std::cout<< down_card_basic;
+            } else {
+                std::cout<< down_card_ench;
+            }
+
+            if (num_card == m_basic_cards.size() - 1)
+                break;
+            std::cout << delimiter;
+        } 
+
         std::cout << std::endl;
         std::cout << std::endl;
     }
@@ -544,28 +560,60 @@ void Battlefield::print() {
     // print les enchantements
     for (size_t i = 0; i < (m_enchantments.size()/8) + m; i++) {
 
-        // print les numéros de cartes
+        std::vector<int> cards_states = {}; // represents the state of each card of a line of the battlefield
+
+        // print header of the card
         for (size_t j = 0; j < 8; j++) {
 
-            num_card = bc_size + i*8 + j;
+            num_card = i*8 + j;
 
-            std::cout<< "[" << std::setw(12) << num_card << "]";
+            cards_states.push_back(State::Normal);
+            std::cout<< top_card_basic;
 
-            if(num_card == (m_enchantments.size() - 1 + bc_size)) break;
+            if (num_card == m_enchantments.size() - 1 + bc_size)
+                break;
             std::cout << delimiter;
-
         }
-        
-        std::cout << std::endl;
 
-        // print type de carte
+        std::cout<< std::endl;
+
+        // print les numéros de cartes && type de carte
         for (size_t j = 0; j < 8; j++) {
 
-            num_card = bc_size + i*8 + j;
+            num_card = i*8 + j;
+            int diff = num_card > 9 ? 2:1;
 
-            std::cout<< "[" << std::setw(12) << "Enchantment" << "]";
+            // print the token on the first line background
+            std::string token;
+            switch (m_basic_cards[num_card]->get_token())
+            {
+            case 0:
+                token = get_background_color(Color::White);
+            break;
+            case 1:
+                token = get_background_color(Color::Blue);
+            break;
+            case 2:
+                token = get_background_color(Color::Black);
+            break;
+            case 3:
+                token = get_background_color(Color::Red);
+            break;
+            case 4:
+                token = get_background_color(Color::Green);
+            break;
+            default:
+                break;
+            }
+            
+            if(m_basic_cards[num_card]->get_token() == 0){
+                std::cout << left[cards_states[j]]<< get_color(Color::Black) << token << num_card << std::setw(wid-diff) << std::setfill(' ') << "Creature" << get_color(Color::Reset) << get_background_color(Color::Reset) << right[cards_states[j]];
+            } else {
+                std::cout << left[cards_states[j]]<< token << num_card << std::setw(wid-diff) << std::setfill(' ') << "Creature" << get_background_color(Color::Reset) << right[cards_states[j]];
+            }
 
-            if(num_card == (int) m_enchantments.size() - 1 + bc_size) break;
+            if (num_card == m_enchantments.size() - 1 + bc_size)
+                break;
             std::cout << delimiter;
         }
 
@@ -574,31 +622,43 @@ void Battlefield::print() {
         // print nom de carte
         for (size_t j = 0; j < 8; j++) {
 
-            num_card = bc_size + i*8 + j;
+            num_card = i*8 + j;
 
-            std::string s = (m_enchantments[j]->get_name()).substr(0, 12);
+            std::cout << left[cards_states[j]] << centered_string(m_enchantments[num_card]->get_name(), wid) << right[cards_states[j]];
 
-            std::cout<< "[" << std::setw(12) <<  s << "]";
-
-            if(num_card == m_enchantments.size() - 1 + bc_size)
+            if (num_card == m_enchantments.size() - 1 + bc_size)
                 break;
             std::cout << delimiter;
         }
 
         std::cout << std::endl;
-
-        // print token
+        
+        // print cost
         for (size_t j = 0; j < 8; j++) {
 
-            num_card = bc_size + i*8 + j;
+            num_card = i*8 + j;
 
-            int token = m_enchantments[j]->get_token();
+            Enchantment* enchantment = m_enchantments[num_card];
+            Cost* cost = enchantment->get_cost();
 
-            std::cout<< "[" << std::setw(12) << tokens[token] << "]";
+            std::cout<< left[cards_states[j]] << std::setw((wid - 11)/2) << std::setfill(' ') << " ";
 
-            if(num_card == m_enchantments.size() - 1 + bc_size) break;
+            std::cout<< cost->get_any() << " ";
+            std::cout<< get_background_color(Color::White) << get_color(Color::Black) << cost->get_white() << get_color(Color::Reset) << get_background_color(Color::Reset) << " ";
+            std::cout<< get_background_color(Color::Blue) << cost->get_blue() << get_background_color(Color::Reset) << " ";
+            std::cout<< get_background_color(Color::Black) << cost->get_black() << get_background_color(Color::Reset) << " ";
+            std::cout<< get_background_color(Color::Red) << cost->get_red() << get_background_color(Color::Reset) << " ";
+            std::cout<< get_background_color(Color::Green) << cost->get_green() << get_background_color(Color::Reset);
+            
+            std::cout<< std::setw((wid - 11)/2) << std::setfill(' ') << " " << right[cards_states[j]];
+
+
+            if (num_card == m_enchantments.size() - 1 + bc_size)
+                break;
             std::cout << delimiter;
+
         }
+
 
         std::cout << std::endl;
 
@@ -608,7 +668,7 @@ void Battlefield::print() {
             num_card = bc_size + i*8 + j;
 
             if ((m_enchantments[j]->get_effects()).empty()) {
-                std::cout<< empty_case;
+                std::cout<< left[cards_states[j]] << std::setw(wid) << std::setfill(' ') << " " << right[cards_states[j]];
             } else {
 
                 int effect = (m_enchantments[j]->get_effects())[0];
@@ -616,23 +676,23 @@ void Battlefield::print() {
                 switch (m_enchantments[j]->get_token()){
 
                     case Token::White:
-                        std::cout<< "[" << std::setw(12) << white_effects[effect].substr(0, 12) << "]";
+                        std::cout<< left[cards_states[j]]<< centered_string(white_effects[effect], wid) << right[cards_states[j]];
                         break;
 
                     case Token::Blue:
-                        std::cout<< "[" << std::setw(12) << blue_effects[effect].substr(0, 12) << "]";
+                        std::cout<< left[cards_states[j]]<< centered_string(blue_effects[effect], wid) << right[cards_states[j]];
                         break;
 
                     case Token::Black:
-                        std::cout<< "[" << std::setw(12) << black_effects[effect].substr(0, 12) << "]";
+                        std::cout<< left[cards_states[j]]<< centered_string(black_effects[effect], wid) << right[cards_states[j]];
                         break;
 
                     case Token::Red:
-                        std::cout<< "[" << std::setw(12) << red_effects[effect].substr(0, 12) << "]";
+                        std::cout<< left[cards_states[j]]<< centered_string(red_effects[effect], wid) << right[cards_states[j]];
                         break;
 
                     case Token::Green:
-                        std::cout<< "[" << std::setw(12) << green_effects[effect].substr(0, 12) << "]";
+                        std::cout<< left[cards_states[j]]<< centered_string(green_effects[effect], wid) << right[cards_states[j]];
                         break;
                 
                     default:
@@ -653,31 +713,31 @@ void Battlefield::print() {
             num_card = bc_size + i*8 + j;
 
             if ((m_enchantments[j]->get_effects()).size() < 2) {
-                std::cout<< empty_case;
+                std::cout<< left[cards_states[j]] << std::setw(wid) << std::setfill(' ') << " " << right[cards_states[j]];
             } else {
 
                 int effect = (m_enchantments[j]->get_effects())[1];
 
-                switch (m_enchantments[j]->get_token()) {
+                switch (m_enchantments[j]->get_token()){
 
                     case Token::White:
-                        std::cout<< "[" << std::setw(12) << white_effects[effect].substr(0, 12) << "]";
+                        std::cout<< left[cards_states[j]]<< centered_string(white_effects[effect], wid) << right[cards_states[j]];
                         break;
 
                     case Token::Blue:
-                        std::cout<< "[" << std::setw(12) << blue_effects[effect].substr(0, 12) << "]";
+                        std::cout<< left[cards_states[j]]<< centered_string(blue_effects[effect], wid) << right[cards_states[j]];
                         break;
 
                     case Token::Black:
-                        std::cout<< "[" << std::setw(12) << black_effects[effect].substr(0, 12) << "]";
+                        std::cout<< left[cards_states[j]]<< centered_string(black_effects[effect], wid) << right[cards_states[j]];
                         break;
 
                     case Token::Red:
-                        std::cout<< "[" << std::setw(12) << red_effects[effect].substr(0, 12) << "]";
+                        std::cout<< left[cards_states[j]]<< centered_string(red_effects[effect], wid) << right[cards_states[j]];
                         break;
 
                     case Token::Green:
-                        std::cout<< "[" << std::setw(12) << green_effects[effect].substr(0, 12) << "]";
+                        std::cout<< left[cards_states[j]]<< centered_string(green_effects[effect], wid) << right[cards_states[j]];
                         break;
                 
                     default:

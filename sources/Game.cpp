@@ -90,7 +90,7 @@ void Game::start() {
     set_players(p1, p2);
 
     // Choix des decks, mélange des bibliothèques et pioche initiale
-    std::string path = "data/";
+    std::string path = "data/complet";
 
     std::vector<std::pair<std::string, std::string > > available_decks = {};
 
@@ -231,10 +231,10 @@ void Game::phases() {
 bool Game::check_defeat() {
     // check if a player has lost
     if (get_current_player()->get_looser()) {
-        victory(*get_current_player()->get_opponent());
+        victory(get_current_player()->get_opponent());
         return true;
     } else if ((get_current_player()->get_opponent())->get_looser()) {
-        victory(*get_current_player());
+        victory(get_current_player());
         return true;
     }
     return false;
@@ -632,8 +632,8 @@ void Game::exit() {
 
 }
 
-void Game::victory(Player p) {
-    print_info("Bravo " + p.get_name() + "tu as vaincu " + p.get_opponent()->get_name() + " !");
+void Game::victory(Player* p) {
+    print_info("Bravo " + p->get_name() + "tu as vaincu " + p->get_opponent()->get_name() + " !");
 }
 
 void Game::print_title_screen() {

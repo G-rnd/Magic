@@ -21,7 +21,7 @@
 	#ABILITIES: 1 
 	
 	// types : <white, black, red, blue, green>
-	#TYPES: 1, 2, 3, 4
+	#TYPES: 0
 	
 	// cost : <any>, <white>, <black>, <red>, <blue>, <green>
 	#COST: 1, 0, 0, 0, 0, 0
@@ -51,7 +51,7 @@
 	#ABILITIES: 1 
 	
 	// types : <white, black, red, blue, green>
-	#TYPES: 1, 2, 3, 4
+	#TYPES: 0
 	
 	// cost : <any>, <white>, <black>, <red>, <blue>, <green>
 	#COST: 1, 0, 0, 0, 0, 0
@@ -77,7 +77,7 @@
 	#ABILITIES: 1 
 	
 	// types : <white, black, red, blue, green>
-	#TYPES: 1, 2, 3, 4
+	#TYPES: 0
 	
 	// cost : <any>, <white>, <black>, <red>, <blue>, <green>
 	#COST: 1, 0, 0, 0, 0, 0
@@ -103,7 +103,7 @@
 	#ABILITIES: 1 
 	
 	// types : <white, black, red, blue, green>
-	#TYPES: 1, 2, 3, 4
+	#TYPES: 0
 	
 	// cost : <any>, <white>, <black>, <red>, <blue>, <green>
 	#COST: 1, 0, 0, 0, 0, 0
@@ -129,7 +129,7 @@
 	#ABILITIES: 1 
 	
 	// types : <white, black, red, blue, green>
-	#TYPES: 1, 2, 3, 4
+	#TYPES: 0
 	
 	// cost : <any>, <white>, <black>, <red>, <blue>, <green>
 	#COST: 1, 0, 0, 0, 0, 0
@@ -155,8 +155,9 @@
 	#ABILITIES: 1 
 	
 	// types : <white, black, red, blue, green>
-	#TYPES: 1, 2, 3, 4
+	#TYPES: 0
 	
 	// cost : <any>, <white>, <black>, <red>, <blue>, <green>
 	#COST: 1, 0, 0, 0, 0, 0
 #END_CARD
+coucoubibou

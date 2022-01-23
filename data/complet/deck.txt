@@ -123,10 +123,10 @@
 	#POWER: 3
 	#TOUGHNESS: 3
 	// types : <ability_1, ... ability_n>
-	#ABILITIES: 
+	#ABILITIES:
 	
 	// types : <white, black, red, blue, green>
-	#TYPES: 
+	#TYPES: 4
 	
 	// cost : <any>, <white>, <black>, <red>, <blue>, <green>
 	#COST: 0, 0, 0, 0, 0, 2
@@ -174,7 +174,7 @@
 	#POWER: 3
 	#TOUGHNESS: 1
 	// types : <ability_1, ... ability_n>
-	#ABILITIES: 
+	#ABILITIES:
 	
 	// types : <white, black, red, blue, green>
 	#TYPES: 4
@@ -378,7 +378,7 @@
 	#POWER: 3
 	#TOUGHNESS: 2
 	// types : <ability_1, ... ability_n>
-	#ABILITIES: 
+	#ABILITIES:
 	
 	// types : <white, black, red, blue, green>
 	#TYPES: 9
@@ -395,7 +395,7 @@
 	#POWER: 3
 	#TOUGHNESS: 3
 	// types : <ability_1, ... ability_n>
-	#ABILITIES: 
+	#ABILITIES:
 	
 	// types : <white, black, red, blue, green>
 	#TYPES: 10
@@ -412,7 +412,6 @@
 
 	#EFFECTS: 0
 	#COST: 1, 1, 0, 0, 0, 0
-	#INFO: Titanice Growth give you three health of power
 #END_CARD
 
 #BEGIN_CARD
@@ -422,7 +421,6 @@
 
 	#EFFECTS: 1
 	#COST: 1, 1, 0, 0, 0, 0
-	#INFO: Give 1 / 1 to your favorite creature
 #END_CARD
 
 #BEGIN_CARD
@@ -432,7 +430,6 @@
 
 	#EFFECTS: 2
 	#COST: 1, 2, 0, 0, 0, 0
-	#INFO: Destroy a creature of your opponent
 #END_CARD
 
 #BEGIN_CARD
@@ -442,7 +439,6 @@
 
 	#EFFECTS: 0
 	#COST: 1, 1, 0, 0, 0, 0
-	#INFO: Play another land
 #END_CARD
 
 #BEGIN_CARD
@@ -452,7 +448,6 @@
 
 	#EFFECTS: 1
 	#COST: 1, 1, 0, 0, 0, 0
-	#INFO: Take 2 lands in your library and shuffle your library
 #END_CARD
 
 // ENCHANTMENTS
@@ -462,7 +457,6 @@
 	#TOKEN: 1
 
 
-	#EFFECTS: 1, 2, 3, 4
+	#EFFECTS: 0
 	#COST: 3, 0, 0, 0, 0, 0
-	#INFO: Blabla enchantement génial
 #END_CARD

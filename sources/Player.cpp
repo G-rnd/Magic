@@ -198,9 +198,15 @@ void Player::discard_card(Card* c) {
 
 void Player::shuffle_library() {
 
+/*
+    std::default_engine_generator generator;
+    std::uniform_int_distribution<int> distribution(1, 6);
+    int rand = distribution(generator);
+*/
+
     std::vector<Card*> m_library_copy = m_library;
     int i_lib = 0;
-    while(m_library_copy.size() != 0){
+    while(!m_library_copy.empty()){
         int j = rand() % m_library_copy.size();
         m_library[i_lib] = m_library_copy[j];
         m_library_copy.erase(m_library_copy.begin() + j);
@@ -243,6 +249,7 @@ void Player::disengage_card(BasicCard* bc) {
 - Haste
 */
 std::vector<Creature*> Player::attack() {
+
     int i = 0;
     std::vector<Creature*> possible_creatures = {};
     
@@ -290,7 +297,9 @@ std::vector<Creature*> Player::attack() {
 
     // Interaction with player : choices
     while (true) {
-        //cls();
+        cls();
+        this->print();
+
         print_actions("Sélectionnez les cartes pour attaquer !", {
             {"<id>", "pour attaquer avec cette carte"},
             {"reset", "pour annuler vos choix"},
@@ -369,20 +378,15 @@ std::vector<Creature*> Player::attack() {
 void Player::choose_defenders(std::vector<Creature*> opponents) {
 
     std::vector<Creature*> availabled_creature = m_battlefield->get_available_creatures();
+    std::vector<std::pair<std::string, std::string> > print_creatures = {};
 
     for (auto opponent : opponents) {
-
-        print_actions("Selectionnez les cartes pour défendre " + opponent->get_name() + " :", {
-        {"<id>", "pour défendre avec cette carte"},
-        {"reset", "pour annuler vos choix"},
-        {"valid", "pour valider vos choix"},
-        }, "Attention ! Choisissez vos défenseurs dans l'ordre souhaité !");
 
         std::string cmd;
         int i = 0;
         bool quit = false;
         std::vector<Creature*> possible_defenders = {};
-        std::vector<Creature*> chosen_defenders = {};
+        std::vector<Creature*> chosen_defenders = {}; //TODO si des creatures meurent
 
         // Etablish opponent abilities
         bool threat_opponent = false;
@@ -409,19 +413,39 @@ void Player::choose_defenders(std::vector<Creature*> opponents) {
                     scope_creature = true;
                 }
             }
-            
+
             // Check Flight ability
             if ((flight_opponent && (flight_creature || scope_creature)) || !flight_opponent) {
-                std::cout << i << " - " << creature->get_name() << " : " << creature->get_power_current() << "/" << creature->get_toughness_current() << std::endl;
                 possible_defenders.push_back(creature);
                 i++;
             }
+
         }
+
+        std::vector<Creature*> creatures = {};
+        for(auto& c : possible_defenders)
+            creatures.push_back(c);
 
         // Interaction with player : choices
         while (!quit) {
-            std::getline(std::cin, cmd);
+
+            cls();
+            m_opponent->print();
+
+            print_actions(m_name + ", selectionnez les cartes pour défendre " + opponent->get_name() + " :", {
+            {"<id>", "pour défendre avec cette carte"},
+            {"reset", "pour annuler vos choix"},
+            {"valid", "pour valider vos choix"} });
+
+            size_t id = 0;
+            print_creatures = {};
+            for(auto& c : creatures) {
+                print_creatures.push_back({std::to_string(id), c->get_name()});
+                id++;
+            }
+            print_list(print_creatures);
             
+            std::getline(std::cin, cmd);
         
             if (cmd.find("valid") != std::string::npos) {
                 // Check Threat ability is respected
@@ -430,35 +454,119 @@ void Player::choose_defenders(std::vector<Creature*> opponents) {
                 } else {
                     quit = true;
                     if (!chosen_defenders.empty()) {
+                        for (auto c : chosen_defenders){
+                            c->set_engaged(true);
+                        }
+                        if (chosen_defenders.size() > 1){
+                            chosen_defenders = m_opponent->choose_defenders_orders(chosen_defenders, opponent);
+                        }
                         // Deflect attack for each opponent with the possible and chosen defender
                         this->deflect_attack(opponent, chosen_defenders);
+                    } else {
+                        m_opponent->set_hp(m_opponent->get_hp() - opponent->get_power_current()); // TODO : check defeat
                     }
                 }
             } else if (cmd.find("reset") != std::string::npos) {
+                creatures = possible_defenders;
                 chosen_defenders = {};
-                std::cout<< "Reset reussi" <<std::endl;
+                print_info("Reset reussi");
             } else {
                 try {
                     int num = std::stoi(cmd);
                     if (num > i || num < 0) {
-                        std::cout << "Id invalide" << std::endl;
-
-                        std::cout << "Entrée pour continuer." << std::endl;
-                        std::getline(std::cin, cmd);
+                        print_info("Id invalide");
                     } else {
-                        if (contain(possible_defenders[num], chosen_defenders)) {
-                            std::cout << num <<" deja choisie" << std::endl; 
+                        if (contain(creatures[num], chosen_defenders)) {
+                            print_info(std::to_string(num) + " deja choisie"); 
                         } else {
-                            std::cout<< "Vous venez d'ajouter " << possible_defenders[num]->get_name() << "."<<std::endl;
-                            chosen_defenders.push_back(possible_defenders[num]);
+                            print_info("Vous venez d'ajouter " + creatures[num]->get_name() + ".");
+                            chosen_defenders.push_back(creatures[num]);
+                            remove(creatures[num], creatures);
                         }
                     }
                 } catch (std::invalid_argument &e) {
-                    std::cout << "Commande Invalide" << std::endl;    
+                    print_info("Commande Invalide");    
                 }
             }
         }
     }
+}
+
+// l'attaquant choisi l'ordre du blocage
+std::vector<Creature*> Player::choose_defenders_orders(std::vector<Creature*> defenders, Creature* opponent){
+
+    std::vector<std::pair<std::string, std::string> > print_creatures = {};
+
+    std::string cmd;
+    int i = 0;
+    bool quit = false;
+    std::vector<Creature*> possible_defenders = defenders;
+    std::vector<Creature*> chosen_defenders = {};
+
+    while(!possible_defenders.empty()){
+
+        cls();
+        this->print();
+
+        print_actions(m_name + ", selectionnez l'ordre des defenseurs que " + opponent->get_name() + " va attaquer :", {
+        {"<id>", "pour selectionner cette carte"},
+        {"reset", "pour annuler vos choix"},
+        {"valid", "pour valider vos choix"} });
+
+        size_t id = 0;
+        print_creatures = {};
+        for(auto& c : possible_defenders) {
+            print_creatures.push_back({std::to_string(id), c->get_name()});
+            id++;
+        }
+        print_list(print_creatures);
+
+        // Interaction with player : choices
+        while (!quit) {
+            std::getline(std::cin, cmd);
+            
+        
+            if (cmd.find("valid") != std::string::npos) {
+                if(chosen_defenders.size() != defenders.size()){
+                    print_info("Vous n'avez pas selectionne toutes les creatures !");
+                } else {
+                    quit = true;
+                    size_t id = 0;
+                    std::vector<std::pair<std::string, std::string> > print_creatures = {};
+                    for(auto& c : chosen_defenders) {
+                        print_creatures.push_back({std::to_string(id), c->get_name()});
+                        id++;
+                    }
+                    print_actions("Voici l'ordre dans lequel " + m_opponent->get_name() + " va vous defendre :", print_creatures);
+                }
+            } else if (cmd.find("reset") != std::string::npos) {
+                    chosen_defenders = {};
+                    print_info("Reset reussi");
+            } else {
+                try {
+                    int num = std::stoi(cmd);
+                    if (num > i || num < 0) {
+                        print_info("Id invalide");
+                    } else {
+                        if (contain(possible_defenders[num], chosen_defenders)) {
+                            print_info(std::to_string(num) + " deja choisie"); 
+                        } else {
+                            print_info("Vous venez d'ajouter " + possible_defenders[num]->get_name() + ".");
+                            chosen_defenders.push_back(possible_defenders[num]);
+                            remove(possible_defenders[num], possible_defenders);
+                        }
+                    }
+                } catch (std::invalid_argument &e) {
+                    print_info("Commande Invalide");
+                }
+            }
+        }
+
+    }
+
+    return chosen_defenders;
+    
+
 }
 
 void Player::deflect_attack(Creature* opponent, std::vector<Creature*> defenders) {
@@ -555,7 +663,7 @@ void Player::battle_creature(Creature* opponent, Creature* defender) {
         }
         if (opponent->get_toughness_current() <= 0) {
             opponent_dead = true;
-            destroy_card(opponent);
+            m_opponent->destroy_card(opponent);
         }
     }
     // If the battle continue
@@ -596,23 +704,18 @@ void Player::battle_creature(Creature* opponent, Creature* defender) {
 
         // If the creatures are dead, deplace them into the graveyard
         if (opponent->get_toughness_current() <= 0) {
-
-            std::cout<<"pouypouy"<<std::endl<<std::endl;
             opponent_dead = true;
-            m_opponent->destroy_card(opponent); //TODO : on suppr la carte dans le battlefield de l'opponent : à faire partout
-            std::cout<<"pouypouyAHAH"<<std::endl<<std::endl;
+            m_opponent->destroy_card(opponent);
         }
         if (defender->get_toughness_current() <= 0) {
-            std::cout<<"pouypouy2222222"<<std::endl<<std::endl;
             defender_dead = true;
             destroy_card(defender);
-            std::cout<<"pouypouyCULULU"<<std::endl<<std::endl;
         }
     }
 
     // Check Trampling ability
     if (!opponent_dead && trampling_opponent) {
-        this->set_hp(this->get_hp() - opponent->get_power_current());
+        this->set_hp(this->get_hp() - opponent->get_power_current()); //TODO change power change
     }
 }
 
@@ -1171,49 +1274,102 @@ void Player::print_hand(){
 
     sort_hand();
 
-    std::string tokens[5] = {"White", "Blue", "Black", "Red", "Green"};
-
     std::string white_effects[] = {"Win_1_HP_white", "Flight_Life_link"};
     std::string blue_effects[]  = {"Control_creature"};
     std::string black_effects[] = {"Less_HP_death_creature"};
     std::string red_effects[]   = {"More_1_0_attack_creatures"};
     std::string green_effects[] = {"More_1_land", "More_G_G_creature"};
-    
+
+    std::string white_ritual_effects[] = { "More_3_HP", "More_1_1_creature_current", "Destroy_engaged_creature", "Destroy_enchantment" };
+    std::string blue_ritual_effects[]  = { "Draw_2_cards", "Back_hand_creature" };
+    std::string black_ritual_effects[] = { "Kill_creature", "Kill_creature_2_power", "Kill_not_angel", "Less_2_2_creature_current"};
+    std::string red_ritual_effects[]   = { "Damage_3_creature_or_player", "Damage_4_creatures"};
+    std::string green_ritual_effects[] = { "Play_another_land", "Take_2_lands_library_shuffle"};
+
+    std::string abilities[] = {"Flight", "Scope", "Vigilance", "Touch_of_death", "Defender", "Initiative", "Double_initiative", "Haste", 
+            "Unblockable", "Life_link", "Threat", "Trampling", "White_protection", "Blue_protection", "Black_protection", "Red_protection", "Green_protection"};
+
     std::string delimiter = "     ";
-    std::string empty_case = "              ";
-    int num_card;
+    std::string empty_case = "                 ";
+    int wid = 15; // width of a card
+    std::string top_card_basic  = "┌─────────────────┐";
+    std::string down_card_basic = "└─────────────────┘";
+
+    size_t num_card;
     int n = (m_hand.size() % 8 == 0) ? 0 : 1; // gérer le nb de lignes
 
-    for (int i = 0; i < ((int) m_hand.size() / 8) + n ; i++) {
+    for (size_t i = 0; i < (m_hand.size() / 8) + n ; i++) {
 
-        // print les numéros de cartes
-        for (int j = 0; j < 8; j++) {
+        // print header of the card
+        for (size_t j = 0; j < 8; j++) {
 
             num_card = i*8 + j;
-            std::cout << "[" << std::setfill(' ') << std::setw(12) << num_card << "]";
 
-            if(num_card == ((int) m_hand.size() - 1)) 
+            std::cout<< top_card_basic;
+
+            if (num_card == m_hand.size() - 1)
                 break;
             std::cout << delimiter;
         }
-        std::cout << std::endl;
+
+        std::cout<<std::endl;
         
-        // print type de carte
-        for (int j = 0; j < 8; j++) {
+        // print les numéros de cartes && type de carte
+        for (size_t j = 0; j < 8; j++) {
 
             num_card = i*8 + j;
+            int diff = num_card > 9 ? 2:1;
 
+            // print the token on the first line background
+            std::string token;
+            switch (m_hand[num_card]->get_token())
+            {
+            case 0:
+                token = get_background_color(Color::White);
+            break;
+            case 1:
+                token = get_background_color(Color::Blue);
+            break;
+            case 2:
+                token = get_background_color(Color::Black);
+            break;
+            case 3:
+                token = get_background_color(Color::Red);
+            break;
+            case 4:
+                token = get_background_color(Color::Green);
+            break;
+            default:
+                break;
+            }
+            
             if (m_hand[num_card]->is_class(Card_class::CREATURE)) {
-                std::cout << "[" << std::setw(12) << "Creature" << "]";
+                if(m_hand[num_card]->get_token() == 0){
+                    std::cout << "│ "<< get_color(Color::Black) << token << num_card << std::setw(wid-diff) << std::setfill(' ') << "Creature" << get_color(Color::Reset) << get_background_color(Color::Reset) << " │";
+                } else {
+                    std::cout << "│ "<< token << num_card << std::setw(wid-diff) << std::setfill(' ') << "Creature" << get_background_color(Color::Reset) << " │";
+                }
             } else if (m_hand[num_card]->is_class(Card_class::LAND)) {
-                std::cout << "[" << std::setw(12) << "Land" << "]";
-            } else if (m_hand[num_card]->is_class(Card_class::ENCHANTEMENT)) {
-                std::cout << "[" << std::setw(12) << "Enchantement" << "]";
+                if(m_hand[num_card]->get_token() == 0){
+                    std::cout << "│ "<< get_color(Color::Black) << token << num_card << std::setw(wid-diff) << std::setfill(' ') << "Land" << get_color(Color::Reset) << get_background_color(Color::Reset) << " │";
+                } else {
+                    std::cout << "│ "<< token << num_card << std::setw(wid-diff) << std::setfill(' ') << "Land" << get_background_color(Color::Reset) << " │";
+                } 
             } else if (m_hand[num_card]->is_class(Card_class::RITUAL)) {
-                std::cout << "[" << std::setw(12) << "Rituel" << "]";
-            } 
+                if(m_hand[num_card]->get_token() == 0){
+                    std::cout << "│ "<< get_color(Color::Black) << token << num_card << std::setw(wid-diff) << std::setfill(' ') << "Ritual" << get_color(Color::Reset) << get_background_color(Color::Reset) << " │";
+                } else {
+                    std::cout << "│ "<< token << num_card << std::setw(wid-diff) << std::setfill(' ') << "Ritual" << get_background_color(Color::Reset) << " │";
+                } 
+            } else if (m_hand[num_card]->is_class(Card_class::ENCHANTEMENT)) {
+                if(m_hand[num_card]->get_token() == 0){
+                    std::cout << "│ "<< get_color(Color::Black) << token << num_card << std::setw(wid-diff) << std::setfill(' ') << "Enchantment" << get_color(Color::Reset) << get_background_color(Color::Reset) << " │";
+                } else {
+                    std::cout << "│ "<< token << num_card << std::setw(wid-diff) << std::setfill(' ') << "Enchantment" << get_background_color(Color::Reset) << " │";
+                } 
+            }
 
-            if (num_card == (int) m_hand.size() - 1)
+            if(num_card == m_hand.size() - 1)
                 break;
             std::cout << delimiter;
         }
@@ -1221,84 +1377,58 @@ void Player::print_hand(){
         std::cout << std::endl;
 
         // print nom de carte
-        for (int j = 0; j < 8; j++) {
+        for (size_t j = 0; j < 8; j++) {
 
             num_card = i*8 + j;
 
-            std::string s = (m_hand[num_card]->get_name()).substr(0, 12);
+            std::cout << "│ " << centered_string(m_hand[num_card]->get_name(), wid) << " │";
 
-            std::cout<< "[" << std::setw(12) << s << "]";
-
-            if (num_card == (int) m_hand.size() - 1)
+            if(num_card == m_hand.size() - 1)
                 break;
             std::cout << delimiter;
         }
 
         std::cout << std::endl;
 
-        // print token
-        for (int j = 0; j < 8; j++) {
-
-            num_card = i*8 + j;
-
-            int token = m_hand[num_card]->get_token();
-            std::cout << "[" << std::setw(12) << tokens[token] << "]";
-
-            if (num_card == (int) m_hand.size() - 1)
-                break;
-            std::cout << delimiter;
-        }
-
-        std::cout << std::endl;
-
-        //print cost
-        for (int j = 0; j < 8; j++) {
+        // print cost pour creature
+        for (size_t j = 0; j < 8; j++) {
 
             num_card = i*8 + j;
 
             if (m_hand[num_card]->is_class(Card_class::LAND)) {
 
-                Land* land = dynamic_cast<Land*>(m_hand[num_card]);
-                std::cout<< "[" << std::setw(12) << land->get_value() << "]";
+                std::cout << "│ " << std::setw(wid) << " " << " │";
             } else {
-
                 Cost* cost;
-                if (m_hand[num_card]->is_class(Card_class::CREATURE)) {
-                    cost = (dynamic_cast<Creature*>(m_hand[num_card]))->get_cost();
-                } else {
-                    cost = (dynamic_cast<Creature*>(m_hand[num_card]))->get_cost();
+                if(m_hand[num_card]->is_class(Card_class::CREATURE)) {
+                    Creature* creature = dynamic_cast<Creature*>(m_hand[num_card]);
+                    cost = creature->get_cost();
+                } else if (m_hand[num_card]->is_class(Card_class::RITUAL) || m_hand[num_card]->is_class(Card_class::ENCHANTEMENT)) {
+                    SpecialCard* sp = dynamic_cast<SpecialCard*>(m_hand[num_card]);
+                    cost = sp->get_cost();
                 }
 
-                std::string s = "";
+                std::cout<< "│ " << std::setw((wid - 11)/2) << std::setfill(' ') << " ";
 
-                if (!cost->is_any_null())
-                    s += std::to_string(cost->get_any()) + "*";
-
-                if (!cost->is_white_null())
-                    s += std::to_string(cost->get_white()) + "W";
-
-                if (!cost->is_blue_null())
-                    s += std::to_string(cost->get_blue()) + "B";
-
-                if (!cost->is_black_null())
-                    s += std::to_string(cost->get_black()) + "N";
-
-                if (!cost->is_red_null())
-                    s += std::to_string(cost->get_red()) + "R";
-
-                if (!cost->is_green_null())
-                    s += std::to_string(cost->get_green()) + "G";
-                    
-                std::cout << "[" << std::setw(12) << s << "]";
+                std::cout<< cost->get_any() << " ";
+                std::cout<< get_background_color(Color::White) << get_color(Color::Black) << cost->get_white() << get_color(Color::Reset) << get_background_color(Color::Reset) << " ";
+                std::cout<< get_background_color(Color::Blue) << cost->get_blue() << get_background_color(Color::Reset) << " ";
+                std::cout<< get_background_color(Color::Black) << cost->get_black() << get_background_color(Color::Reset) << " ";
+                std::cout<< get_background_color(Color::Red) << cost->get_red() << get_background_color(Color::Reset) << " ";
+                std::cout<< get_background_color(Color::Green) << cost->get_green() << get_background_color(Color::Reset);
+                
+                std::cout<< std::setw((wid - 11)/2) << std::setfill(' ') << " " << " │";
             }
 
-            if (num_card == (int) m_hand.size() - 1)
-              break;
+            if(num_card == m_hand.size() - 1)
+                break;
             std::cout << delimiter;
+
         }
+
         std::cout << std::endl;
 
-        // print type pour creature, value pour land et effects pour les specialCard
+        // print type pour creature, vide pour les autres
         for (int j = 0; j < 8; j++) {
 
             num_card = i*8 + j;
@@ -1306,55 +1436,27 @@ void Player::print_hand(){
             if (m_hand[num_card]->is_class(Card_class::CREATURE)) {
 
                 Creature* creature = dynamic_cast<Creature*>(m_hand[num_card]);
-                std::string types[1] = {"Angel"};
-                std::vector<int> creat_type =  creature->get_types();
+                std::vector<std::string> types{"Angel", "Beast", "Human_werewolf", "HippoGriff", "Kor_warrior", "Dinosaur", "Humans", "Vampire", "Spider", "Elf", "Troll"}; // TODO : mettre à jour
+                std::vector<int> creat_type = creature->get_types();
                 std::string s = "";
-                for (auto t : creat_type) {
-                    s += types[t].substr(0, 3);
-                    s += "-";
-                }
-                s = s.substr(0, s.size() - 2);
-                std::cout<< "[" << std::setw(12) << s.substr(0,12) << "]";
 
-            } else if (m_hand[num_card]->is_class(Card_class::LAND)) {
-                std::cout<< empty_case;
-            } else {
-                SpecialCard *sc = dynamic_cast<SpecialCard*>(m_hand[num_card]);
-                if ((sc->get_effects()).empty()) {
-                    std::cout<< empty_case;
+                if(creat_type.empty()){
+                    std::cout<< "│ " << std::setw(wid) << std::setfill(' ') << " " << " │";
+                } else if(creat_type.size() == 1){
+                    std::cout<< "│ " << centered_string(types[creat_type[0]], wid) << " │";
+                } else if(creat_type.size() == 2){
+                    s = types[creat_type[0]] + types[creat_type[1]];
+                    std::cout<< "│ " << centered_string(s, wid) << " │";
                 } else {
-
-                    int effect = (sc->get_effects())[0];
-
-                    switch (sc->get_token()) {
-
-                        case Token::White:
-                            std::cout << "[" << std::setw(12) << white_effects[effect].substr(0, 12) << "]";
-                            break;
-
-                        case Token::Blue:
-                            std::cout << "[" << std::setw(12) << blue_effects[effect].substr(0, 12) << "]";
-                            break;
-
-                        case Token::Black:
-                            std::cout << "[" << std::setw(12) << black_effects[effect].substr(0, 12) << "]";
-                            break;
-
-                        case Token::Red:
-                            std::cout << "[" << std::setw(12) << red_effects[effect].substr(0, 12) << "]";
-                            break;
-
-                        case Token::Green:
-                            std::cout << "[" << std::setw(12) << green_effects[effect].substr(0, 12) << "]";
-                            break;
-                    
-                        default:
-                            break;
-                    }
+                    // TODO
                 }
+
+                
+            } else {
+                std::cout<< "│ " << std::setw(wid) << std::setfill(' ') << " " << " │";
             }
 
-            if (num_card == (int) m_hand.size() - 1)
+            if (num_card == m_hand.size() - 1)
                 break;
             std::cout << delimiter;
 
@@ -1362,8 +1464,160 @@ void Player::print_hand(){
 
         std::cout << std::endl;
 
-        // print power/toughness
+        // print first effect for specialcard, empty for the others
         for (int j = 0; j < 8; j++) {
+
+            num_card = i*8 + j;
+
+            if (m_hand[num_card]->is_class(Card_class::RITUAL) || m_hand[num_card]->is_class(Card_class::ENCHANTEMENT)) {
+
+                SpecialCard* sp = dynamic_cast<SpecialCard*>(m_hand[num_card]);
+
+                if ((sp->get_effects()).empty()) {
+                std::cout<< "│ " << std::setw(wid) << std::setfill(' ') << " " << " │";
+                } else {
+
+                    int effect = (sp->get_effects())[0];
+
+                    switch (sp->get_token()){
+
+                        case Token::White:
+                            std::cout<< "│ "<< centered_string(white_effects[effect], wid) << " │";
+                            break;
+
+                        case Token::Blue:
+                            std::cout<< "│ "<< centered_string(blue_effects[effect], wid) << " │";
+                            break;
+
+                        case Token::Black:
+                            std::cout<< "│ "<< centered_string(black_effects[effect], wid) << " │";
+                            break;
+
+                        case Token::Red:
+                            std::cout<< "│ "<< centered_string(red_effects[effect], wid) << " │";
+                            break;
+
+                        case Token::Green:
+                            std::cout<< "│ "<< centered_string(green_effects[effect], wid) << " │";
+                            break;
+                    
+                        default:
+                            break;
+                    }
+                }
+
+            } else {
+                std::cout<< "│ " << std::setw(wid) << std::setfill(' ') << " " << " │";
+            }
+
+            if (num_card == m_hand.size() - 1)
+                break;
+            std::cout << delimiter;
+
+        }
+
+        std::cout << std::endl;
+
+        // print second effect for specialcard, 2 abilities for creature, empty for the others
+        for (int j = 0; j < 8; j++) {
+
+            num_card = i*8 + j;
+
+            if (m_hand[num_card]->is_class(Card_class::RITUAL) || m_hand[num_card]->is_class(Card_class::ENCHANTEMENT)) {
+
+                SpecialCard* sp = dynamic_cast<SpecialCard*>(m_hand[num_card]);
+
+                if ((sp->get_effects()).size() < 2) {
+                    std::cout<< "│ " << std::setw(wid) << std::setfill(' ') << " " << " │";
+                } else {
+
+                    int effect = (sp->get_effects())[1];
+
+                    switch (sp->get_token()){
+
+                        case Token::White:
+                            std::cout<< "│ "<< centered_string(white_effects[effect], wid) << " │";
+                            break;
+
+                        case Token::Blue:
+                            std::cout<< "│ "<< centered_string(blue_effects[effect], wid) << " │";
+                            break;
+
+                        case Token::Black:
+                            std::cout<< "│ "<< centered_string(black_effects[effect], wid) << " │";
+                            break;
+
+                        case Token::Red:
+                            std::cout<< "│ "<< centered_string(red_effects[effect], wid) << " │";
+                            break;
+
+                        case Token::Green:
+                            std::cout<< "│ "<< centered_string(green_effects[effect], wid) << " │";
+                            break;
+                    
+                        default:
+                            break;
+                    }
+                }
+
+            } else if (m_hand[num_card]->is_class(Card_class::CREATURE)) {
+
+                Creature* creature = dynamic_cast<Creature*>(m_hand[num_card]);
+                std::vector<int> abilities_crea =  creature->get_abilities();
+                std::string s = "";
+                
+                if(abilities_crea.empty()){
+                    std::cout<< "│ " << std::setw(wid) << std::setfill(' ') << " " << " │";
+                } else if(abilities_crea.size() == 1){
+                    std::cout<< "│ " << centered_string(abilities[abilities_crea[0]], wid) << " │";
+                } else {
+                    s = abilities[abilities_crea[0]] + " " +  abilities[abilities_crea[1]];
+                    std::cout<< "│ " << centered_string(s, wid) << " │";
+                }
+            } else {
+                std::cout<< "│ " << std::setw(wid) << std::setfill(' ') << " " << " │";
+            }
+
+            if (num_card == m_hand.size() - 1)
+                break;
+            std::cout << delimiter;
+        }
+
+        std::cout<<std::endl;
+
+        // print abilities
+        for (size_t j = 0; j < 8; j++) {
+
+            num_card = i*8 + j;
+
+            if (m_hand[num_card]->is_class(Card_class::CREATURE)) {
+
+                Creature* creature = dynamic_cast<Creature*>(m_hand[num_card]);
+                std::vector<int> abilities_crea =  creature->get_abilities();
+                std::string s = "";
+                
+                if(abilities_crea.size() == 3){
+                    std::cout<< "│ " << centered_string(abilities[abilities_crea[2]], wid) << " │";
+                } else if(abilities_crea.size() > 3){
+                    s = abilities[abilities_crea[2]] + " " +  abilities[abilities_crea[3]];
+                    std::cout<< "│ " << centered_string(s, wid) << " │";
+                } else {
+                    std::cout<< "│ " << std::setw(wid) << std::setfill(' ') << " " << " │";
+                }
+                
+            } else {
+                std::cout<< "│ " << std::setw(wid) << std::setfill(' ') << " " << " │";
+            }
+
+            if(num_card == m_hand.size() - 1)
+                break;
+            std::cout << delimiter;
+        }
+
+        std::cout<<std::endl;
+
+        // print power/toughness for creatures and value for lands
+        for (size_t j = 0; j < 8; j++) {
 
             num_card = i*8 + j;
 
@@ -1374,48 +1628,18 @@ void Player::print_hand(){
                 int tough = creature->get_toughness_current();
 
                 std::string s = std::to_string(pow) + " / " + std::to_string(tough);
-        
-                std::cout << "[" << std::setw(12) << s.substr(0,12) << "]";
 
-            } else if (m_hand[num_card]->is_class(Card_class::LAND)) {
-                std::cout << empty_case;
+                std::cout<< "│ " << std::setw(wid) << s << " │";
+
+            } else if (m_hand[num_card]->is_class(Card_class::LAND)){
+                Land* land = dynamic_cast<Land*>(m_hand[num_card]);
+                
+                std::cout<< "│ " << std::setw(wid) << land->get_value() << " │";
             } else {
-                SpecialCard *sc = dynamic_cast<SpecialCard*>(m_hand[num_card]);
-                if ((sc->get_effects()).size() < 2) {
-                    std::cout<< empty_case;
-                } else {
-
-                    int effect = (sc->get_effects())[1];
-
-                    switch (sc->get_token()){
-
-                        case Token::White:
-                            std::cout << "[" << std::setw(12) << white_effects[effect].substr(0, 12) << "]";
-                            break;
-
-                        case Token::Blue:
-                            std::cout << "[" << std::setw(12) << blue_effects[effect].substr(0, 12) << "]";
-                            break;
-
-                        case Token::Black:
-                            std::cout << "[" << std::setw(12) << black_effects[effect].substr(0, 12) << "]";
-                            break;
-
-                        case Token::Red:
-                            std::cout << "[" << std::setw(12) << red_effects[effect].substr(0, 12) << "]";
-                            break;
-
-                        case Token::Green:
-                            std::cout << "[" << std::setw(12) << green_effects[effect].substr(0, 12) << "]";
-                            break;
-                    
-                        default:
-                            break;
-                    }
-                }
+                std::cout<< "│ " << std::setw(wid) << std::setfill(' ') << " " << " │";
             }
 
-            if (num_card == (int) m_hand.size() - 1)
+            if (num_card == m_hand.size() - 1)
                 break;
             std::cout << delimiter;
 
@@ -1423,32 +1647,17 @@ void Player::print_hand(){
 
         std::cout << std::endl;
 
-        // print abilities
-        for (int j = 0; j < 8; j++) {
+        // print bottom of the card
+        for (size_t j = 0; j < 8; j++) {
 
             num_card = i*8 + j;
 
-            if (m_hand[num_card]->is_class(Card_class::CREATURE)) {
+            std::cout<< down_card_basic;
 
-                Creature* creature = dynamic_cast<Creature*>(m_hand[num_card]);
-                std::string abilities[] = {"Flight", "Scope", "Vigilance", "Touch_of_death", "Defender", "Initiative", "Double_initiative", "Haste", 
-                           "Unblockable", "Life_link", "Threat", "Trampling", "White_protection", "Blue_protection", "Black_protection", "Red_protection", "Green_protection"};
-                std::vector<int> abilities_crea =  creature->get_abilities();
-                std::string s = "";
-                for (auto a : abilities_crea) {
-                    s += abilities[a].substr(0, 3);
-                    s += "-";
-                }
-                s = s.substr(0, s.size() - 2);
-                std::cout << "[" << std::setw(12) << s.substr(0,12) << "]";
-            } else {
-                std::cout << empty_case;
-            }
-
-            if (num_card == (int) m_hand.size() - 1)
+            if (num_card == m_hand.size() - 1)
                 break;
             std::cout << delimiter;
-        }
+        } 
 
         std::cout << std::endl;
         std::cout << std::endl;

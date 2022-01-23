@@ -9,7 +9,7 @@
 class Ritual : public virtual SpecialCard {
 
     public:
-        Ritual(int, std::string, int, std::string, Cost*, std::vector<int>);
+        Ritual(int, std::string, int, Cost*, std::vector<int>);
         ~Ritual();
 
         void        print();

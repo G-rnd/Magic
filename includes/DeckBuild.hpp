@@ -8,25 +8,25 @@ class DeckBuild{
 
     private:
 
-    std::string                m_filename;
-    std::ofstream              m_file;
-    const int                  m_nb_cards = 30;
-    int                        m_crea = 0;
-    int                        m_land = 0;
-    int                        m_ritu = 0;
-    int                        m_ench = 0;
+        std::string                m_filename;
+        std::ofstream              m_file;
+        const int                  m_nb_cards = 30;
+        int                        m_crea = 0;
+        int                        m_land = 0;
+        int                        m_ritu = 0;
+        int                        m_ench = 0;
 
     public:
 
-    DeckBuild() {}
+        DeckBuild() {}
 
-    int                        get_nb_cards_current() const;
+        int                        get_nb_cards_current() const;
 
-    void                       create_file();
-    void                       create_creature();
-    void                       create_land();
-    void                       create_ritual();
-    void                       create_enchantment();
+        void                       create_file();
+        void                       create_creature();
+        void                       create_land();
+        void                       create_ritual();
+        void                       create_enchantment();
 
 };
 

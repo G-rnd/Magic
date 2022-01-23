@@ -3,6 +3,7 @@
 
 #include <string>
 #include <vector>
+#include <map>
 
 #include "Player.hpp"
 
@@ -12,8 +13,11 @@ class Game {
         size_t               m_phase;
         bool                 m_player_turn;
         std::vector<Player*> m_players;
-         
+
     public: 
+
+        static std::map<std::string, std::string> Background_color;
+
         Game(); 
         ~Game(); 
          
@@ -39,7 +43,7 @@ class Game {
         void                 save(const std::string& name);
         std::string          to_string();
         void                 exit();
-        void                 victory(Player p);
+        void                 victory(Player* p);
 
         static void          print_title_screen();
         static void          load();

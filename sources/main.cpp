@@ -1,4 +1,5 @@
 #include <iostream>
+#include <fstream>
 #include <string>
 
 #include "Game.hpp"
@@ -6,6 +7,7 @@
 #include "DeckBuild.hpp"
 
 int main() {
+
     while(1){
         std::string s;
         bool quit = false;
