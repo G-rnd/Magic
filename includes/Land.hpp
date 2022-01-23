@@ -18,7 +18,8 @@ class Land : public virtual BasicCard {
         int             get_value() const;
         void            set_value(int i);
 
-        virtual void    print();
+        void            print();
+        std::string     to_string();
 };
 
 #endif

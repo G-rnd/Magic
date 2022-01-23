@@ -39,12 +39,15 @@ class Player {
         std::vector<Card*>     get_library() const;
         std::vector<Card*>     get_hand() const;
         bool                   get_looser() const;
+        std::string            to_string();
    
         void                   set_opponent(Player* p);
+        void                   set_battlefield(Battlefield* b);
         void                   set_name(std::string s);
         void                   set_hp(int i);
-        void                   set_library(std::vector<Card*> cards);
-        void                   set_hand(std::vector<Card*> cards);
+        void                   set_library(const std::vector<Card*>& cards);
+        void                   set_graveyard(const std::vector<Card*>& cards);
+        void                   set_hand(const std::vector<Card*>& cards);
         void                   set_looser(bool b);
         void                   set_played_land(int i);
         void                   add_played_land(int i);

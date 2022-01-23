@@ -6,8 +6,6 @@
 #include "FonctionsAux.hpp"
 #include "DeckBuild.hpp"
 
-#include "CardParser.hpp"
-
 int main() {
 
     while(1){
@@ -19,11 +17,12 @@ int main() {
             std::getline(std::cin, s);
             
             if(s == "play"){
-                Game g{};
-                g.start();
-                cls();
+                Game* g = new Game();
+                g->start();
+                delete g;
             } else if(s == "load"){
-                // TODO : charger une partie
+                Game::load();
+                cls();
             } else if(s == "deck-builder"){
                 DeckBuild db;
                 db.create_file();
@@ -31,11 +30,8 @@ int main() {
                 return EXIT_SUCCESS;
             } else {
                 print_info("Commande non reconnue.");
-                Game::print_title_screen();
             }
-
         }
-
     }
 
     return 0;

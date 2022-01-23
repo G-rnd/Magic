@@ -10,6 +10,7 @@
 #include "Battlefield.hpp"
 #include "Ritual.hpp"
 #include "Enchantment.hpp"
+#include "SaveParser.hpp"
 
 #include "FonctionsAux.hpp"
 
@@ -22,6 +23,16 @@ Player::Player(std::string name): m_name(name) {
 
 Player::~Player() {
     //std::cout << "[Player] : Denstruction de " << this << std::endl;
+
+    for(auto c : m_deck)
+        delete c;
+    for(auto c : m_graveyard)
+        delete c;
+    for(auto c : m_library)
+        delete c;
+    for(auto c : m_hand)
+        delete c;
+    delete m_battlefield;
 }
 
 Player* Player::get_opponent() const {
@@ -64,8 +75,43 @@ bool Player::get_looser() const {
     return m_looser;
 }
 
+std::string Player::to_string() {
+    std::string s = "";
+    s += SaveParser::begin_player + "\n";
+    s += SaveParser::name + m_name + "\n";
+    s += SaveParser::hp + std::to_string(m_hp) + "\n";
+    s += SaveParser::played_land + std::to_string(m_played_land) + "\n";
+
+    s += SaveParser::begin_library + "\n";
+    
+    for(auto c : m_library)
+        s += c->to_string();
+    s += SaveParser::end_library + "\n";
+
+    s += SaveParser::begin_graveyard + "\n";
+    for(auto c : m_graveyard)
+        s += c->to_string();
+    s += SaveParser::end_graveyard + "\n";
+
+    s += SaveParser::begin_hand + "\n";
+    for(auto c : m_hand)
+        s += c->to_string();
+    s += SaveParser::end_hand + "\n";
+
+    s += SaveParser::begin_battlefield + "\n";
+    s += m_battlefield->to_string();
+    s += SaveParser::end_battlefield + "\n";
+
+    s += SaveParser::end_player + "\n";
+    return s;
+}
+
 void Player::set_opponent(Player* p) {
     m_opponent = p;
+}
+
+void Player::set_battlefield(Battlefield* b) {
+    m_battlefield = b;
 }
 
 void Player::set_name(std::string s) {
@@ -77,11 +123,15 @@ void Player::set_hp(int i) {
     if(m_hp == 0) m_looser = true;
 }
 
-void Player::set_library(std::vector<Card*> cards) {
+void Player::set_graveyard(const std::vector<Card*>& cards) {
+    m_graveyard = cards;
+}
+
+void Player::set_library(const std::vector<Card*>& cards) {
     m_library = cards;
 }
 
-void Player::set_hand(std::vector<Card*> cards) {
+void Player::set_hand(const std::vector<Card*>& cards) {
     m_hand = cards;
 }
 

@@ -12,8 +12,8 @@ class Ritual : public virtual SpecialCard {
         Ritual(int, std::string, int, Cost*, std::vector<int>);
         ~Ritual();
 
-        virtual void print();
-
+        void        print();
+        std::string to_string();
 };
 
 #endif

@@ -109,3 +109,7 @@ Cost& Cost::operator=(const Cost& o) {
 
     return *this;
 }
+
+std::string Cost::to_string() {
+    return std::to_string(m_any) + ", " + std::to_string(m_white) + ", " + std::to_string(m_blue) + ", " + std::to_string(m_black) + ", " + std::to_string(m_red) + ", " + std::to_string(m_green);
+}

@@ -21,6 +21,7 @@ class SpecialCard : public virtual Card {
         virtual std::vector<int> get_effects() const;
      
         virtual void             print() = 0;
+        virtual std::string		 to_string() = 0;
 
 };
 

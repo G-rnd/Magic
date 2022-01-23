@@ -7,13 +7,18 @@
 #include "Game.hpp"
 #include "Player.hpp"
 #include "CardParser.hpp"
+#include "SaveParser.hpp"
 #include "FonctionsAux.hpp"
 
 Game::Game() {
     m_player_turn = false;
+    m_phase = 0;
 }
 
 Game::~Game() {
+    for(auto p : m_players)
+        if (p != nullptr)
+            delete p;
 }
 bool Game::get_player_turn() const {
     return m_player_turn;
@@ -43,6 +48,25 @@ Player* Game::get_current_player() const {
     return m_player_turn ? get_second_player() : get_first_player();
 }
 
+void Game::set_players(Player* p1, Player* p2) {
+    m_players.clear();
+    m_players.push_back(p1);
+    m_players.push_back(p2);
+}
+
+void Game::set_phase(size_t i) {
+    if (i < 3)
+        m_phase = i;
+}
+
+size_t Game::get_phase() const {
+    return m_phase;
+}
+
+void Game::next_phase() {
+    m_phase = (m_phase + 1) % 3;
+}
+
 void Game::start() {
     std::string p_name_1;
     std::string p_name_2;
@@ -51,20 +75,19 @@ void Game::start() {
     print_actions("Bienvenue dans votre partie !", {}, "Saisir le nom du premier joueur");
 
     std::cin >> p_name_1;
-    Player p1(p_name_1);
+    Player* p1 = new Player(p_name_1);
     
     cls();
     print_actions("Bienvenue dans votre partie !", {}, "Saisir le nom du second joueur");
     std::cin >> p_name_2;
-    Player p2(p_name_2);
+    Player* p2 = new Player(p_name_2);
     
     cls();
 
-    p1.set_opponent(&p2);
-    p2.set_opponent(&p1);
+    p1->set_opponent(p2);
+    p2->set_opponent(p1);
 
-    m_players.push_back(&p1);
-    m_players.push_back(&p2);
+    set_players(p1, p2);
 
     // Choix des decks, mélange des bibliothèques et pioche initiale
     std::string path = "data/complet";
@@ -125,65 +148,83 @@ void Game::start() {
         }
     }
 
+    phases();
+}
+
+void Game::phases() {
     // Phases de jeu
     while (true) {
-        cls();
-        print_info("C'est au tour de " + get_current_player()->get_name() + " de jouer !");
-        get_current_player()->set_played_land(0);
+        if (m_phase == 0) {
+            cls();
+            print_info("C'est au tour de " + get_current_player()->get_name() + " de jouer !");
+            get_current_player()->set_played_land(0);
 
-        // reset des stats des cartes 
-        for (auto p : m_players) {
-            for (auto bc : p->get_battlefield()->get_basic_cards()) {
-                if (bc->is_class(Card_class::CREATURE)){
-                    Creature* c = dynamic_cast<Creature*>(bc);
-                    c->set_power_current(c->get_power());
-                    c->set_toughness_current(c->get_toughness());
-                    c->set_is_first_turn(false);
+            // reset des stats des cartes 
+            for (auto p : m_players) {
+                for (auto bc : p->get_battlefield()->get_basic_cards()) {
+                    if (bc->is_class(Card_class::CREATURE)){
+                        Creature* c = dynamic_cast<Creature*>(bc);
+                        c->set_power_current(c->get_power());
+                        c->set_toughness_current(c->get_toughness());
+                        c->set_is_first_turn(false);
+                    }
                 }
             }
+
+            // Phase de pioche
+            if (get_current_player()->get_library().size() == 0) {
+                victory(*get_current_player()->get_opponent());
+                return;
+            } else {
+                cls();
+                print_info("Vous piochez la carte : " + get_current_player()->get_library()[0]->get_name());
+                get_current_player()->draw_card();
+            }
+
+            // Phase de désengagement
+            for (auto c : get_current_player()->get_battlefield()->get_basic_cards()) {
+                get_current_player()->get_battlefield()->disengage_card(c);
+            }
+
+            // Phase principale
+            if (Game::main_phase(true))
+                return;
+            
+            // check if a player has lost
+            if (check_defeat())
+                return;
+            
+            next_phase();
         }
 
-        // Phase de pioche
-        if (get_current_player()->get_library().size() == 0) {
-            victory(get_current_player()->get_opponent());
-            return;
-        } else {
-            cls();
-            print_info("Vous piochez la carte : " + get_current_player()->get_library()[0]->get_name());
-            get_current_player()->draw_card();
+        if (m_phase == 1) {
+            // Phase de combat
+            Game::combat_phase();
+
+            // check if a player has lost
+            if (check_defeat())
+                return;
+            
+            next_phase();
         }
 
-        // Phase de désengagement
-        for (auto c : get_current_player()->get_battlefield()->get_basic_cards()) {
-            get_current_player()->get_battlefield()->disengage_card(c);
+        if (m_phase == 2) {
+            // Phase secondaire
+            if (Game::main_phase(false))
+                return;
+
+            // check if a player has lost
+            if (check_defeat())
+                return;
+
+            // Phase end turn
+            Game::turn_end_phase();
+
+            get_current_player()->print();
+            m_player_turn = !m_player_turn;
+
+            next_phase();
         }
-
-        // Phase principale
-        Game::main_phase(true);
-        
-        // check if a player has lost
-        if (check_defeat())
-            return;
-        
-        // Phase de combat
-        Game::combat_phase();
-
-        // check if a player has lost
-        if (check_defeat())
-            return;
-        
-        // Phase secondaire
-        Game::main_phase(false);
-
-        // check if a player has lost
-        if (check_defeat())
-            return;
-
-        // Phase end turn
-        Game::turn_end_phase();
-
-        get_current_player()->print();
-        m_player_turn = !m_player_turn;
     }
 }
 
@@ -199,7 +240,7 @@ bool Game::check_defeat() {
     return false;
 }
 
-void Game::main_phase(bool first) {
+bool Game::main_phase(bool first) {
     cls();
     std::string debut = "Debut de la phase ";
     debut += (first) ? "principale !" : "secondaire !";
@@ -215,6 +256,8 @@ void Game::main_phase(bool first) {
         print_actions("Selectionnez une carte à placer", {
             {"<id>", "jouer une carte"},
             {"info <id>", "afficher les caractéristiques d'une carte"},
+            {"save <filename>", "sauvegarde la partie en cours"},
+            {"exit", "quitte la partie en cours"},
             {"end ", s}
         });
 
@@ -227,13 +270,6 @@ void Game::main_phase(bool first) {
         int hand_size = hand.size();
         // Vérifications 
         for (int i = 0; i < hand_size; i++) {
-
-            /* Cas possibles pour une carte jouable:
-                - une créature jouable
-                - un terrain et le nombre de terrains déjà placés <= 0
-                - un rituel jouable
-                - un enchantement jouable
-             */
             if ((hand[i]->is_class(Card_class::CREATURE) && get_current_player()->get_battlefield()->is_playable(hand[i])) 
             || (hand[i]->is_class(Card_class::LAND) && (get_current_player()->get_played_land() <= 0))
             || (hand[i]->is_class(Card_class::RITUAL) && get_current_player()->get_battlefield()->is_playable(hand[i]))
@@ -248,7 +284,7 @@ void Game::main_phase(bool first) {
 
         if (hand_size == 0) {
             print_info("Aucune action disponible pour cette phase.");
-            return;
+            return false;
         }
 
         print_list(available_cards);
@@ -257,7 +293,15 @@ void Game::main_phase(bool first) {
         std::getline(std::cin, cmd);
 
         if (cmd.find("end") != std::string::npos)
-            return;
+            return false;
+        else if (cmd.find("exit") != std::string::npos) {
+            exit();
+            return true;
+        }
+        else if (cmd.find("save") != std::string::npos) {
+            save(cmd.substr(cmd.find("save ")+5));
+            print_info("Partie sauvagardée sous le nom " + cmd.substr(cmd.find("save ")+5) + ".");
+        }
         else {
             try {
                 int num = std::stoi(cmd);
@@ -290,6 +334,7 @@ void Game::main_phase(bool first) {
             } 
         }
     }
+    return false;
 }
 
 void Game::combat_phase() {
@@ -466,20 +511,125 @@ void Game::turn_end_phase() {
     }
 }
 
-void Game::save() {
-    // TODO
+void Game::save(const std::string& name) {
+    std::string path = "saves/" + name + ".txt";
+
+    std::ofstream file;
+    file.open(path, std::ios::out | std::ofstream::trunc);
+    file << to_string();
+    file.close();
 }
 
-void Game::choose_save() {
-    // TODO
+std::string Game::to_string() {
+    std::string s = "";
+    s += SaveParser::begin_game + "\n";
+    s += SaveParser::player_turn + std::to_string(m_player_turn) + "\n";
+    s += SaveParser::phase + std::to_string(m_phase) + "\n";
+    for(auto p : m_players)
+        s += p->to_string();
+    
+    s += SaveParser::end_game + "\n";
+    return s;
+}
+
+void Game::choose_save(std::string& data) {
+    Game* g = SaveParser::load(data);
+    if (g != nullptr) {
+        g->phases();
+    }
+    delete g;
 }
 
 void Game::load() {
-    // TODO
+    std::string path = "saves/";
+
+    std::vector<std::pair<std::string, std::string > > available_saves = {};
+
+    for (const auto & file : std::filesystem::directory_iterator(path))
+        available_saves.push_back({"", (file.path()).string().substr(path.size())});
+    for(size_t i = 0; i < available_saves.size(); i++) {
+        available_saves[i].first = (available_saves.size() > 10) ? ((i/10 == 1) ? " " : "") : "" + std::to_string(i);
+    }
+
+    if (available_saves.size() == 0) {
+        cls();
+        print_info("Aucune partie n'a été sauvegardée.");
+        return;
+    }
+    available_saves.push_back({"back","retourner au menu."});
+
+    while (true) {
+        cls();
+        print_actions("Voici la liste des parties sauvagardées", available_saves, "Saisir l'id de la partie", false);
+
+        std::string cmd;
+        std::getline(std::cin, cmd);
+
+        try {
+            int id = stoi(cmd);
+
+            if (id < 0 || id >= (int) available_saves.size() - 1) {
+                print_info("Id invalide !");
+                continue;
+            } else {
+                std::string filename = path + available_saves[id].second;
+
+                std::ifstream ifile;
+                ifile.open(filename);
+
+                if (ifile) {
+                    std::string read_file = "";
+                    std::getline(std::ifstream(filename), read_file, '\0');
+                    choose_save(read_file);
+                    break;
+                } else {
+                    print_info("Erreur: le fichier n'existe plus !");
+                }
+            }
+        } catch (std::invalid_argument& e) {
+            if (cmd.find("back") != std::string::npos) {
+                print_info("Retour au menu principal.");
+                break;
+            } else
+                print_info("Commande invalide !");
+        }
+    }
 }
 
 void Game::exit() {
-    // TODO
+    while (true) {
+        cls();
+        print_actions("Voulez-vous sauvagarder la partie avant de la quitter ?", {{"0", "non"}, {"1", "oui"}}, "Saisir un nombre");
+
+        std::string cmd;
+        std::cin.clear();
+        std::getline(std::cin, cmd);
+        try {
+            int res = stoi(cmd);
+            switch (res) {
+                case 0:
+                    print_info("Vous quittez la partie.");
+                    return;
+                case 1: {
+                    cls();
+                    print_actions("Saisir un nom pour la sauvagarde", {{"<file>", "nom du fichier"}});
+                    std::cin.clear();
+                    std::getline(std::cin, cmd);
+                    save(cmd);
+                    print_info("Vous quittez la partie.");
+                    return;
+                }
+                default:
+                    print_err("Commande invalide.");
+                    break;
+
+
+            }
+        } catch(std::invalid_argument& e) {
+            print_err("Commande invalide.");
+        }
+    }
+
 }
 
 void Game::victory(Player* p) {

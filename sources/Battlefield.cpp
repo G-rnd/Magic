@@ -9,15 +9,35 @@
 #include "Creature.hpp"
 #include "Land.hpp"
 #include "Enchantment.hpp"
+#include "SaveParser.hpp"
 #include "Game.hpp"
-
 #include "FonctionsAux.hpp"
 
 Battlefield::Battlefield() {
     //std::cout << "[Battlefield] : Création de " << this << std::endl;
 }
 
+Battlefield::Battlefield(const std::vector<Card*>& basic_cards, const std::vector<Enchantment*>& enchantments) {
+    for(auto c : basic_cards) {
+        if (c->get_class() == Card_class::CREATURE)
+            m_basic_cards.push_back(dynamic_cast<Creature*>(c));
+        if (c->get_class() == Card_class::LAND)
+            m_basic_cards.push_back(dynamic_cast<Land*>(c));
+    }
+
+    for(auto e : enchantments)
+        if (e->get_class() == Card_class::ENCHANTEMENT)
+            m_enchantments.push_back(dynamic_cast<Enchantment*>(e));
+    //std::cout << "[Battlefield] : Création de " << this << std::endl;
+}
+
 Battlefield::~Battlefield() {
+    for(auto c : m_basic_cards)
+        delete c;
+    
+    for(auto c : m_enchantments)
+        delete c;
+    
     //std::cout << "[Battlefield] : Destruction de " << this << std::endl;
 }
 
@@ -199,6 +219,21 @@ void Battlefield::engage_lands(Cost* c){
         }
     }
 
+}
+
+std::string Battlefield::to_string() {
+    std::string s = "";
+    s += SaveParser::begin_card_list + "\n";
+    for(auto c : m_basic_cards)
+        s += c->to_string();
+    s += SaveParser::end_card_list + "\n";
+
+    s += SaveParser::begin_enchantments + "\n";
+    for(auto c : m_enchantments)
+        s += c->to_string();
+    s += SaveParser::end_enchantments + "\n";
+
+    return s;
 }
 
 void Battlefield::print() {

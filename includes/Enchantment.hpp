@@ -11,7 +11,10 @@ class Enchantment : public virtual SpecialCard {
 		Enchantment(int, std::string, int, Cost*, std::vector<int>);
 		~Enchantment();
 
-		virtual void print();
+		void 		print();
+		std::string to_string();
+
+		static bool is_valid(size_t token, size_t id);
 
 };
 

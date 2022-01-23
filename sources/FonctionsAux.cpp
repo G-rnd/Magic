@@ -16,7 +16,7 @@
     <Entrée> pour continuer
 */
 void print_info(const std::string& s)  {
-    //std::cin.clear();
+    std::cin.clear();
     if (s != "") {    
         std::string lign(s.size(), '-');
         std::cout << std::endl << get_color(Color::BrightBlack) << lign << std::endl << std::endl;
@@ -26,6 +26,21 @@ void print_info(const std::string& s)  {
         std::cout << get_color(Color::BrightBlack) << lign << std::endl << std::endl;
     }
     std::cout << get_color(Color::BrightBlack)  << std::endl << "<Entrée> pour continuer." << get_color(Color::Reset) << std::endl;
+
+    std::string cmd;
+    std::getline(std::cin, cmd);
+}
+
+void print_err(const std::string& s)  {
+    std::cin.clear();   
+    
+    std::string prefix = "Erreur : ";
+    std::string lign(prefix.size() + s.size() , '-');
+
+    std::cout << std::endl << get_color(Color::BrightBlack) << lign << std::endl << std::endl;
+
+    std::cout << get_color(Color::Cyan) << prefix << s << std::endl << std::endl;
+    std::cout << get_color(Color::BrightBlack) << lign << std::endl << std::endl << get_color(Color::Reset);
 
     std::string cmd;
     std::getline(std::cin, cmd);
@@ -170,6 +185,18 @@ std::string get_color(Color c) {
         default:
             return "";
     }
+}
+
+std::string list_int_to_string(std::vector<int> l) {
+    std::string s = "";
+    if (l.size() == 0)
+        return s;
+
+    for(size_t i = 0; i < l.size()-1; i++)
+        s += std::to_string(l[i]) + ", ";
+    
+    s += std::to_string(l.back());
+    return s;
 }
 
 std::string centered_string(std::string s, int width){

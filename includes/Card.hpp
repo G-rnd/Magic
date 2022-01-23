@@ -27,6 +27,7 @@ class Card {
 		virtual std::vector<Card*>	remove(std::vector<Card*> cards);
 
 		virtual void        		print() = 0;
+		virtual std::string			to_string() = 0;
 
 };
 
