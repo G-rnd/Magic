@@ -364,7 +364,7 @@ std::vector<Creature*> Player::attack() {
             }
         }
         if (!vigilance_creature) {
-            card->set_engaged(true);
+            engage_card(card);
         }
     }
     return returned_creatures;
@@ -456,7 +456,7 @@ void Player::choose_defenders(std::vector<Creature*> opponents) {
                     quit = true;
                     if (!chosen_defenders.empty()) {
                         for (auto c : chosen_defenders){
-                            c->set_engaged(true);
+                            engage_card(c);
                         }
                         if (chosen_defenders.size() > 1){
                             chosen_defenders = m_opponent->choose_defenders_orders(chosen_defenders, opponent);
@@ -758,10 +758,10 @@ void Player::play_ritual(Ritual* r) {
                     case White_ritual_effects::More_1_1_creature_current: {
                         for (auto bc : m_battlefield->get_basic_cards()) {
                             if (bc->is_class(Card_class::CREATURE)) {
-                                Creature creature = *dynamic_cast<Creature*>(bc);
-                                creature.set_power_current(creature.get_power_current() + 1);
-                                creature.set_toughness_current(creature.get_toughness_current() + 1);
-                                print_info(creature.get_name() + " gagne 1 / 1 pour ce tour-ci");
+                                Creature* creature = dynamic_cast<Creature*>(bc);
+                                creature->set_power_current(creature->get_power_current() + 1);
+                                creature->set_toughness_current(creature->get_toughness_current() + 1);
+                                print_info(creature->get_name() + " gagne 1 / 1 pour ce tour-ci");
                             }
                         }
                     }
@@ -770,18 +770,18 @@ void Player::play_ritual(Ritual* r) {
                     // The player destroy an engaged creature of its opponent
                     case White_ritual_effects::Destroy_engaged_creature: {
 
-                        int i = 1;
+                        int i = 0;
                         std::vector<Creature*> possible_creatures;
 
                         print_info("Selectionnez une creature pour le detruire de la partie :");
 
                         for (auto bc : m_opponent->get_battlefield()->get_basic_cards()) {
                             if (bc->is_class(Card_class::CREATURE)) {
-                                Creature creature = *dynamic_cast<Creature*>(bc);
+                                Creature* creature = dynamic_cast<Creature*>(bc);
 
-                                if (creature.get_engaged()) {
-                                    std::cout<< i << " - " << creature.get_name() <<std::endl;
-                                    possible_creatures.push_back(&creature);
+                                if (creature->get_engaged()) {
+                                    std::cout<< i << " - " << creature->get_name() <<std::endl;
+                                    possible_creatures.push_back(creature);
                                     i++;
                                 }
                             }
@@ -797,7 +797,7 @@ void Player::play_ritual(Ritual* r) {
                                 if (num > i || num < 0) {
                                     print_info("Id invalide.");
                                 } else {
-                                    Creature* chosen_creature = possible_creatures[num - 1];
+                                    Creature* chosen_creature = possible_creatures[num];
                                     // TODO : tester si le delete fonctionne
                                     m_opponent->get_battlefield()->remove_basic_card(chosen_creature);
                                     print_info("Vous venez de détruire " + chosen_creature->get_name() + ".");
@@ -814,7 +814,7 @@ void Player::play_ritual(Ritual* r) {
                     // The player destroy an enchantment of its opponent
                     case White_ritual_effects::Destroy_enchantment: {
 
-                        int i = 1;
+                        int i = 0;
                         std::vector<Enchantment*> possible_enchantments;
 
                         print_info("Selectionnez un enchantement pour le detruire de la partie :");
@@ -847,7 +847,7 @@ void Player::play_ritual(Ritual* r) {
                                 if (num > i || num < 0) {
                                     print_info("Id invalide.");
                                 } else {
-                                    Enchantment* chosen_enchantment = possible_enchantments[num - 1];
+                                    Enchantment* chosen_enchantment = possible_enchantments[num];
                                     // TODO : tester si delete fonctionne
                                     m_opponent->get_battlefield()->remove_enchantment(chosen_enchantment);
                                     print_info("Vous venez de détruire " + chosen_enchantment->get_name() + ".");
@@ -887,7 +887,7 @@ void Player::play_ritual(Ritual* r) {
                 // Return an opponent creature to the hand of the opponent
                 case Blue_ritual_effects::Back_hand_creature: {
 
-                    int i = 1;
+                    int i = 0;
                     std::vector<Creature*> possible_creatures;
 
                     print_info("Selectionnez une creature pour la renvoyer dans la main de votre adversaire :");
@@ -896,10 +896,10 @@ void Player::play_ritual(Ritual* r) {
                         
                         if (bc->is_class(Card_class::CREATURE)) {
 
-                            Creature creature = *dynamic_cast<Creature*>(bc);
+                            Creature* creature = dynamic_cast<Creature*>(bc);
 
-                            std::cout<< i << " - " << creature.get_name() <<std::endl;
-                            possible_creatures.push_back(&creature);
+                            std::cout<< i << " - " << creature->get_name() <<std::endl;
+                            possible_creatures.push_back(creature);
                             i++;
                         }
                     }
@@ -914,7 +914,7 @@ void Player::play_ritual(Ritual* r) {
                             if (num > i || num < 0) {
                                 print_info("Id invalide.");
                             } else {
-                                Creature* chosen_creature = possible_creatures[num - 1];
+                                Creature* chosen_creature = possible_creatures[num];
                                 m_opponent->add_hand(chosen_creature);
                                 m_opponent->remove_battlefield(chosen_creature);
                                 print_info("Vous venez de retourner " + chosen_creature->get_name() + " dans la main de votre adversaire.");
@@ -941,7 +941,7 @@ void Player::play_ritual(Ritual* r) {
 
                 case Black_ritual_effects::Kill_creature: {
 
-                    int i = 1;
+                    int i = 0;
                     std::vector<Creature*> possible_creatures;
 
                     print_info("Selectionnez une creature pour la tuer : ");
@@ -950,10 +950,10 @@ void Player::play_ritual(Ritual* r) {
                         
                         if (bc->is_class(Card_class::CREATURE)) {
 
-                            Creature creature = *dynamic_cast<Creature*>(bc);
+                            Creature* creature = dynamic_cast<Creature*>(bc);
 
-                            std::cout<< i << " - " << creature.get_name() <<std::endl;
-                            possible_creatures.push_back(&creature);
+                            std::cout<< i << " - " << creature->get_name() <<std::endl;
+                            possible_creatures.push_back(creature);
                             i++;
                         }
                     }
@@ -968,7 +968,7 @@ void Player::play_ritual(Ritual* r) {
                             if (num > i || num < 0) {
                                 print_info("Id invalide.");
                             } else {
-                                Creature* chosen_creature = possible_creatures[num - 1];
+                                Creature* chosen_creature = possible_creatures[num];
                                 destroy_card(chosen_creature);
                                 print_info("Vous venez de placer " + chosen_creature->get_name() + " dans le cimetière de votre adversaire ! ");
                                 break;
@@ -982,7 +982,7 @@ void Player::play_ritual(Ritual* r) {
 
                 case Black_ritual_effects::Kill_creature_2_power: {
 
-                    int i = 1;
+                    int i = 0;
                     std::vector<Creature*> possible_creatures;
 
                     print_info("Selectionnez une creature avec plus de 2 de force pour la tuer : ");
@@ -991,11 +991,11 @@ void Player::play_ritual(Ritual* r) {
                         
                         if (bc->is_class(Card_class::CREATURE)) {
 
-                            Creature creature = *dynamic_cast<Creature*>(bc);
+                            Creature* creature = dynamic_cast<Creature*>(bc);
 
-                            if (creature.get_power_current() <= 2) {
-                                std::cout<< i << " - " << creature.get_name() <<std::endl;
-                                possible_creatures.push_back(&creature);
+                            if (creature->get_power_current() <= 2) {
+                                std::cout<< i << " - " << creature->get_name() <<std::endl;
+                                possible_creatures.push_back(creature);
                                 i++;
                             }
                         }
@@ -1011,7 +1011,7 @@ void Player::play_ritual(Ritual* r) {
                             if (num > i || num < 0) {
                                 print_info("Id invalide.");
                             } else {
-                                Creature* chosen_creature = possible_creatures[num - 1];
+                                Creature* chosen_creature = possible_creatures[num];
                                 destroy_card(chosen_creature);
                                 print_info("Vous venez de placer " + chosen_creature->get_name() + " dans le cimetière de votre adversaire ! ");
                                 break;
@@ -1027,7 +1027,7 @@ void Player::play_ritual(Ritual* r) {
 
                 case Black_ritual_effects::Kill_not_angel: {
 
-                    int i = 1;
+                    int i = 0;
                     std::vector<Creature*> possible_creatures;
 
                     print_info("Selectionnez une creature qui n'est pas un Ange pour la tuer : ");
@@ -1036,16 +1036,16 @@ void Player::play_ritual(Ritual* r) {
                         
                         if (bc->is_class(Card_class::CREATURE)) {
 
-                            Creature creature = *dynamic_cast<Creature*>(bc);
+                            Creature* creature = dynamic_cast<Creature*>(bc);
                             bool is_angel = false;
 
-                            for (auto type_creature : creature.get_types()) {
+                            for (auto type_creature : creature->get_types()) {
                                 if(type_creature == Type::Angel) is_angel = true;
                             }
                             
                             if (!is_angel) {
-                                std::cout << i << " - " << creature.get_name() << std::endl;
-                                possible_creatures.push_back(&creature);
+                                std::cout << i << " - " << creature->get_name() << std::endl;
+                                possible_creatures.push_back(creature);
                                 i++;
                             }
                         }
@@ -1061,7 +1061,7 @@ void Player::play_ritual(Ritual* r) {
                             if (num > i || num < 0) {
                                 print_info("Id invalide.");
                             } else {
-                                Creature* chosen_creature = possible_creatures[num - 1];
+                                Creature* chosen_creature = possible_creatures[num];
                                 destroy_card(chosen_creature);
                                 print_info("Vous venez de placer " + chosen_creature->get_name() + " dans le cimetière de votre adversaire ! ");
                                 break;
@@ -1075,7 +1075,7 @@ void Player::play_ritual(Ritual* r) {
 
                 case Black_ritual_effects::Less_2_2_creature_current: {
 
-                    int i = 1;
+                    int i = 0;
                     std::vector<Creature*> possible_creatures;
 
                     print_info("Selectionnez une creature pour lui infligez -2 / -2 :");
@@ -1084,10 +1084,10 @@ void Player::play_ritual(Ritual* r) {
                         
                         if (bc->is_class(Card_class::CREATURE)) {
 
-                            Creature creature = *dynamic_cast<Creature*>(bc);
+                            Creature* creature = dynamic_cast<Creature*>(bc);
 
-                            std::cout<< i << " - " << creature.get_name() <<std::endl;
-                            possible_creatures.push_back(&creature);
+                            std::cout<< i << " - " << creature->get_name() <<std::endl;
+                            possible_creatures.push_back(creature);
                             i++;
                         }
                     }
@@ -1102,7 +1102,7 @@ void Player::play_ritual(Ritual* r) {
                             if (num > i || num < 0) {
                                 print_info("Id invalide.");
                             } else {
-                                Creature* chosen_creature = possible_creatures[num - 1];
+                                Creature* chosen_creature = possible_creatures[num];
 
                                 if (chosen_creature->get_power_current() < 3) {
                                     chosen_creature->set_power_current(0);
@@ -1156,7 +1156,7 @@ void Player::play_ritual(Ritual* r) {
                             print_info("Vous venez d'infliger 3 dégâts à votre adversaire ! ");
                             break;
                         } else if (cmd == "crea") {
-                            int i = 1;
+                            int i = 0;
                             std::vector<Creature*> possible_creatures;
 
                             for (auto bc : m_opponent->get_battlefield()->get_basic_cards()) {
@@ -1179,7 +1179,7 @@ void Player::play_ritual(Ritual* r) {
                                     if (num > i || num < 0) {
                                         print_info("Id invalide.");
                                     } else {
-                                        Creature* chosen_creature = possible_creatures[num - 1];
+                                        Creature* chosen_creature = possible_creatures[num];
 
                                         if (chosen_creature->get_toughness_current() < 4) {
                                             destroy_card(chosen_creature);
@@ -1206,7 +1206,7 @@ void Player::play_ritual(Ritual* r) {
                 
                 case Red_ritual_effects::Damage_4_creatures: {
 
-                    int i = 1;
+                    int i = 0;
                     std::vector<Creature*> possible_creatures;
                     std::vector<Creature*> chosen_creatures;
 
@@ -1248,10 +1248,10 @@ void Player::play_ritual(Ritual* r) {
                                 if (num > i || num < 0) {
                                     print_info("Id invalide");
                                 } else {
-                                    if (contain(possible_creatures[num - 1], chosen_creatures)) {
+                                    if (contain(possible_creatures[num], chosen_creatures)) {
                                         print_info(std::to_string(num) + " deja choisie"); 
                                     } else {
-                                        chosen_creatures.push_back(possible_creatures[num - 1]);
+                                        chosen_creatures.push_back(possible_creatures[num]);
                                         print_info("Vous avez ajouté " + possible_creatures[num-1]->get_name() + " !");
 
                                     }
@@ -1290,7 +1290,9 @@ void Player::play_ritual(Ritual* r) {
 
                 case Green_ritual_effects::Take_2_lands_library_shuffle: {
 
-                    int i = 1;
+                    cls();
+
+                    int i = 0;
                     std::vector<Land*> possible_lands;
                     std::vector<Land*> chosen_lands;
 
@@ -1318,7 +1320,7 @@ void Player::play_ritual(Ritual* r) {
                         std::getline(std::cin, cmd);
                     
                         if (cmd.find("valid") != std::string::npos) {
-                            if(chosen_lands.size() < 3){
+                            if(chosen_lands.size() < 2){
                                 print_info("Vous n'avez pas choisi 2 terrains, continuez ! ");
                             } else {
                                 for (auto land : chosen_lands) {
@@ -1340,8 +1342,10 @@ void Player::play_ritual(Ritual* r) {
                                 } else {
                                     if(chosen_lands.size() == 2){
                                         print_info("Vous avez deja fait 2 choix, tapez valid ou reset.");
-                                    }
-                                    chosen_lands.push_back(possible_lands[num - 1]);                            
+                                    } else {
+                                        chosen_lands.push_back(possible_lands[num]);  
+                                        print_info("Vous avez ajouté " + possible_lands[num]->get_name() + " !");   
+                                    }                       
                                 }
                             } catch (std::invalid_argument &e) {
                                 print_info("Commande Invalide");    
@@ -1587,8 +1591,44 @@ void Player::print_hand(){
 
             num_card = i*8 + j;
 
-            if (m_hand[num_card]->is_class(Card_class::RITUAL) || m_hand[num_card]->is_class(Card_class::ENCHANTEMENT)) {
+            if (m_hand[num_card]->is_class(Card_class::RITUAL)) {
 
+                SpecialCard* sp = dynamic_cast<SpecialCard*>(m_hand[num_card]);
+
+                if ((sp->get_effects()).empty()) {
+                std::cout<< "│ " << std::setw(wid) << std::setfill(' ') << " " << " │";
+                } else {
+
+                    int effect = (sp->get_effects())[0];
+
+                    switch (sp->get_token()){
+
+                        case Token::White:
+                            std::cout<< "│ "<< centered_string(white_ritual_effects[effect], wid) << " │";
+                            break;
+
+                        case Token::Blue:
+                            std::cout<< "│ "<< centered_string(blue_ritual_effects[effect], wid) << " │";
+                            break;
+
+                        case Token::Black:
+                            std::cout<< "│ "<< centered_string(black_ritual_effects[effect], wid) << " │";
+                            break;
+
+                        case Token::Red:
+                            std::cout<< "│ "<< centered_string(red_ritual_effects[effect], wid) << " │";
+                            break;
+
+                        case Token::Green:
+                            std::cout<< "│ "<< centered_string(green_ritual_effects[effect], wid) << " │";
+                            break;
+                    
+                        default:
+                            break;
+                    }
+                }
+
+            } else if (m_hand[num_card]->is_class(Card_class::ENCHANTEMENT)){
                 SpecialCard* sp = dynamic_cast<SpecialCard*>(m_hand[num_card]);
 
                 if ((sp->get_effects()).empty()) {
@@ -1623,7 +1663,6 @@ void Player::print_hand(){
                             break;
                     }
                 }
-
             } else {
                 std::cout<< "│ " << std::setw(wid) << std::setfill(' ') << " " << " │";
             }
@@ -1641,12 +1680,48 @@ void Player::print_hand(){
 
             num_card = i*8 + j;
 
-            if (m_hand[num_card]->is_class(Card_class::RITUAL) || m_hand[num_card]->is_class(Card_class::ENCHANTEMENT)) {
+            if (m_hand[num_card]->is_class(Card_class::RITUAL)) {
 
                 SpecialCard* sp = dynamic_cast<SpecialCard*>(m_hand[num_card]);
 
                 if ((sp->get_effects()).size() < 2) {
                     std::cout<< "│ " << std::setw(wid) << std::setfill(' ') << " " << " │";
+                } else {
+
+                    int effect = (sp->get_effects())[1];
+
+                    switch (sp->get_token()){
+
+                        case Token::White:
+                            std::cout<< "│ "<< centered_string(white_ritual_effects[effect], wid) << " │";
+                            break;
+
+                        case Token::Blue:
+                            std::cout<< "│ "<< centered_string(blue_ritual_effects[effect], wid) << " │";
+                            break;
+
+                        case Token::Black:
+                            std::cout<< "│ "<< centered_string(black_ritual_effects[effect], wid) << " │";
+                            break;
+
+                        case Token::Red:
+                            std::cout<< "│ "<< centered_string(red_ritual_effects[effect], wid) << " │";
+                            break;
+
+                        case Token::Green:
+                            std::cout<< "│ "<< centered_string(green_ritual_effects[effect], wid) << " │";
+                            break;
+                    
+                        default:
+                            break;
+                    }
+                }
+
+            } else if (m_hand[num_card]->is_class(Card_class::ENCHANTEMENT)){
+                SpecialCard* sp = dynamic_cast<SpecialCard*>(m_hand[num_card]);
+
+                if ((sp->get_effects()).size() < 2) {
+                std::cout<< "│ " << std::setw(wid) << std::setfill(' ') << " " << " │";
                 } else {
 
                     int effect = (sp->get_effects())[1];
@@ -1677,7 +1752,6 @@ void Player::print_hand(){
                             break;
                     }
                 }
-
             } else if (m_hand[num_card]->is_class(Card_class::CREATURE)) {
 
                 Creature* creature = dynamic_cast<Creature*>(m_hand[num_card]);

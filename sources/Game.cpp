@@ -475,7 +475,7 @@ void Game::turn_end_phase() {
                 }
 
                 print_actions("Voici les cartes que vous voulez défausser :", {
-                    {"0","retourer au choix des cartes à défausser"},
+                    {"0","retourner au choix des cartes à défausser"},
                     {"1", "valider votre choix"}
                 });
                 print_list(print_cards);
