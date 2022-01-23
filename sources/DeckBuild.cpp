@@ -2,6 +2,7 @@
 #include <string>
 #include <vector>
 #include <fstream>
+#include <filesystem>
 
 #include "DeckBuild.hpp"
 #include "FonctionsAux.hpp"
@@ -25,8 +26,8 @@ void DeckBuild::create_file(){
         cls();
 
         print_actions("Selectionnez ce que vous souhaitez faire : ",{
-        {"new", "pour créer un nouveau deck."}, 
-        {"load", "pour charger un commencé."} });
+        {"new", "pour créer un nouveau deck"}, 
+        {"load", "pour charger un commencé"} });
 
         std::string cmd;
         std::cin >> cmd;
@@ -35,36 +36,47 @@ void DeckBuild::create_file(){
             cls();
             print_actions("Choisissez une nom de deck : ");
 
-            std::cin.clear();
-            std::getline(std::cin, name);
+            std::cin >> name;
 
-            path = "data/in_construction" + name + ".txt";
+            path = "data/in_construction/" + name + ".txt";
             m_filename = path;
             break;
         } else if(cmd == "load"){
-            cls();
-
             std::vector<std::pair<std::string, std::string > > available_decks = {};
 
             for (const auto & file : std::filesystem::directory_iterator(path))
                 available_decks.push_back({"", (file.path()).string().substr(path.size())});
+
             for(size_t i = 0; i < available_decks.size(); i++) {
                 available_decks[i].first = (available_decks.size() > 10) ? ((i/10 == 1) ? " " : "") : "" + std::to_string(i);
             }
 
             if (available_decks.size() == 0) {
                 cls();
-                print_info("Erreur : Aucun deck n'est disponible !");
+                print_info("Erreur : Aucun deck n'est en construction, veuillez en créer un nouveau !");
                 return;
             }
 
-            print_actions("Sélectionnez votre deck à compléter : ",{
-            {"crea", "pour créer une créature."}, 
-            {"land", "pour créer un terrain."},
-            {"ritu", "pour créer un rituel."},
-            {"ench", "pour créer un enchantement."},
-            {"save", "pour enregistrer l'état actuel du deck et le continuer plus tard."} }, "Choississez votre type de carte : ");
+            while (true){
+                cls();
+                print_actions("Choisir un deck parmi les incomplets", available_decks, "", false, " - ");
 
+                try {
+                    std::string cmd;
+                    std::cin >> cmd;
+                    int id = stoi(cmd);
+
+                    if (id < 0 || id >= (int) available_decks.size())
+                        print_info("Id invalide !");
+                    else {
+                        m_filename = path + available_decks[id].second;
+                        break;
+                    }
+                } catch (std::invalid_argument& e) {
+                    print_info("Id invalide !");
+                }
+            }
+                
             break;
         } else {
             print_info("Commande invalide.");
@@ -78,12 +90,11 @@ void DeckBuild::create_file(){
 
     bool saved = false;
     
-    while(m_nb_cards != get_nb_cards_current() || saved){
+    while(m_nb_cards != get_nb_cards_current() && !saved){
 
-        bool quit = false;
         std::string card;
 
-        while(!quit){
+        while(true){
 
             cls();
 
@@ -103,28 +114,28 @@ void DeckBuild::create_file(){
                 print_actions("Créez une créature ! ");
                 create_creature();
                 m_crea += 1;
-                quit = true;
+                break;
             } else if(card == "land"){
                 cls();
                 print_actions("Créez un terrain ! ");
                 create_land();
                 m_land += 1;
-                quit = true;
+                break;
             } else if(card == "ritu"){
                 cls();
                 print_actions("Créez un rituel ! ");
                 create_ritual();
                 m_ritu += 1;
-                quit = true;
+                break;
             } else if(card == "ench"){
                 cls();
                 print_actions("Créez un enchantement ! ");
                 create_enchantment();
                 m_ench += 1;
-                quit = true;
+                break;
             } else if(card == "save"){
-                quit = true;
                 saved = true;
+                break;
             } else{
                 print_info("Commande invalide.");
             }
@@ -134,7 +145,7 @@ void DeckBuild::create_file(){
     }
 
     if(saved){
-        print_info("Votre deck " + name + " de " + std::to_string(get_nb_cards_current()) + " est sauvegardé avec succès !");
+        print_info("Votre deck " + name + " de " + std::to_string(get_nb_cards_current()) + " cartes est sauvegardé avec succès !");
         m_file.close();
     } else {
         print_info("Votre deck " + name + " est complet, il a été créé avec succès !");
@@ -163,24 +174,23 @@ void DeckBuild::create_creature(){
     std::cout<<std::endl<<std::endl;;
 
     // Token
-    print_list({
+    int token;
+
+    while(true){
+
+        print_list({
         {std::to_string(0), "Créature blanche"},
         {std::to_string(1), "Créature bleue"},
         {std::to_string(2), "Créature noire"},
         {std::to_string(3), "Créature rouge"},
-        {std::to_string(4), "Créature verte"},
-    }, " - ");
+        {std::to_string(4), "Créature verte"}, }, " - ");
 
-    std::cout<< std::endl << "Entrez la couleur de votre créature : " <<std::endl;
+        std::cout<< std::endl << "Entrez la couleur de votre créature : " <<std::endl;
 
-    int token;
-    bool quit = false;
-
-    while(!quit){
         std::cin>> token;
         std::cin.ignore();
         if(token < 5 && token >= 0 ){
-            quit = true;
+            break;
         } else{
             print_info("Commande invalide.");
         }
@@ -191,24 +201,54 @@ void DeckBuild::create_creature(){
     std::cout<<std::endl;
 
     // Power
-    std::cout<< "Entrez la force de votre créature : " <<std::endl;
+    std::string power;
+    while(true){
 
-    int power;
-    std::cin>> power;
-    std::cin.ignore();
+        std::cout<< "Entrez la force de votre créature : " <<std::endl;
 
-    m_file << "    #POWER: " + std::to_string(power) <<std::endl;
+        try{
+            std::cin >> power;
+            int id = stoi(power);
+            if(id >= 0){
+                break;
+            } else {
+                print_info("Force doit être positive ou nulle ! ");
+            }
+        }
+        catch (std::invalid_argument& e) {
+            print_info("Id invalide !");
+        }
+
+    }
+
+    m_file << "    #POWER: " + power <<std::endl;
 
     std::cout<<std::endl;
 
     // Toughness
     std::cout<< "Entrez l'endurance de votre créature : " <<std::endl;
 
-    int toughness;
-    std::cin>> toughness;
-    std::cin.ignore();
+    std::string toughness;
+    while(true){
 
-    m_file << "    #TOUGHNESS: " + std::to_string(toughness) <<std::endl;
+        std::cout<< "Entrez la force de votre créature : " <<std::endl;
+
+        try{
+            std::cin >> toughness;
+            int id = stoi(toughness);
+            if(id >= 0){
+                break;
+            } else {
+                print_info("Endurance doit être positive ou nulle ! ");
+            }
+        }
+        catch (std::invalid_argument& e) {
+            print_info("Id invalide !");
+        }
+
+    }
+
+    m_file << "    #TOUGHNESS: " + toughness <<std::endl;
 
     std::cout<<std::endl;
 
@@ -287,6 +327,7 @@ void DeckBuild::create_creature(){
 
     // Types
     // TODO : remplir types
+    // TODO : printactions dans boucle
     print_list({
     {"0 ", "."}, 
     {"1 ", "."},
@@ -359,42 +400,138 @@ void DeckBuild::create_creature(){
     // Cost
     std::cout<< "Entrez le coût en terrain blanc : " <<std::endl;
 
-    int cost_white;
-    std::cin>> cost_white;
-    std::cin.ignore();
+    std::string cost_white;
+    while(true){
+
+        std::cout<< "Entrez la force de votre créature : " <<std::endl;
+
+        try{
+            std::cin >> cost_white;
+            int id = stoi(cost_white);
+            if(id >= 0){
+                break;
+            } else {
+                print_info("Coût doit être positive ou nulle ! ");
+            }
+        }
+        catch (std::invalid_argument& e) {
+            print_info("Id invalide !");
+        }
+
+    }
 
     std::cout<< std::endl << "Entrez le coût en terrain bleu : " <<std::endl;
 
-    int cost_blue;
-    std::cin>> cost_blue;
-    std::cin.ignore();
+    std::string cost_blue;
+    while(true){
+
+        std::cout<< "Entrez la force de votre créature : " <<std::endl;
+
+        try{
+            std::cin >> cost_blue;
+            int id = stoi(cost_blue);
+            if(id >= 0){
+                break;
+            } else {
+                print_info("Coût doit être positive ou nulle ! ");
+            }
+        }
+        catch (std::invalid_argument& e) {
+            print_info("Id invalide !");
+        }
+
+    }
 
     std::cout<< std::endl << "Entrez le coût en terrain noir : " <<std::endl;
 
-    int cost_black;
-    std::cin>> cost_black;
-    std::cin.ignore();
+    std::string cost_black;
+    while(true){
+
+        std::cout<< "Entrez la force de votre créature : " <<std::endl;
+
+        try{
+            std::cin >> cost_black;
+            int id = stoi(cost_black);
+            if(id >= 0){
+                break;
+            } else {
+                print_info("Coût doit être positive ou nulle ! ");
+            }
+        }
+        catch (std::invalid_argument& e) {
+            print_info("Id invalide !");
+        }
+
+    }
 
     std::cout<< std::endl << "Entrez le coût en terrain rouge : " <<std::endl;
 
-    int cost_red;
-    std::cin>> cost_red;
-    std::cin.ignore();
+    std::string cost_red;
+    while(true){
+
+        std::cout<< "Entrez la force de votre créature : " <<std::endl;
+
+        try{
+            std::cin >> cost_red;
+            int id = stoi(cost_red);
+            if(id >= 0){
+                break;
+            } else {
+                print_info("Coût doit être positive ou nulle ! ");
+            }
+        }
+        catch (std::invalid_argument& e) {
+            print_info("Id invalide !");
+        }
+
+    }
 
     std::cout<< std::endl <<"Entrez le coût en terrain vert : " <<std::endl;
 
-    int cost_green;
-    std::cin>> cost_green;
-    std::cin.ignore();
+    std::string cost_green;
+    while(true){
+
+        std::cout<< "Entrez la force de votre créature : " <<std::endl;
+
+        try{
+            std::cin >> cost_green;
+            int id = stoi(cost_green);
+            if(id >= 0){
+                break;
+            } else {
+                print_info("Coût doit être positive ou nulle ! ");
+            }
+        }
+        catch (std::invalid_argument& e) {
+            print_info("Id invalide !");
+        }
+
+    }
 
     std::cout<< std::endl << "Entrez le coût en terrain de n'importe quelle couleur : " <<std::endl;
 
-    int cost_any;
-    std::cin>> cost_any;
-    std::cin.ignore();
+    std::string cost_any;
+    while(true){
+
+        std::cout<< "Entrez la force de votre créature : " <<std::endl;
+
+        try{
+            std::cin >> cost_any;
+            int id = stoi(cost_any);
+            if(id >= 0){
+                break;
+            } else {
+                print_info("Coût doit être positive ou nulle ! ");
+            }
+        }
+        catch (std::invalid_argument& e) {
+            print_info("Id invalide !");
+        }
+
+    }
 
     std::string cost;
-    cost = std::to_string(cost_any) + ", " + std::to_string(cost_white) + ", " + std::to_string(cost_blue) + ", " + std::to_string(cost_black) + ", " + std::to_string(cost_red) + ", " + std::to_string(cost_green);
+    cost = cost_any + ", " + cost_white + ", " + cost_blue + ", " + cost_black + ", " + cost_red + ", " + cost_green;
 
     m_file << "    #COST: " + cost <<std::endl;
 
@@ -421,24 +558,23 @@ void DeckBuild::create_land(){
     std::cout<<std::endl<<std::endl;;
 
     // Token
-    print_list({
-        {std::to_string(0), "Terrain blanc"},
-        {std::to_string(1), "Terrain bleu"},
-        {std::to_string(2), "Terrain noir"},
-        {std::to_string(3), "Terrain rouge"},
-        {std::to_string(4), "Terrain vert"},
-    }, " - ");
-
-    std::cout<< std::endl << "Entrez la couleur de votre terrain : " <<std::endl;
-
     int token;
-    bool quit = false;
 
-    while(!quit){
+    while(true){
+
+        print_list({
+        {std::to_string(0), "Créature blanche"},
+        {std::to_string(1), "Créature bleue"},
+        {std::to_string(2), "Créature noire"},
+        {std::to_string(3), "Créature rouge"},
+        {std::to_string(4), "Créature verte"}, }, " - ");
+
+        std::cout<< std::endl << "Entrez la couleur de votre terrain : " <<std::endl;
+
         std::cin>> token;
         std::cin.ignore();
         if(token < 5 && token >= 0 ){
-            quit = true;
+            break;
         } else{
             print_info("Commande invalide.");
         }
@@ -470,26 +606,23 @@ void DeckBuild::create_ritual(){
     std::cout<<std::endl;
 
     // Token
-    print_list({
-        {std::to_string(0), "Rituel blanc"},
-        {std::to_string(1), "Rituel bleu"},
-        {std::to_string(2), "Rituel noir"},
-        {std::to_string(3), "Rituel rouge"},
-        {std::to_string(4), "Rituel vert"},
-    }, " - ");
-
-    std::cout<< std::endl << "Entrez la couleur de votre rituel : " <<std::endl;
-
     int token;
-    bool quit = false;
 
-    std::cout<<std::endl;
+    while(true){
 
-    while(!quit){
+        print_list({
+        {std::to_string(0), "Créature blanche"},
+        {std::to_string(1), "Créature bleue"},
+        {std::to_string(2), "Créature noire"},
+        {std::to_string(3), "Créature rouge"},
+        {std::to_string(4), "Créature verte"}, }, " - ");
+
+        std::cout<< std::endl << "Entrez la couleur de votre rituel : " <<std::endl;
+
         std::cin>> token;
         std::cin.ignore();
         if(token < 5 && token >= 0 ){
-            quit = true;
+            break;
         } else{
             print_info("Commande invalide.");
         }
@@ -779,44 +912,140 @@ void DeckBuild::create_ritual(){
     }
 
     // Cost
-    std::cout<< std::endl << "Entrez le coût en terrain blanc : " <<std::endl;
+    std::cout<< "Entrez le coût en terrain blanc : " <<std::endl;
 
-    int cost_white;
-    std::cin>> cost_white;
-    std::cin.ignore();
+    std::string cost_white;
+    while(true){
+
+        std::cout<< "Entrez la force de votre créature : " <<std::endl;
+
+        try{
+            std::cin >> cost_white;
+            int id = stoi(cost_white);
+            if(id >= 0){
+                break;
+            } else {
+                print_info("Coût doit être positive ou nulle ! ");
+            }
+        }
+        catch (std::invalid_argument& e) {
+            print_info("Id invalide !");
+        }
+
+    }
 
     std::cout<< std::endl << "Entrez le coût en terrain bleu : " <<std::endl;
 
-    int cost_blue;
-    std::cin>> cost_blue;
-    std::cin.ignore();
+    std::string cost_blue;
+    while(true){
+
+        std::cout<< "Entrez la force de votre créature : " <<std::endl;
+
+        try{
+            std::cin >> cost_blue;
+            int id = stoi(cost_blue);
+            if(id >= 0){
+                break;
+            } else {
+                print_info("Coût doit être positive ou nulle ! ");
+            }
+        }
+        catch (std::invalid_argument& e) {
+            print_info("Id invalide !");
+        }
+
+    }
 
     std::cout<< std::endl << "Entrez le coût en terrain noir : " <<std::endl;
 
-    int cost_black;
-    std::cin>> cost_black;
-    std::cin.ignore();
+    std::string cost_black;
+    while(true){
+
+        std::cout<< "Entrez la force de votre créature : " <<std::endl;
+
+        try{
+            std::cin >> cost_black;
+            int id = stoi(cost_black);
+            if(id >= 0){
+                break;
+            } else {
+                print_info("Coût doit être positive ou nulle ! ");
+            }
+        }
+        catch (std::invalid_argument& e) {
+            print_info("Id invalide !");
+        }
+
+    }
 
     std::cout<< std::endl << "Entrez le coût en terrain rouge : " <<std::endl;
 
-    int cost_red;
-    std::cin>> cost_red;
-    std::cin.ignore();
+    std::string cost_red;
+    while(true){
 
-    std::cout<< std::endl << "Entrez le coût en terrain vert : " <<std::endl;
+        std::cout<< "Entrez la force de votre créature : " <<std::endl;
 
-    int cost_green;
-    std::cin>> cost_green;
-    std::cin.ignore();
+        try{
+            std::cin >> cost_red;
+            int id = stoi(cost_red);
+            if(id >= 0){
+                break;
+            } else {
+                print_info("Coût doit être positive ou nulle ! ");
+            }
+        }
+        catch (std::invalid_argument& e) {
+            print_info("Id invalide !");
+        }
+
+    }
+
+    std::cout<< std::endl <<"Entrez le coût en terrain vert : " <<std::endl;
+
+    std::string cost_green;
+    while(true){
+
+        std::cout<< "Entrez la force de votre créature : " <<std::endl;
+
+        try{
+            std::cin >> cost_green;
+            int id = stoi(cost_green);
+            if(id >= 0){
+                break;
+            } else {
+                print_info("Coût doit être positive ou nulle ! ");
+            }
+        }
+        catch (std::invalid_argument& e) {
+            print_info("Id invalide !");
+        }
+
+    }
 
     std::cout<< std::endl << "Entrez le coût en terrain de n'importe quelle couleur : " <<std::endl;
 
-    int cost_any;
-    std::cin>> cost_any;
-    std::cin.ignore();
+    std::string cost_any;
+    while(true){
+
+        std::cout<< "Entrez la force de votre créature : " <<std::endl;
+
+        try{
+            std::cin >> cost_any;
+            int id = stoi(cost_any);
+            if(id >= 0){
+                break;
+            } else {
+                print_info("Coût doit être positive ou nulle ! ");
+            }
+        }
+        catch (std::invalid_argument& e) {
+            print_info("Id invalide !");
+        }
+
+    }
 
     std::string cost;
-    cost = std::to_string(cost_any) + ", " + std::to_string(cost_white) + ", " + std::to_string(cost_blue) + ", " + std::to_string(cost_black) + ", " + std::to_string(cost_red) + ", " + std::to_string(cost_green);
+    cost = cost_any + ", " + cost_white + ", " + cost_blue + ", " + cost_black + ", " + cost_red + ", " + cost_green;
 
     m_file << "    #COST: " + cost <<std::endl;
 
@@ -842,24 +1071,23 @@ void DeckBuild::create_enchantment(){
     std::cout<<std::endl;
 
     // Token
-    print_list({
-        {std::to_string(0), "Enchantement blanc"},
-        {std::to_string(1), "Enchantement bleu"},
-        {std::to_string(2), "Enchantement noir"},
-        {std::to_string(3), "Enchantement rouge"},
-        {std::to_string(4), "Enchantement vert"},
-    }, " - ");
-
-    std::cout<< std::endl << "Entrez la couleur de votre enchantement : " <<std::endl;
-
     int token;
-    bool quit = false;
 
-    while(!quit){
+    while(true){
+
+        print_list({
+        {std::to_string(0), "Créature blanche"},
+        {std::to_string(1), "Créature bleue"},
+        {std::to_string(2), "Créature noire"},
+        {std::to_string(3), "Créature rouge"},
+        {std::to_string(4), "Créature verte"}, }, " - ");
+
+        std::cout<< std::endl << "Entrez la couleur de votre enchantement : " <<std::endl;
+
         std::cin>> token;
         std::cin.ignore();
         if(token < 5 && token >= 0 ){
-            quit = true;
+            break;
         } else{
             print_info("Commande invalide.");
         }
@@ -1160,44 +1388,140 @@ void DeckBuild::create_enchantment(){
     }
 
     // Cost
-    std::cout<< std::endl << "Entrez le coût en terrain blanc : " <<std::endl;
+    std::cout<< "Entrez le coût en terrain blanc : " <<std::endl;
 
-    int cost_white;
-    std::cin>> cost_white;
-    std::cin.ignore();
+    std::string cost_white;
+    while(true){
+
+        std::cout<< "Entrez la force de votre créature : " <<std::endl;
+
+        try{
+            std::cin >> cost_white;
+            int id = stoi(cost_white);
+            if(id >= 0){
+                break;
+            } else {
+                print_info("Coût doit être positive ou nulle ! ");
+            }
+        }
+        catch (std::invalid_argument& e) {
+            print_info("Id invalide !");
+        }
+
+    }
 
     std::cout<< std::endl << "Entrez le coût en terrain bleu : " <<std::endl;
 
-    int cost_blue;
-    std::cin>> cost_blue;
-    std::cin.ignore();
+    std::string cost_blue;
+    while(true){
+
+        std::cout<< "Entrez la force de votre créature : " <<std::endl;
+
+        try{
+            std::cin >> cost_blue;
+            int id = stoi(cost_blue);
+            if(id >= 0){
+                break;
+            } else {
+                print_info("Coût doit être positive ou nulle ! ");
+            }
+        }
+        catch (std::invalid_argument& e) {
+            print_info("Id invalide !");
+        }
+
+    }
 
     std::cout<< std::endl << "Entrez le coût en terrain noir : " <<std::endl;
 
-    int cost_black;
-    std::cin>> cost_black;
-    std::cin.ignore();
+    std::string cost_black;
+    while(true){
+
+        std::cout<< "Entrez la force de votre créature : " <<std::endl;
+
+        try{
+            std::cin >> cost_black;
+            int id = stoi(cost_black);
+            if(id >= 0){
+                break;
+            } else {
+                print_info("Coût doit être positive ou nulle ! ");
+            }
+        }
+        catch (std::invalid_argument& e) {
+            print_info("Id invalide !");
+        }
+
+    }
 
     std::cout<< std::endl << "Entrez le coût en terrain rouge : " <<std::endl;
 
-    int cost_red;
-    std::cin>> cost_red;
-    std::cin.ignore();
+    std::string cost_red;
+    while(true){
 
-    std::cout<< std::endl << "Entrez le coût en terrain vert : " <<std::endl;
+        std::cout<< "Entrez la force de votre créature : " <<std::endl;
 
-    int cost_green;
-    std::cin>> cost_green;
-    std::cin.ignore();
+        try{
+            std::cin >> cost_red;
+            int id = stoi(cost_red);
+            if(id >= 0){
+                break;
+            } else {
+                print_info("Coût doit être positive ou nulle ! ");
+            }
+        }
+        catch (std::invalid_argument& e) {
+            print_info("Id invalide !");
+        }
+
+    }
+
+    std::cout<< std::endl <<"Entrez le coût en terrain vert : " <<std::endl;
+
+    std::string cost_green;
+    while(true){
+
+        std::cout<< "Entrez la force de votre créature : " <<std::endl;
+
+        try{
+            std::cin >> cost_green;
+            int id = stoi(cost_green);
+            if(id >= 0){
+                break;
+            } else {
+                print_info("Coût doit être positive ou nulle ! ");
+            }
+        }
+        catch (std::invalid_argument& e) {
+            print_info("Id invalide !");
+        }
+
+    }
 
     std::cout<< std::endl << "Entrez le coût en terrain de n'importe quelle couleur : " <<std::endl;
 
-    int cost_any;
-    std::cin>> cost_any;
-    std::cin.ignore();
+    std::string cost_any;
+    while(true){
+
+        std::cout<< "Entrez la force de votre créature : " <<std::endl;
+
+        try{
+            std::cin >> cost_any;
+            int id = stoi(cost_any);
+            if(id >= 0){
+                break;
+            } else {
+                print_info("Coût doit être positive ou nulle ! ");
+            }
+        }
+        catch (std::invalid_argument& e) {
+            print_info("Id invalide !");
+        }
+
+    }
 
     std::string cost;
-    cost = std::to_string(cost_any) + ", " + std::to_string(cost_white) + ", " + std::to_string(cost_blue) + ", " + std::to_string(cost_black) + ", " + std::to_string(cost_red) + ", " + std::to_string(cost_green);
+    cost = cost_any + ", " + cost_white + ", " + cost_blue + ", " + cost_black + ", " + cost_red + ", " + cost_green;
 
     m_file << "    #COST: " + cost <<std::endl;
 
