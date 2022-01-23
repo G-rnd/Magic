@@ -304,7 +304,7 @@ Ritual* SaveParser::extract_ritual(std::vector<std::string>& data) {
     cropped_line = extract_line(SaveParser::cost, data);
     std::vector<int> cost = extract_int_list(SaveParser::cost, cropped_line);
     // TODO info à retirer je crois
-    Ritual* r = new Ritual(Card_class::RITUAL, name, token, "", new Cost(cost[0], cost[1], cost[2], cost[3], cost[4], cost[5]), effects);
+    Ritual* r = new Ritual(Card_class::RITUAL, name, token, new Cost(cost[0], cost[1], cost[2], cost[3], cost[4], cost[5]), effects);
 
     return r; 
 }
@@ -328,7 +328,7 @@ Enchantment* SaveParser::extract_enchantment(std::vector<std::string>& data) {
     cropped_line = extract_line(SaveParser::cost, data);
     std::vector<int> cost = extract_int_list(SaveParser::cost, cropped_line);
     // TODO info à retirer je crois
-    Enchantment* e = new Enchantment(Card_class::ENCHANTEMENT, name, token, "", new Cost(cost[0], cost[1], cost[2], cost[3], cost[4], cost[5]), effects);
+    Enchantment* e = new Enchantment(Card_class::ENCHANTEMENT, name, token, new Cost(cost[0], cost[1], cost[2], cost[3], cost[4], cost[5]), effects);
 
     return e;
 }

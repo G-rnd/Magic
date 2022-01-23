@@ -173,7 +173,7 @@ void Game::phases() {
 
             // Phase de pioche
             if (get_current_player()->get_library().size() == 0) {
-                victory(*get_current_player()->get_opponent());
+                victory(get_current_player()->get_opponent());
                 return;
             } else {
                 cls();
