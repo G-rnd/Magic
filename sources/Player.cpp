@@ -744,6 +744,27 @@ void Player::destroy_card(Card* c) {
             m_graveyard.push_back(e);
         }
         dynamic_cast<BasicCard*>(c)->reset_enchantments();
+
+        // Check the enchantment : remove 1 hp to the opponent when a creature die
+        if(c->is_class(Card_class::CREATURE)){
+            for (auto ench : m_battlefield->get_enchantments()){
+                for (auto effect : ench->get_effects()){
+                    if(effect == Black_enchantment_effects::Less_HP_death_creature){
+                        m_opponent->set_hp(m_opponent->get_hp() - 1);
+                        print_info("Une creature est morte, " + m_opponent->get_name() + " perd un point de vie !");
+                    }
+                }
+            }
+            for (auto ench : m_opponent->get_battlefield()->get_enchantments()){
+                for (auto effect : ench->get_effects()){
+                    if(effect == Black_enchantment_effects::Less_HP_death_creature){
+                        m_hp--;
+                        print_info("Une creature est morte, " + m_name + " perd un point de vie !");
+                    }
+                }
+              }
+        }
+
     } 
     // If c is a Ritual, we place it into the graveyard
     else if (c->is_class(Card_class::RITUAL)) {
@@ -1423,6 +1444,8 @@ void Player::play_enchantment(Enchantment* e){
                                     i++;
                                 }
                             }
+
+                            print_list(print_creatures);
                                 
                             std::getline(std::cin, cmd);
                         
@@ -1483,6 +1506,8 @@ void Player::play_enchantment(Enchantment* e){
                                     i++;
                                 }
                             }
+
+                            print_list(print_creatures);
                                 
                             std::getline(std::cin, cmd);
                         
@@ -1503,6 +1528,154 @@ void Player::play_enchantment(Enchantment* e){
                             
                         }   
                     }                     
+
+                }
+            }
+        }
+        break;
+
+        case Token::Black:{
+                    
+            for (auto effect : e->get_effects()) {
+
+                switch (effect) {
+                
+                    case Black_enchantment_effects::Less_HP_death_creature :{
+                        m_battlefield->place_enchantment(e);
+                        print_info("Chaque fois qu'une creature meurt, l'avdersaire perd un point de vie !");
+                    }                     
+
+                }
+            }
+        }
+        break;
+
+        case Token::Red:{
+                    
+            for (auto effect : e->get_effects()) {
+
+                switch (effect) {
+                
+                    case Red_enchantment_effects::More_1_0_attack_creatures :{
+                        m_battlefield->place_enchantment(e);
+                        print_info("A chaque phase d'attaque, vos creatures gagneront 1 / 0 !");
+                    }                     
+
+                }
+            }
+        }
+        break;
+
+        case Token::Green:{
+                    
+            for (auto effect : e->get_effects()) {
+
+                switch (effect) {
+                
+                    // The enchanted land give 1 more resources
+                    case Green_enchantment_effects::More_1_land :{
+                        
+                        int i = 0;
+                        std::vector<Land*> possible_lands;
+                        std::vector<std::pair<std::string, std::string>> print_lands;
+
+                        std::string cmd;
+
+                        while (true) {
+
+                            cls();
+                            print();
+
+                            print_actions(m_name + ", selectionnez votre land à enchanter pour la controler :", {
+                                {"<id>", "pour choisir cette carte"} });
+
+                            for (auto card : m_opponent->get_battlefield()->get_basic_cards()){
+                                if(card->is_class(Card_class::LAND)){
+                                    Land* land = dynamic_cast<Land*>(card);
+                                    print_lands.push_back({std::to_string(i), land->get_name()});
+                                    possible_lands.push_back(land);
+                                    i++;
+                                }
+                            }
+
+                            print_list(print_lands);
+                                
+                            std::getline(std::cin, cmd);
+                        
+                            try {
+                                int num = std::stoi(cmd);
+                                if (num > i || num < 0) {
+                                    print_info("Id invalide");
+                                } else {
+                                    possible_lands[num]->add_enchantment(e);
+                                    possible_lands[num]->set_value(possible_lands[num]->get_value() + 1);
+                                    print_info(possible_lands[num]->get_name() + " donne une ressource de plus ! ");
+                                    break;
+                                }
+                            } catch (std::invalid_argument &e) {
+                                print_info("Commande Invalide");    
+                            }
+                            
+                        }
+
+                    }
+                    break;
+
+                    // The enchanted creature win X / X, X the number of your green lands
+                    case Green_enchantment_effects::More_G_G_creature :{
+                        
+                        int i = 0;
+                        std::vector<Creature*> possible_creatures;
+                        std::vector<std::pair<std::string, std::string>> print_creatures;
+                        int green_lands = 0;
+
+                        std::string cmd;
+
+                        while (true) {
+
+                            cls();
+                            print();
+
+                            print_actions(m_name + ", selectionnez votre land à enchanter pour la controler :", {
+                                {"<id>", "pour choisir cette carte"} });
+
+                            for (auto card : m_opponent->get_battlefield()->get_basic_cards()){
+                                if(card->is_class(Card_class::CREATURE)){
+                                    Creature* creature = dynamic_cast<Creature*>(card);
+                                    print_creatures.push_back({std::to_string(i), creature->get_name()});
+                                    possible_creatures.push_back(creature);
+                                    i++;
+                                } else if(card->is_class(Card_class::LAND)){
+                                    Land *land = dynamic_cast<Land*>(card);
+                                    if(land->get_token() == Token::Green){
+                                        green_lands++;
+                                    }
+                                }
+                            }
+
+                            print_list(print_creatures);
+                                
+                            std::getline(std::cin, cmd);
+                        
+                            try {
+                                int num = std::stoi(cmd);
+                                if (num > i || num < 0) {
+                                    print_info("Id invalide");
+                                } else {
+                                    possible_creatures[num]->add_enchantment(e);
+                                    possible_creatures[num]->set_power_current(possible_creatures[num]->get_power_current() + green_lands);
+                                    possible_creatures[num]->set_toughness_current(possible_creatures[num]->get_toughness_current() + green_lands);
+                                    possible_creatures[num]->set_power(possible_creatures[num]->get_power() + green_lands);
+                                    possible_creatures[num]->set_toughness(possible_creatures[num]->get_toughness() + green_lands);
+                                    print_info(possible_creatures[num]->get_name() + " gagne " + std::to_string(green_lands) + " / " + std::to_string(green_lands) + " car vous controlez " + std::to_string(green_lands) + " forets !");
+                                    break;
+                                }
+                            } catch (std::invalid_argument &e) {
+                                print_info("Commande Invalide");    
+                            }
+                        }
+                    }
+                    break;                    
 
                 }
             }
