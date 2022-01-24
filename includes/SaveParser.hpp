@@ -10,7 +10,9 @@
 #include "Card.hpp"
 
 class SaveParser {
+	private:
         SaveParser() {}
+
     public:
 		static const std::string begin_game;
         static const std::string end_game;
@@ -46,24 +48,21 @@ class SaveParser {
         static const std::string effects;
         static const std::string value;
 
-        static Game* load(std::string& data);
         static std::vector<std::string> crop(const std::string& begin, const std::string& end, std::vector<std::string>& data);
-        static std::string extract_data(const std::string& key, const std::string& data);
-        static std::string extract_line(const std::string& key, std::vector<std::string>& data);
-        static int extract_int(const std::string& key, const std::string& data);
-        static std::vector<int> extract_int_list(const std::string& key, std::string& data);
-        static Game* extract_game(std::vector<std::string>& data);
-        static Player* extract_player(std::vector<std::string>& data);
-        static Battlefield* extract_battlefield(std::vector<std::string>& data);
-        static std::vector<Card*> extract_cards(std::vector<std::string>& data);
-        static Card* extract_card(std::vector<std::string>& data);
-        static Creature* extract_creature(std::vector<std::string>& data);
-        static Land* extract_land(std::vector<std::string>& data);
-        static Ritual* extract_ritual(std::vector<std::string>& data);
-        static Enchantment* extract_enchantment(std::vector<std::string>& data);
-
-
-
+        static std::string 				extract_data(const std::string& key, const std::string& data);
+        static std::string 				extract_line(const std::string& key, std::vector<std::string>& data);
+        static int 						extract_int(const std::string& key, const std::string& data);
+        static std::vector<int> 		extract_int_list(const std::string& key, std::string& data);
+		static Game*					load(std::string& data);
+        static Game*					extract_game(std::vector<std::string>& data);
+        static Player*					extract_player(std::vector<std::string>& data);
+        static Battlefield*				extract_battlefield(std::vector<std::string>& data);
+        static std::vector<Card*>		extract_cards(std::vector<std::string>& data);
+        static Card*					extract_card(std::vector<std::string>& data);
+        static Creature*				extract_creature(std::vector<std::string>& data);
+        static Land*					extract_land(std::vector<std::string>& data);
+        static Ritual*					extract_ritual(std::vector<std::string>& data);
+        static Enchantment*				extract_enchantment(std::vector<std::string>& data);
 
 };
 

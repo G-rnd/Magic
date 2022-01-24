@@ -538,11 +538,15 @@ std::string Game::to_string() {
 }
 
 void Game::choose_save(std::string& data) {
-    Game* g = SaveParser::load(data);
-
-    if (g != nullptr) {
-        g->phases();
-        delete g;
+    try {
+        Game* g = SaveParser::load(data);
+        
+        if (g != nullptr) {
+            g->phases();
+            delete g;
+        }
+    } catch (std::invalid_argument& e) {
+        print_err(e.what());
     }
 }
 

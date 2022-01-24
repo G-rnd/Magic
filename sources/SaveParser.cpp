@@ -15,7 +15,6 @@
 #include "Cost.hpp"
 #include "Battlefield.hpp"
 #include "FonctionsAux.hpp"
-#include "FonctionsAux.hpp"
 
 const std::string SaveParser::begin_game = "#BEGIN_GAME";
 const std::string SaveParser::end_game = "#END_GAME";
@@ -124,22 +123,17 @@ std::string SaveParser::extract_line(const std::string& key, std::vector<std::st
 }
 
 Player* SaveParser::extract_player(std::vector<std::string>& data) {
-    if (data.size() == 0) {
-        print_err("Erreur dans la lecture de Player");
-        return nullptr;
-    }
+    if (data.size() == 0)
+        throw std::invalid_argument("Lecture de Player");
+
     std::string name = extract_data(SaveParser::name, extract_line(SaveParser::name, data));
     int hp = extract_int(SaveParser::hp, extract_line(SaveParser::hp, data));
-    if (hp < 1) {
-        print_err("Erreur dans la lecture de HP");
-        return nullptr;
-    }
+    if (hp < 1)
+        throw std::invalid_argument("Lecture de HP");
 
     int played_land = extract_int(SaveParser::played_land, extract_line(SaveParser::played_land, data));
-    if (played_land < -1) {
-        print_err("Erreur dans la lecture de played_land");
-        return nullptr;
-    }
+    if (played_land < -1)
+        throw std::invalid_argument("Erreur dans la lecture de played_land");
 
     auto cropped_data = crop(SaveParser::begin_battlefield, SaveParser::end_battlefield, data);
     Battlefield* b = extract_battlefield(cropped_data);
@@ -182,52 +176,41 @@ Card* SaveParser::extract_card(std::vector<std::string>& data) {
         default:
             break;
     }
-    if (card == nullptr) {
-        print_err("Extraction d'un carte a échoué.");
-    }
+    if (card == nullptr)
+        throw std::invalid_argument("Extraction d'un carte a échoué.");
     return card;
 }
 
 Creature* SaveParser::extract_creature(std::vector<std::string>& data) {
     int token = extract_int(SaveParser::token, extract_line(SaveParser::token, data));
-    if (token > Token::Count || token < 0) {
-        print_err("Token de Creature invalide.");
-        return nullptr;
-    }
+    if (token > Token::Count || token < 0)
+        throw std::invalid_argument("Token de Creature invalide.");
 
     std::string name = extract_data(SaveParser::name, extract_line(SaveParser::name, data));
-    if (name == "") {
-        print_err("Name de Creature non renseigné.");
-        return nullptr;
-    }
+    if (name == "")
+        throw std::invalid_argument("Name de Creature non renseigné.");
 
     int engaged = extract_int(SaveParser::engaged, extract_line(SaveParser::engaged, data));
-    if ((engaged & 1) != engaged) {
-        print_err("Token de Creature invalide.");
-        return nullptr;
-    }
+    if ((engaged & 1) != engaged)
+        throw std::invalid_argument("Engaged de Creature invalide.");
 
     int first_turn = extract_int(SaveParser::first_turn, extract_line(SaveParser::first_turn, data));
-    if ((first_turn & 1) != first_turn) {
-        print_err("first_turn de Creature invalide.");
-        return nullptr;
-    }
+    if ((first_turn & 1) != first_turn)
+        throw std::invalid_argument("First_turn de Creature invalide.");
+
     std::string cropped_line = extract_line(SaveParser::power_toughness, data);
     std::vector<int> power_toughness = extract_int_list(SaveParser::power_toughness, cropped_line);
-    if (power_toughness.size() != 4) {
-        print_err("Power/toughness de Creature invalide.");
-        return nullptr;
-    }
+    if (power_toughness.size() != 4)
+        throw std::invalid_argument("Power/toughness de Creature invalide.");
+
     cropped_line = extract_line(SaveParser::abilities, data);
     std::vector<int> abilities = extract_int_list(SaveParser::abilities, cropped_line);
     cropped_line = extract_line(SaveParser::types, data);
     std::vector<int> types = extract_int_list(SaveParser::types, cropped_line);
     cropped_line = extract_line(SaveParser::cost, data);
     std::vector<int> cost = extract_int_list(SaveParser::cost, cropped_line);
-    if (cost.size() != 6) {
-        print_err("Cost de Creature invalide.");
-        return nullptr;
-    }
+    if (cost.size() != 6)
+        throw std::invalid_argument("Cost de Creature invalide.");
 
     auto cropped_data = crop(SaveParser::begin_enchantments, SaveParser::end_enchantments, data);
     std::vector<Card*> ench = extract_cards(cropped_data);
@@ -236,12 +219,11 @@ Creature* SaveParser::extract_creature(std::vector<std::string>& data) {
         if (e->get_class() == Card_class::ENCHANTEMENT) {
             enchantments.push_back(dynamic_cast<Enchantment*>(e));
         } else {
-            print_err("Carte autre d'enchantements dans les enchantements de Créature.");
             for(auto c : ench)
                 delete c;
             for(auto c : enchantments)
                 delete c;
-            return nullptr;
+            throw std::invalid_argument("Carte autre d'enchantements dans les enchantements de Créature.");
         }
     }
 
@@ -257,28 +239,20 @@ Creature* SaveParser::extract_creature(std::vector<std::string>& data) {
 
 Land* SaveParser::extract_land(std::vector<std::string>& data) {
     int token = extract_int(SaveParser::token, extract_line(SaveParser::token, data));
-    if (token > Token::Count || token < 0) {
-        print_err("Token de Land invalide.");
-        return nullptr;
-    }
+    if (token > Token::Count || token < 0)
+        throw std::invalid_argument("Token de Land invalide.");
 
     std::string name = extract_data(SaveParser::name, extract_line(SaveParser::name, data));
-    if (name == "") {
-        print_err("Name de Land non renseigné.");
-        return nullptr;
-    }
+    if (name == "")
+        throw std::invalid_argument("Name de Land non renseigné.");
 
     int engaged = extract_int(SaveParser::engaged, extract_line(SaveParser::engaged, data));
-    if ((engaged & 1) != engaged) {
-        print_err("Token de Land invalide.");
-        return nullptr;
-    }
+    if ((engaged & 1) != engaged)
+        throw std::invalid_argument("Engaged de Land invalide.");
 
     int value = extract_int(SaveParser::value, extract_line(SaveParser::value, data));
-    if (value < 0) {
-        print_err("Token de Land invalide.");
-        return nullptr;
-    }
+    if (value < 0)
+        throw std::invalid_argument("Value de Land invalide.");
 
     auto cropped_data = crop(SaveParser::begin_enchantments, SaveParser::end_enchantments, data);
     std::vector<Card*> ench = extract_cards(cropped_data);
@@ -287,12 +261,11 @@ Land* SaveParser::extract_land(std::vector<std::string>& data) {
         if (e->get_class() == Card_class::ENCHANTEMENT) {
             enchantments.push_back(dynamic_cast<Enchantment*>(e));
         } else {
-            print_err("Carte autre d'enchantements dans les enchantements de Land.");
             for(auto c : ench)
                 delete c;
             for(auto c : enchantments)
                 delete c;
-            return nullptr;
+            throw std::invalid_argument("Carte autre d'enchantements dans les enchantements de Land.");
         }
     }
 
@@ -307,25 +280,19 @@ Land* SaveParser::extract_land(std::vector<std::string>& data) {
 
 Ritual* SaveParser::extract_ritual(std::vector<std::string>& data) {
     int token = extract_int(SaveParser::token, extract_line(SaveParser::token, data));
-    if (token > Token::Count || token < 0) {
-        print_err("Token de Land invalide.");
-        return nullptr;
-    }
+    if (token > Token::Count || token < 0)
+        throw std::invalid_argument("Token de Ritual invalide.");
 
     std::string name = extract_data(SaveParser::name, extract_line(SaveParser::name, data));
-    if (name == "") {
-        print_err("Name de Land non renseigné.");
-        return nullptr;
-    }
+    if (name == "")
+        throw std::invalid_argument("Name de Ritual non renseigné.");
     std::string cropped_line = extract_line(SaveParser::effects, data);
     std::vector<int> effects = extract_int_list(SaveParser::power_toughness, cropped_line);
 
     cropped_line = extract_line(SaveParser::cost, data);
     std::vector<int> cost = extract_int_list(SaveParser::cost, cropped_line);
-    if (cost.size() != 6) {
-        print_err("Cost de Ritual invalide.");
-        return nullptr;
-    }
+    if (cost.size() != 6)
+        throw std::invalid_argument("Cost de Ritual invalide.");
 
     Ritual* r = new Ritual(Card_class::RITUAL, name, token, new Cost(cost[0], cost[1], cost[2], cost[3], cost[4], cost[5]), effects);
 
@@ -334,25 +301,20 @@ Ritual* SaveParser::extract_ritual(std::vector<std::string>& data) {
 
 Enchantment* SaveParser::extract_enchantment(std::vector<std::string>& data) {
     int token = extract_int(SaveParser::token, extract_line(SaveParser::token, data));
-    if (token > Token::Count || token < 0) {
-        print_err("Token de Land invalide.");
-        return nullptr;
-    }
+    if (token > Token::Count || token < 0)
+        throw std::invalid_argument("Token d'Enchantment invalide.");
 
     std::string name = extract_data(SaveParser::name, extract_line(SaveParser::name, data));
-    if (name == "") {
-        print_err("Name de Land non renseigné.");
-        return nullptr;
-    }
+    if (name == "")
+        throw std::invalid_argument("Name d'Enchantment non renseigné.");
 
     std::string cropped_line = extract_line(SaveParser::effects, data);
     std::vector<int> effects = extract_int_list(SaveParser::power_toughness, cropped_line);
     cropped_line = extract_line(SaveParser::cost, data);
     std::vector<int> cost = extract_int_list(SaveParser::cost, cropped_line);
-    if (cost.size() != 6) {
-        print_err("Cost d'Enchantment invalide.");
-        return nullptr;
-    }
+    if (cost.size() != 6)
+        throw std::invalid_argument("Cost d'Enchantment invalide.");
+
     Enchantment* e = new Enchantment(Card_class::ENCHANTEMENT, name, token, new Cost(cost[0], cost[1], cost[2], cost[3], cost[4], cost[5]), effects);
     return e;
 }
@@ -386,61 +348,48 @@ Battlefield* SaveParser::extract_battlefield(std::vector<std::string>& data) {
         if (e->get_class() == Card_class::ENCHANTEMENT) {
             enchantments.push_back(dynamic_cast<Enchantment*>(e));
         } else {
-            print_err("Carte autre d'enchantements dans les enchantements de Battlefield.");
             for(auto c : ench)
                 delete c;
             for(auto c : cards)
                 delete c;
             for(auto c : enchantments)
                 delete c;
-            return nullptr;
+            throw std::invalid_argument("Carte autre d'enchantements dans les enchantements de Battlefield.");
         }
     }
 
     for(auto c : enchantments)
-        if (c->get_class() != Card_class::ENCHANTEMENT) {
-            print_err("Un non enchantement reconnu dans Battlefield::m_enchantments.");
-            return nullptr;
-        }
+        if (c->get_class() != Card_class::ENCHANTEMENT)
+            throw std::invalid_argument("Un non enchantement reconnu dans Battlefield::m_enchantments.");
 
     for(auto c : cards)
-        if (c->get_class() != Card_class::CREATURE && c->get_class() != Card_class::LAND) {
-            print_err("Un carte autre que BasicCard reconnu dans Battlefield::m_basic_cards.");
-            return nullptr;
-        }
+        if (c->get_class() != Card_class::CREATURE && c->get_class() != Card_class::LAND)
+            throw std::invalid_argument("Un carte autre que BasicCard reconnu dans Battlefield::m_basic_cards.");
 
     return new Battlefield(cards, enchantments);
 }
 
 Game* SaveParser::extract_game(std::vector<std::string>& data) {
-    if (data.size() == 0) {
-        print_err("lecture de Game vide.");
-        return nullptr;
-    }
+    if (data.size() == 0)
+        throw std::invalid_argument("Lecture de Game vide.");
 
     int player_turn = extract_int(SaveParser::player_turn, extract_line(SaveParser::player_turn, data));
-    if ((player_turn & 1) != player_turn) {
-        print_err("player_turn invalide.");
-        return nullptr;
-    }
+    if ((player_turn & 1) != player_turn)
+        throw std::invalid_argument("Player_turn invalide.");
 
     int phase = extract_int(SaveParser::phase, extract_line(SaveParser::phase, data));
-    if (phase < 0 || phase > 2) {
-        print_err("phase invalide.");
-        return nullptr;
-    }
+    if (phase < 0 || phase > 2)
+        throw std::invalid_argument("Phase invalide.");
+
     auto cropped_data = crop(SaveParser::begin_player, SaveParser::end_player, data);
     Player* p1 = extract_player(cropped_data);
-    if (p1 == nullptr) {
-        print_err("extraction d'un Player.");
-        return nullptr;
-    }
+    if (p1 == nullptr)
+        throw std::invalid_argument("Extraction d'un Player.");
+
     cropped_data = crop(SaveParser::begin_player, SaveParser::end_player, data);
     Player* p2 = extract_player(cropped_data);
-    if (p2 == nullptr) {
-        print_err("extraction d'un Player.");
-        return nullptr;
-    }
+    if (p2 == nullptr)
+        throw std::invalid_argument("Extraction d'un Player.");
 
     Game* g = new Game();
 
@@ -468,5 +417,5 @@ Game* SaveParser::load(std::string& s) {
 
     auto cropped_data = crop(SaveParser::begin_game, SaveParser::end_game, data);
 
-    return extract_game(cropped_data);
+    return extract_game(cropped_data);    
 }
