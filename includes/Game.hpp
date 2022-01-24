@@ -36,6 +36,7 @@ class Game {
 
         void                 start();
         void                 phases();
+        void                 load_phase(size_t phase);
         bool                 check_defeat();
         bool                 main_phase(bool first);
         void                 combat_phase();
