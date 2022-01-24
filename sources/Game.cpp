@@ -74,14 +74,16 @@ void Game::start() {
     cls();
     print_actions("Bienvenue dans votre partie !", {}, "Saisir le nom du premier joueur");
 
-    std::cin >> p_name_1;
+    std::cin.ignore();
+    std::getline(std::cin, p_name_1);
     Player* p1 = new Player(p_name_1);
     
     cls();
     print_actions("Bienvenue dans votre partie !", {}, "Saisir le nom du second joueur");
-    std::cin >> p_name_2;
+    std::cin.ignore();
+    std::getline(std::cin, p_name_2);
     Player* p2 = new Player(p_name_2);
-    
+
     cls();
 
     p1->set_opponent(p2);
@@ -90,7 +92,7 @@ void Game::start() {
     set_players(p1, p2);
 
     // Choix des decks, mélange des bibliothèques et pioche initiale
-    std::string path = "data/complet";
+    std::string path = "data/complet/";
 
     std::vector<std::pair<std::string, std::string > > available_decks = {};
 
@@ -116,10 +118,11 @@ void Game::start() {
             try {
                 std::string cmd;
                 std::cin >> cmd;
+                std::cin.ignore();
                 int id = stoi(cmd);
 
                 if (id < 0 || id >= (int) available_decks.size())
-                    print_info("Id invalide !");
+                    print_err("Id invalide !");
                 else {
                     std::string filename = path + available_decks[id].second;
 
@@ -130,11 +133,11 @@ void Game::start() {
                         m_players[i]->set_library(CardParser::parse(filename));
                         break;
                     } else {
-                        print_info("Erreur: le fichier n'existe plus !");
+                        print_err("Le fichier n'existe plus !");
                     }
                 }
             } catch (std::invalid_argument& e) {
-                print_info("Id invalide !");
+                print_err("Id invalide !");
             }
         }
         
@@ -154,6 +157,7 @@ void Game::start() {
 void Game::phases() {
     // Phases de jeu
     while (true) {
+        // todo changer le m_phase : repioche quand load
         if (m_phase == 0) {
             cls();
             print_info("C'est au tour de " + get_current_player()->get_name() + " de jouer !");
@@ -453,6 +457,7 @@ void Game::turn_end_phase() {
                 
                 std::string cmd;
                 std::cin >> cmd;
+                std::cin.ignore();
                     
                 if(cmd.find("reset") != std::string::npos) {
                     chosen_cards = {};
@@ -549,11 +554,16 @@ std::string Game::to_string() {
 }
 
 void Game::choose_save(std::string& data) {
-    Game* g = SaveParser::load(data);
-    if (g != nullptr) {
-        g->phases();
+    try {
+        Game* g = SaveParser::load(data);
+        
+        if (g != nullptr) {
+            g->phases();
+            delete g;
+        }
+    } catch (std::invalid_argument& e) {
+        print_err(e.what());
     }
-    delete g;
 }
 
 void Game::load() {
