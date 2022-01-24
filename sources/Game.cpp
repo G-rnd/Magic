@@ -158,77 +158,71 @@ void Game::phases() {
     // Phases de jeu
     while (true) {
         // todo changer le m_phase : repioche quand load
-        if (m_phase == 0) {
-            cls();
-            print_info("C'est au tour de " + get_current_player()->get_name() + " de jouer !");
-            get_current_player()->set_played_land(0);
+        cls();
+        print_info("C'est au tour de " + get_current_player()->get_name() + " de jouer !");
+        get_current_player()->set_played_land(0);
 
-            // reset des stats des cartes 
-            for (auto p : m_players) {
-                for (auto bc : p->get_battlefield()->get_basic_cards()) {
-                    if (bc->is_class(Card_class::CREATURE)){
-                        Creature* c = dynamic_cast<Creature*>(bc);
-                        c->set_power_current(c->get_power());
-                        c->set_toughness_current(c->get_toughness());
-                        c->set_is_first_turn(false);
-                    }
+        // reset des stats des cartes 
+        for (auto p : m_players) {
+            for (auto bc : p->get_battlefield()->get_basic_cards()) {
+                if (bc->is_class(Card_class::CREATURE)){
+                    Creature* c = dynamic_cast<Creature*>(bc);
+                    c->set_power_current(c->get_power());
+                    c->set_toughness_current(c->get_toughness());
+                    c->set_is_first_turn(false);
                 }
             }
-
-            // Phase de pioche
-            if (get_current_player()->get_library().size() == 0) {
-                victory(get_current_player()->get_opponent());
-                return;
-            } else {
-                cls();
-                print_info("Vous piochez la carte : " + get_current_player()->get_library()[0]->get_name());
-                get_current_player()->draw_card();
-            }
-
-            // Phase de désengagement
-            for (auto c : get_current_player()->get_battlefield()->get_basic_cards()) {
-                get_current_player()->get_battlefield()->disengage_card(c);
-            }
-
-            // Phase principale
-            if (Game::main_phase(true))
-                return;
-            
-            // check if a player has lost
-            if (check_defeat())
-                return;
-            
-            next_phase();
         }
 
-        if (m_phase == 1) {
-            // Phase de combat
-            Game::combat_phase();
-
-            // check if a player has lost
-            if (check_defeat())
-                return;
-            
-            next_phase();
+        // Phase de pioche
+        if (get_current_player()->get_library().size() == 0) {
+            victory(get_current_player()->get_opponent());
+            return;
+        } else {
+            cls();
+            print_info("Vous piochez la carte : " + get_current_player()->get_library()[0]->get_name());
+            get_current_player()->draw_card();
         }
 
-        if (m_phase == 2) {
-            // Phase secondaire
-            if (Game::main_phase(false))
-                return;
-
-            // check if a player has lost
-            if (check_defeat())
-                return;
-
-            // Phase end turn
-            Game::turn_end_phase();
-
-            get_current_player()->print();
-            m_player_turn = !m_player_turn;
-
-            next_phase();
+        // Phase de désengagement
+        for (auto c : get_current_player()->get_battlefield()->get_basic_cards()) {
+            get_current_player()->get_battlefield()->disengage_card(c);
         }
+
+        // Phase principale
+        if (Game::main_phase(true))
+            return;
+        
+        // check if a player has lost
+        if (check_defeat())
+            return;
+        
+        next_phase();
+
+        // Phase de combat
+        Game::combat_phase();
+
+        // check if a player has lost
+        if (check_defeat())
+            return;
+        
+        next_phase();
+
+        // Phase secondaire
+        if (Game::main_phase(false))
+            return;
+
+        // check if a player has lost
+        if (check_defeat())
+            return;
+
+        // Phase end turn
+        Game::turn_end_phase();
+
+        get_current_player()->print();
+        m_player_turn = !m_player_turn;
+
+        next_phase();
     }
 }
 
@@ -558,13 +552,56 @@ void Game::choose_save(std::string& data) {
         Game* g = SaveParser::load(data);
         
         if (g != nullptr) {
-            g->phases();
+
+            g->load_phase(g->get_phase());
+
             delete g;
         }
     } catch (std::invalid_argument& e) {
         print_err(e.what());
     }
 }
+
+void Game::load_phase(size_t phase) {
+    if (phase <= 0) {
+        // Phase principale
+        if (Game::main_phase(true))
+            return;
+        
+        // check if a player has lost
+        if (check_defeat())
+            return;
+        
+        next_phase();
+    }
+    if (phase <= 1) {
+        // Phase de combat
+        Game::combat_phase();
+
+        // check if a player has lost
+        if (check_defeat())
+            return;
+        
+        next_phase();
+    }
+    if (phase <= 2) {
+        // Phase secondaire
+        if (Game::main_phase(false))
+            return;
+
+        // check if a player has lost
+        if (check_defeat())
+            return;
+
+        // Phase end turn
+        Game::turn_end_phase();
+
+        get_current_player()->print();
+        m_player_turn = !m_player_turn;
+    }
+    next_phase();
+}
+
 
 void Game::load() {
     std::string path = "saves/";

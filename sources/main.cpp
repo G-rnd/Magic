@@ -29,6 +29,7 @@ int main() {
                 DeckBuild db;
                 db.create_file();
             } else if(s == "exit"){
+                print_info("À bientôt !");
                 return EXIT_SUCCESS;
             } else {
                 print_info("Commande non reconnue.");
