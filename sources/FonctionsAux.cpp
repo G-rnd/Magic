@@ -32,7 +32,7 @@ void print_info(const std::string& s)  {
 }
 
 void print_err(const std::string& s)  {
-    std::cin.clear();   
+    std::cin.clear();  
     
     std::string prefix = "Erreur : ";
     std::string lign(prefix.size() + s.size() , '-');

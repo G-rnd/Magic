@@ -160,19 +160,32 @@ Player* SaveParser::extract_player(std::vector<std::string>& data) {
 }
 
 Card* SaveParser::extract_card(std::vector<std::string>& data) {
+    if (data.size() == 0) {
+        return nullptr;
+    }
+        
+    Card* card = nullptr;
+
     switch (extract_int(SaveParser::classcard, extract_line(SaveParser::classcard, data))) {
         case Card_class::CREATURE:
-            return SaveParser::extract_creature(data);
+            card = SaveParser::extract_creature(data);
+            break;
         case Card_class::LAND:
-            return SaveParser::extract_land(data);
+            card = SaveParser::extract_land(data);
+            break;
         case Card_class::RITUAL:
-            return SaveParser::extract_ritual(data);
+            card = SaveParser::extract_ritual(data);
+            break;
         case Card_class::ENCHANTEMENT:
-            return SaveParser::extract_enchantment(data);
+            card = SaveParser::extract_enchantment(data);
+            break;
         default:
             break;
     }
-    return nullptr;
+    if (card == nullptr) {
+        print_err("Extraction d'un carte a échoué.");
+    }
+    return card;
 }
 
 Creature* SaveParser::extract_creature(std::vector<std::string>& data) {
@@ -211,7 +224,7 @@ Creature* SaveParser::extract_creature(std::vector<std::string>& data) {
     std::vector<int> types = extract_int_list(SaveParser::types, cropped_line);
     cropped_line = extract_line(SaveParser::cost, data);
     std::vector<int> cost = extract_int_list(SaveParser::cost, cropped_line);
-    if (cost.size() != 4) {
+    if (cost.size() != 6) {
         print_err("Cost de Creature invalide.");
         return nullptr;
     }
@@ -304,18 +317,19 @@ Ritual* SaveParser::extract_ritual(std::vector<std::string>& data) {
         print_err("Name de Land non renseigné.");
         return nullptr;
     }
-/*
     std::string cropped_line = extract_line(SaveParser::effects, data);
     std::vector<int> effects = extract_int_list(SaveParser::power_toughness, cropped_line);
 
     cropped_line = extract_line(SaveParser::cost, data);
     std::vector<int> cost = extract_int_list(SaveParser::cost, cropped_line);
+    if (cost.size() != 6) {
+        print_err("Cost de Ritual invalide.");
+        return nullptr;
+    }
 
     Ritual* r = new Ritual(Card_class::RITUAL, name, token, new Cost(cost[0], cost[1], cost[2], cost[3], cost[4], cost[5]), effects);
 
     return r;
-    */
-    return nullptr; 
 }
 
 Enchantment* SaveParser::extract_enchantment(std::vector<std::string>& data) {
@@ -335,9 +349,11 @@ Enchantment* SaveParser::extract_enchantment(std::vector<std::string>& data) {
     std::vector<int> effects = extract_int_list(SaveParser::power_toughness, cropped_line);
     cropped_line = extract_line(SaveParser::cost, data);
     std::vector<int> cost = extract_int_list(SaveParser::cost, cropped_line);
-
+    if (cost.size() != 6) {
+        print_err("Cost d'Enchantment invalide.");
+        return nullptr;
+    }
     Enchantment* e = new Enchantment(Card_class::ENCHANTEMENT, name, token, new Cost(cost[0], cost[1], cost[2], cost[3], cost[4], cost[5]), effects);
-
     return e;
 }
 
