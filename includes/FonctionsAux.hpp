@@ -32,7 +32,6 @@ namespace Ability {
     enum Ability                    { Flight, Scope, Vigilance, Touch_of_death, Defender, Initiative, Double_initiative, Haste, Unblockable,
                                     Life_link, Threat, Trampling, White_protection, Blue_protection, Black_protection, Red_protection, Green_protection, Count };
 }
-                                    
 
 enum Type					    { Angel, Beast, Human_werewolf, HippoGriff, Kor_warrior, Dinosaur, Humans, Vampire, Spider, Elf, Troll, Count };
 
