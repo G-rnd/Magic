@@ -218,10 +218,12 @@ void Player::play_card(Card* c) {
 
     if(c->get_token() == Token::White){
         for (auto e : m_battlefield->get_enchantments()){
-            for (auto effect : e->get_effects()) {
-                if(effect == White_enchantment_effects::Win_1_HP_white){
-                    m_hp ++;
-                    print_info("Vous gagnez 1 point de vie pour avoir joué une carte blanche !");
+            if(e->get_token() == Token::White){
+                for (auto effect : e->get_effects()) {
+                    if(effect == White_enchantment_effects::Win_1_HP_white){
+                        m_hp ++;
+                        print_info("Vous gagnez 1 point de vie pour avoir joué une carte blanche !");
+                    }
                 }
             }
         }
@@ -477,7 +479,7 @@ void Player::choose_defenders(std::vector<Creature*> opponents) {
                         // Deflect attack for each opponent with the possible and chosen defender
                         this->deflect_attack(opponent, chosen_defenders);
                     } else {
-                        m_opponent->set_hp(m_opponent->get_hp() - opponent->get_power_current()); // TODO : check defeat
+                        set_hp(m_opponent->get_hp() - opponent->get_power_current()); // TODO : check defeat
                     }
                 }
             } else if (cmd.find("reset") != std::string::npos) {
@@ -1696,11 +1698,11 @@ void Player::print() {
 
     std::cout<<std::endl;
 
-    std::cout<< std::setfill('=') << std::setw(147) << "=" << std::endl << std::endl; 
+    std::cout<< std::setfill('=') << std::setw(186) << "=" << std::endl << std::endl; 
 
     m_battlefield->print();
 
-    std::cout << std::setfill('-') << std::setw(147) << "-" << std::endl;
+    std::cout << std::setfill('-') << std::setw(186) << "-" << std::endl;
 
     std::cout<<"Ma main"<<std::endl << std::endl;
 
