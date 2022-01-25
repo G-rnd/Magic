@@ -109,5 +109,69 @@ std::string Creature::to_string() {
 }
 
 void Creature::print(){
-    // TODO : print
+    print_info("Voici les information de " + get_name() + " :");
+
+    std::string token;
+    switch (get_token())
+    {
+    case 0:
+        token = get_background_color(Color::White);
+    break;
+    case 1:
+        token = get_background_color(Color::Blue);
+    break;
+    case 2:
+        token = get_background_color(Color::Black);
+    break;
+    case 3:
+        token = get_background_color(Color::Red);
+    break;
+    case 4:
+        token = get_background_color(Color::Green);
+    break;
+    default:
+        break;
+    }
+
+    std::string str_types = "";
+    std::vector<std::string> types{"Angel", "Beast", "Human_werewolf", "HippoGriff", "Kor_warrior", "Dinosaur", "Humans", "Vampire", "Spider", "Elf", "Troll"}; // TODO : mettre à jour
+    for (size_t i = 0; i < m_types.size(); i++){
+        if(i == m_types.size() - 1){
+            str_types += types[m_types[i]];
+        } else {
+            str_types += types[m_types[i]] + ", ";
+        }
+    }
+
+    std::string str_abilities;
+    if(m_abilities.empty()){
+        str_abilities = " n'a pas de capacités";
+    } else{
+        str_abilities = " a les capacités suivantes : ";
+        std::string abilities[] = {"Flight", "Scope", "Vigilance", "Touch_of_death", "Defender", "Initiative", "Double_initiative", "Haste", 
+                "Unblockable", "Life_link", "Threat", "Trampling", "White_protection", "Blue_protection", "Black_protection", "Red_protection", "Green_protection"};
+        for (size_t i = 0; i < m_abilities.size(); i++){
+            if(i == m_abilities.size() - 1){
+                str_abilities += abilities[m_abilities[i]];
+            } else {
+                str_abilities += abilities[m_abilities[i]] + ", ";
+            }
+        }
+    }
+
+    if(get_token() == 0){
+        std::cout << get_color(Color::Black) << token << get_name() << " est une créature de type(s) " << str_types << ". ";
+        std::cout<< get_name() << " vous coûte ";
+        m_cost->print();
+        std::cout << " elle a une force initiale de " << m_power << " et une endurance initiale de " << m_toughness << "." <<std::endl;
+        std::cout << "En ce moment elle est dans l'état suivant : " << m_power_current << " de force et " << m_toughness_current << " d'endurance. ";
+        std::cout << get_name() << str_abilities << "." << get_color(Color::Reset) << get_background_color(Color::Reset)<< std::endl;
+    } else {
+        std::cout <<  token << get_name() << " est une créature de type(s) " << str_types << ". ";
+        std::cout<< get_name() << " vous coûte ";
+        m_cost->print();
+        std::cout << " elle a une force initiale de " << m_power << " et une endurance initiale de " << m_toughness << "." <<std::endl;
+        std::cout << "En ce moment elle est dans l'état suivant : " << m_power_current << " de force et " << m_toughness_current << " d'endurance. ";
+        std::cout << get_name() << str_abilities << "." << get_background_color(Color::Reset)<< std::endl;
+    }
 }

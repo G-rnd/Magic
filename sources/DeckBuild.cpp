@@ -326,26 +326,20 @@ void DeckBuild::create_creature(){
     std::cout<<std::endl<<std::endl;
 
     // Types
-    // TODO : remplir types
+    // TODO : mettre à jour types
     // TODO : printactions dans boucle
     print_list({
-    {"0 ", "."}, 
-    {"1 ", "."},
-    {"2 ", "."},
-    {"3 ", "  ."},
-    {"4 ", "."},
-    {"5 ", "."},
-    {"6 ", " ."},
-    {"7 ", "."},
-    {"8 ", "."},
-    {"9 ", "  ."},
-    {"10", "."},
-    {"11", "."},
-    {"12", "."},
-    {"13", "."}, 
-    {"14", "  ."},
-    {"15", "  ."},
-    {"16", "  ."}}, " - ");
+    {"0 ", "Ange"}, 
+    {"1 ", "Bête"},
+    {"2 ", "Loup-garou"},
+    {"3 ", "Hippogriffe"},
+    {"4 ", "Guerrier Kor"},
+    {"5 ", "Dinosaure"},
+    {"6 ", "Humain"},
+    {"7 ", "Vampire"},
+    {"8 ", "Araignée"},
+    {"9 ", "Elfe"},
+    {"10", "Troll"}}, " - ");
 
     print_actions("Choix types, cf. ci-dessus", {
     {"valid", "valider vos choix"}, 

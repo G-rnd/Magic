@@ -64,7 +64,24 @@ void Cost::set_blue(int blue) {
 }
 
 void Cost::print() const {
-    // TODO : print (mais probablement pas besoin)
+    if(m_white > 0){
+        std::cout << m_white << " terrains blancs, ";
+    }
+    if(m_blue > 0){
+        std::cout << m_blue << " terrains bleus, ";
+    }
+    if(m_black > 0){
+        std::cout << m_black << " terrains noirs,";
+    }
+    if(m_red > 0){
+        std::cout << m_red << " terrains rouges,";
+    }
+    if(m_green > 0){
+        std::cout << m_green << " terrains verts,";
+    }
+    if(m_any > 0){
+        std::cout << m_any << " terrains aléatoires,";
+    }
 }
 
 bool Cost::is_null() {

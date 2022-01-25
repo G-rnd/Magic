@@ -25,7 +25,37 @@ void Land::set_value(int value){
 }
 
 void Land::print(){
-    // TODO : print
+    
+    print_info("Voici les information de " + get_name() + " :");
+
+    std::string token;
+    switch (get_token())
+    {
+    case 0:
+        token = get_background_color(Color::White);
+    break;
+    case 1:
+        token = get_background_color(Color::Blue);
+    break;
+    case 2:
+        token = get_background_color(Color::Black);
+    break;
+    case 3:
+        token = get_background_color(Color::Red);
+    break;
+    case 4:
+        token = get_background_color(Color::Green);
+    break;
+    default:
+        break;
+    }
+
+    if(get_token() == 0){
+        std::cout << get_color(Color::Black) << token << get_name() << " est un terrain qui rapporte " + std::to_string(m_value) + " ressources."<< get_color(Color::Reset) << get_background_color(Color::Reset)<< std::endl;
+    } else {
+        std::cout << token << get_name() << " est un terrain qui rapporte " + std::to_string(m_value) + " ressources."<< get_background_color(Color::Reset) << std::endl;
+    }
+
 }
 
 std::string Land::to_string() {
