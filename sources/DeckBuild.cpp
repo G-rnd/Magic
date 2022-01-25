@@ -76,6 +76,23 @@ void DeckBuild::create_file(){
                     print_info("Id invalide !");
                 }
             }
+
+            std::ifstream input_file(m_filename);
+            std::string line;
+
+            while(std::getline(input_file, line)){
+                if(line.find("#TYPE_CARD: Enchantment") != std::string::npos){
+                    m_ench += 1;
+                } else if (line.find("#TYPE_CARD: Creature") != std::string::npos){
+                    m_crea += 1;
+                } else if (line.find("#TYPE_CARD: Land") != std::string::npos){
+                    m_land += 1;
+                } else if (line.find("#TYPE_CARD: Ritual") != std::string::npos){
+                    m_ritu +=1;
+                }
+            }
+
+            input_file.close();
                 
             break;
         } else {
@@ -101,11 +118,11 @@ void DeckBuild::create_file(){
             print_info("Vous avez créé \n - " + std::to_string(m_crea) + " créatures \n - " + std::to_string(m_land) + " terrains \n - " + std::to_string(m_ritu) + " rituels \n - " + std::to_string(m_ench) + " enchantements");
 
             print_actions("Sélectionnez votre type de carte : ",{
-            {"crea", "pour créer une créature."}, 
-            {"land", "pour créer un terrain."},
-            {"ritu", "pour créer un rituel."},
-            {"ench", "pour créer un enchantement."},
-            {"save", "pour enregistrer l'état actuel du deck et le continuer plus tard."} }, "Choississez votre type de carte : ");
+            {"crea", "pour créer une créature"}, 
+            {"land", "pour créer un terrain"},
+            {"ritu", "pour créer un rituel"},
+            {"ench", "pour créer un enchantement"},
+            {"save", "pour enregistrer l'état actuel du deck et le continuer plus tard"} }, "Choississez votre type de carte : ");
 
             std::cin.clear();
             std::getline(std::cin, card);
@@ -148,8 +165,9 @@ void DeckBuild::create_file(){
         print_info("Votre deck " + name + " de " + std::to_string(get_nb_cards_current()) + " cartes est sauvegardé avec succès !");
         m_file.close();
     } else {
+        name = m_filename.substr(21, m_filename.length());
         print_info("Votre deck " + name + " est complet, il a été créé avec succès !");
-        std::string new_name = "data/complet/" + name + ".txt";
+        std::string new_name = "data/complet/" + name;
         rename(m_filename.c_str(), new_name.c_str());
         m_file.close();
     }
@@ -159,7 +177,7 @@ void DeckBuild::create_file(){
 void DeckBuild::create_creature(){
     
     // Begin
-    m_file << "#BEGIN_CARD" <<std::endl;
+    m_file << std::endl << "#BEGIN_CARD" <<std::endl;
     m_file << "    #TYPE_CARD: Creature" <<std::endl;
 
     // Name
@@ -226,15 +244,15 @@ void DeckBuild::create_creature(){
     std::cout<<std::endl;
 
     // Toughness
-    std::cout<< "Entrez l'endurance de votre créature : " <<std::endl;
 
     std::string toughness;
     while(true){
 
-        std::cout<< "Entrez la force de votre créature : " <<std::endl;
+        std::cout<< "Entrez l'endurance de votre créature : " <<std::endl;
 
         try{
             std::cin >> toughness;
+            std::cin.ignore();
             int id = stoi(toughness);
             if(id >= 0){
                 break;
@@ -304,6 +322,7 @@ void DeckBuild::create_creature(){
                         add_protection = true;
                     }
                     abilities.push_back(num);
+                    print_info("Vous avez ajouté " + std::to_string(num));
                 }
             } catch (std::invalid_argument &e) {
                 print_info("Commande invalide."); 
@@ -392,12 +411,10 @@ void DeckBuild::create_creature(){
     std::cout<<std::endl<<std::endl;
 
     // Cost
-    std::cout<< "Entrez le coût en terrain blanc : " <<std::endl;
-
     std::string cost_white;
     while(true){
 
-        std::cout<< "Entrez la force de votre créature : " <<std::endl;
+        std::cout<< "Entrez le coût en terrain blanc : " <<std::endl;
 
         try{
             std::cin >> cost_white;
@@ -414,12 +431,10 @@ void DeckBuild::create_creature(){
 
     }
 
-    std::cout<< std::endl << "Entrez le coût en terrain bleu : " <<std::endl;
-
     std::string cost_blue;
     while(true){
 
-        std::cout<< "Entrez la force de votre créature : " <<std::endl;
+        std::cout<< std::endl << "Entrez le coût en terrain bleu : " <<std::endl;
 
         try{
             std::cin >> cost_blue;
@@ -436,12 +451,10 @@ void DeckBuild::create_creature(){
 
     }
 
-    std::cout<< std::endl << "Entrez le coût en terrain noir : " <<std::endl;
-
     std::string cost_black;
     while(true){
 
-        std::cout<< "Entrez la force de votre créature : " <<std::endl;
+        std::cout<< std::endl << "Entrez le coût en terrain noir : " <<std::endl;
 
         try{
             std::cin >> cost_black;
@@ -458,12 +471,10 @@ void DeckBuild::create_creature(){
 
     }
 
-    std::cout<< std::endl << "Entrez le coût en terrain rouge : " <<std::endl;
-
     std::string cost_red;
     while(true){
 
-        std::cout<< "Entrez la force de votre créature : " <<std::endl;
+        std::cout<< std::endl << "Entrez le coût en terrain rouge : " <<std::endl;
 
         try{
             std::cin >> cost_red;
@@ -480,12 +491,10 @@ void DeckBuild::create_creature(){
 
     }
 
-    std::cout<< std::endl <<"Entrez le coût en terrain vert : " <<std::endl;
-
     std::string cost_green;
     while(true){
 
-        std::cout<< "Entrez la force de votre créature : " <<std::endl;
+        std::cout<< std::endl <<"Entrez le coût en terrain vert : " <<std::endl;
 
         try{
             std::cin >> cost_green;
@@ -502,12 +511,10 @@ void DeckBuild::create_creature(){
 
     }
 
-    std::cout<< std::endl << "Entrez le coût en terrain de n'importe quelle couleur : " <<std::endl;
-
     std::string cost_any;
     while(true){
 
-        std::cout<< "Entrez la force de votre créature : " <<std::endl;
+        std::cout<< std::endl << "Entrez le coût en terrain de n'importe quelle couleur : " <<std::endl;
 
         try{
             std::cin >> cost_any;
@@ -537,7 +544,7 @@ void DeckBuild::create_creature(){
 void DeckBuild::create_land(){
     
     // Begin
-    m_file << "#BEGIN_CARD" <<std::endl;
+    m_file << std::endl << "#BEGIN_CARD" <<std::endl;
     m_file << "    #TYPE_CARD: Land" <<std::endl;
 
     // Name
@@ -557,11 +564,11 @@ void DeckBuild::create_land(){
     while(true){
 
         print_list({
-        {std::to_string(0), "Créature blanche"},
-        {std::to_string(1), "Créature bleue"},
-        {std::to_string(2), "Créature noire"},
-        {std::to_string(3), "Créature rouge"},
-        {std::to_string(4), "Créature verte"}, }, " - ");
+        {std::to_string(0), "Terrain blanc"},
+        {std::to_string(1), "Terrain bleu"},
+        {std::to_string(2), "Terrain noir"},
+        {std::to_string(3), "Terrain rouge"},
+        {std::to_string(4), "Terrain vert"}, }, " - ");
 
         std::cout<< std::endl << "Entrez la couleur de votre terrain : " <<std::endl;
 
@@ -585,7 +592,7 @@ void DeckBuild::create_land(){
 void DeckBuild::create_ritual(){
 
     // Begin
-    m_file << "#BEGIN_CARD" <<std::endl;
+    m_file << std::endl << "#BEGIN_CARD" <<std::endl;
     m_file << "    #TYPE_CARD: Ritual" <<std::endl;
 
     // Name
@@ -605,11 +612,11 @@ void DeckBuild::create_ritual(){
     while(true){
 
         print_list({
-        {std::to_string(0), "Créature blanche"},
-        {std::to_string(1), "Créature bleue"},
-        {std::to_string(2), "Créature noire"},
-        {std::to_string(3), "Créature rouge"},
-        {std::to_string(4), "Créature verte"}, }, " - ");
+        {std::to_string(0), "Rituel blanc"},
+        {std::to_string(1), "Rituel bleu"},
+        {std::to_string(2), "Rituel noir"},
+        {std::to_string(3), "Rituel rouge"},
+        {std::to_string(4), "Rituel vert"}, }, " - ");
 
         std::cout<< std::endl << "Entrez la couleur de votre rituel : " <<std::endl;
 
@@ -906,12 +913,11 @@ void DeckBuild::create_ritual(){
     }
 
     // Cost
-    std::cout<< "Entrez le coût en terrain blanc : " <<std::endl;
 
     std::string cost_white;
     while(true){
 
-        std::cout<< "Entrez la force de votre créature : " <<std::endl;
+        std::cout<< "Entrez le coût en terrain blanc : " <<std::endl;
 
         try{
             std::cin >> cost_white;
@@ -928,12 +934,11 @@ void DeckBuild::create_ritual(){
 
     }
 
-    std::cout<< std::endl << "Entrez le coût en terrain bleu : " <<std::endl;
 
     std::string cost_blue;
     while(true){
 
-        std::cout<< "Entrez la force de votre créature : " <<std::endl;
+        std::cout<< std::endl << "Entrez le coût en terrain bleu : " <<std::endl;
 
         try{
             std::cin >> cost_blue;
@@ -950,12 +955,11 @@ void DeckBuild::create_ritual(){
 
     }
 
-    std::cout<< std::endl << "Entrez le coût en terrain noir : " <<std::endl;
 
     std::string cost_black;
     while(true){
 
-        std::cout<< "Entrez la force de votre créature : " <<std::endl;
+        std::cout<< std::endl << "Entrez le coût en terrain noir : " <<std::endl;
 
         try{
             std::cin >> cost_black;
@@ -972,12 +976,12 @@ void DeckBuild::create_ritual(){
 
     }
 
-    std::cout<< std::endl << "Entrez le coût en terrain rouge : " <<std::endl;
+    
 
     std::string cost_red;
     while(true){
 
-        std::cout<< "Entrez la force de votre créature : " <<std::endl;
+        std::cout<< std::endl << "Entrez le coût en terrain rouge : " <<std::endl;
 
         try{
             std::cin >> cost_red;
@@ -994,12 +998,12 @@ void DeckBuild::create_ritual(){
 
     }
 
-    std::cout<< std::endl <<"Entrez le coût en terrain vert : " <<std::endl;
+    
 
     std::string cost_green;
     while(true){
 
-        std::cout<< "Entrez la force de votre créature : " <<std::endl;
+        std::cout<< std::endl <<"Entrez le coût en terrain vert : " <<std::endl;
 
         try{
             std::cin >> cost_green;
@@ -1016,12 +1020,12 @@ void DeckBuild::create_ritual(){
 
     }
 
-    std::cout<< std::endl << "Entrez le coût en terrain de n'importe quelle couleur : " <<std::endl;
+    
 
     std::string cost_any;
     while(true){
 
-        std::cout<< "Entrez la force de votre créature : " <<std::endl;
+        std::cout<< std::endl << "Entrez le coût en terrain de n'importe quelle couleur : " <<std::endl;
 
         try{
             std::cin >> cost_any;
@@ -1050,7 +1054,7 @@ void DeckBuild::create_ritual(){
 void DeckBuild::create_enchantment(){
     
     // Begin
-    m_file << "#BEGIN_CARD" <<std::endl;
+    m_file << std::endl << "#BEGIN_CARD" <<std::endl;
     m_file << "    #TYPE_CARD: Ritual" <<std::endl;
 
     // Name
@@ -1070,11 +1074,11 @@ void DeckBuild::create_enchantment(){
     while(true){
 
         print_list({
-        {std::to_string(0), "Créature blanche"},
-        {std::to_string(1), "Créature bleue"},
-        {std::to_string(2), "Créature noire"},
-        {std::to_string(3), "Créature rouge"},
-        {std::to_string(4), "Créature verte"}, }, " - ");
+        {std::to_string(0), "Enchantement blanc"},
+        {std::to_string(1), "Enchantement bleu"},
+        {std::to_string(2), "Enchantement noir"},
+        {std::to_string(3), "Enchantement rouge"},
+        {std::to_string(4), "Enchantement vert"}, }, " - ");
 
         std::cout<< std::endl << "Entrez la couleur de votre enchantement : " <<std::endl;
 
@@ -1382,12 +1386,12 @@ void DeckBuild::create_enchantment(){
     }
 
     // Cost
-    std::cout<< "Entrez le coût en terrain blanc : " <<std::endl;
+    
 
     std::string cost_white;
     while(true){
 
-        std::cout<< "Entrez la force de votre créature : " <<std::endl;
+        std::cout<< "Entrez le coût en terrain blanc : " <<std::endl;
 
         try{
             std::cin >> cost_white;
@@ -1404,12 +1408,12 @@ void DeckBuild::create_enchantment(){
 
     }
 
-    std::cout<< std::endl << "Entrez le coût en terrain bleu : " <<std::endl;
+    
 
     std::string cost_blue;
     while(true){
 
-        std::cout<< "Entrez la force de votre créature : " <<std::endl;
+        std::cout<< std::endl << "Entrez le coût en terrain bleu : " <<std::endl;
 
         try{
             std::cin >> cost_blue;
@@ -1426,12 +1430,12 @@ void DeckBuild::create_enchantment(){
 
     }
 
-    std::cout<< std::endl << "Entrez le coût en terrain noir : " <<std::endl;
+    
 
     std::string cost_black;
     while(true){
 
-        std::cout<< "Entrez la force de votre créature : " <<std::endl;
+        std::cout<< std::endl << "Entrez le coût en terrain noir : " <<std::endl;
 
         try{
             std::cin >> cost_black;
@@ -1448,12 +1452,12 @@ void DeckBuild::create_enchantment(){
 
     }
 
-    std::cout<< std::endl << "Entrez le coût en terrain rouge : " <<std::endl;
+    
 
     std::string cost_red;
     while(true){
 
-        std::cout<< "Entrez la force de votre créature : " <<std::endl;
+        std::cout<< std::endl << "Entrez le coût en terrain rouge : " <<std::endl;
 
         try{
             std::cin >> cost_red;
@@ -1470,12 +1474,12 @@ void DeckBuild::create_enchantment(){
 
     }
 
-    std::cout<< std::endl <<"Entrez le coût en terrain vert : " <<std::endl;
+    
 
     std::string cost_green;
     while(true){
 
-        std::cout<< "Entrez la force de votre créature : " <<std::endl;
+        std::cout<< std::endl <<"Entrez le coût en terrain vert : " <<std::endl;
 
         try{
             std::cin >> cost_green;
@@ -1492,12 +1496,12 @@ void DeckBuild::create_enchantment(){
 
     }
 
-    std::cout<< std::endl << "Entrez le coût en terrain de n'importe quelle couleur : " <<std::endl;
+    
 
     std::string cost_any;
     while(true){
 
-        std::cout<< "Entrez la force de votre créature : " <<std::endl;
+        std::cout<< std::endl << "Entrez le coût en terrain de n'importe quelle couleur : " <<std::endl;
 
         try{
             std::cin >> cost_any;
