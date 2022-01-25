@@ -363,32 +363,17 @@ void Game::combat_phase() {
     
     if (!chosen_opponent.empty()) {
         get_current_player()->print();
-
-        std::vector<Creature*> chosen_blockabled_opponent = chosen_opponent;
-        
-        // supprimer les cartes imblocables des cartes blocables
-        for (auto creature : chosen_blockabled_opponent) {
-
-            bool unblockable_opponent = false;
-
-            for (auto ability_creature : creature->get_abilities()) {
-                if(ability_creature == Ability::Unblockable) unblockable_opponent = true;
-            }
-
-            if (unblockable_opponent)
-                remove(creature, chosen_blockabled_opponent);
-        }
         
         while (true) {
             // demander à l'adervsaire s'il veut défendre l'attaque
-            if (!chosen_blockabled_opponent.empty()) {
+            if (!chosen_opponent.empty()) {
                 print_actions(get_current_player()->get_opponent()->get_name() + ", voulez-vous bloquer ces créatures ?", {
                     {"0", "Choisir de bloquer les créatures"},
                     {"1", "Choisir de ne pas bloquer les créatures"}
                 });
                 std::vector<std::pair<std::string, std::string> > creature_list = {};
                 int i = 0;
-                for (auto creature : chosen_blockabled_opponent) {
+                for (auto creature : chosen_opponent) {
                     creature_list.push_back({std::to_string(i), creature->get_name()});
                     i++;   
                 }
@@ -404,10 +389,10 @@ void Game::combat_phase() {
                 if (res != 0 && res != 1)
                     print_info("Commande invalide.");
                 else if (res == 0) {
-                    get_current_player()->get_opponent()->choose_defenders(chosen_blockabled_opponent);
+                    get_current_player()->get_opponent()->choose_defenders(chosen_opponent);
                     break;
                 } else {
-                    for (auto creature : chosen_blockabled_opponent) {
+                    for (auto creature : chosen_opponent) {
                         if (!std::all_of(creature->get_abilities().begin(), creature->get_abilities().begin(), [] (auto i) { return i != Ability::Life_link ;}))
                             get_current_player()->set_hp(get_current_player()->get_hp() + creature->get_power_current());
                         print_info(get_current_player()->get_opponent()->get_name() + " perd " + std::to_string(creature->get_power_current()) + " PV !");
