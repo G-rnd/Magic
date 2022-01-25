@@ -96,10 +96,15 @@ std::vector<Creature*> Battlefield::get_engaged_creatures() {
 std::vector<Creature*> Battlefield::get_available_creatures() {
     std::vector<Creature*> v = {};
 
+    bool haste = false;
+
     for (auto card : m_basic_cards) {
         if(card->is_class(Card_class::CREATURE) && !card->get_engaged()) {
             Creature* c = dynamic_cast<Creature*>(card);
-            if(!c->get_is_first_turn()){
+            for (auto a : c->get_abilities()){
+                if(a == Ability::Haste) haste = true;
+            }
+            if(!c->get_is_first_turn() || haste){
                 v.push_back(c);
             }
         }
