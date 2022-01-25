@@ -980,24 +980,32 @@ void Player::play_ritual(Ritual* r) {
 
                     int i = 0;
                     std::vector<Creature*> possible_creatures;
-
-                    print_info("Selectionnez une creature pour la tuer : ");
-
-                    for (auto bc : m_opponent->get_battlefield()->get_basic_cards()) {
-                        
-                        if (bc->is_class(Card_class::CREATURE)) {
-
-                            Creature* creature = dynamic_cast<Creature*>(bc);
-
-                            std::cout<< i << " - " << creature->get_name() <<std::endl;
-                            possible_creatures.push_back(creature);
-                            i++;
-                        }
-                    }
+                    std::vector<std::pair<std::string, std::string>> print_creatures = {};
 
                     std::string cmd;
 
                     while (true) {
+
+                        cls();
+                        print();
+
+                        print_actions(m_name + ", selectionnez une creature pour la tuer :", {
+                                {"<id>", "pour choisir cette carte"} });
+
+                        for (auto bc : m_opponent->get_battlefield()->get_basic_cards()) {
+                        
+                            if (bc->is_class(Card_class::CREATURE)) {
+
+                                Creature* creature = dynamic_cast<Creature*>(bc);
+
+                                print_creatures.push_back({std::to_string(i), creature->get_name()});
+                                possible_creatures.push_back(creature);
+                                i++;
+                            }
+                        }
+
+                        print_list(print_creatures);
+
                         std::getline(std::cin, cmd);
 
                         try {
@@ -1006,8 +1014,8 @@ void Player::play_ritual(Ritual* r) {
                                 print_info("Id invalide.");
                             } else {
                                 Creature* chosen_creature = possible_creatures[num];
-                                destroy_card(chosen_creature);
                                 print_info("Vous venez de placer " + chosen_creature->get_name() + " dans le cimetière de votre adversaire ! ");
+                                m_opponent->destroy_card(chosen_creature);
                                 break;
                             }
                         } catch (std::invalid_argument &e) {
@@ -1049,8 +1057,8 @@ void Player::play_ritual(Ritual* r) {
                                 print_info("Id invalide.");
                             } else {
                                 Creature* chosen_creature = possible_creatures[num];
-                                destroy_card(chosen_creature);
                                 print_info("Vous venez de placer " + chosen_creature->get_name() + " dans le cimetière de votre adversaire ! ");
+                                m_opponent->destroy_card(chosen_creature);
                                 break;
                             }
                         } catch (std::invalid_argument &e) {
@@ -1099,8 +1107,8 @@ void Player::play_ritual(Ritual* r) {
                                 print_info("Id invalide.");
                             } else {
                                 Creature* chosen_creature = possible_creatures[num];
-                                destroy_card(chosen_creature);
                                 print_info("Vous venez de placer " + chosen_creature->get_name() + " dans le cimetière de votre adversaire ! ");
+                                m_opponent->destroy_card(chosen_creature);
                                 break;
                             }
                         } catch (std::invalid_argument &e) {
@@ -1337,33 +1345,34 @@ void Player::play_ritual(Ritual* r) {
 
                 case Green_ritual_effects::Take_2_lands_library_shuffle: {
 
-                    cls();
-                    print();
-
-                    int i = 0;
-                    std::vector<Land*> possible_lands;
-                    std::vector<Land*> chosen_lands;
-
-                    print_actions(m_name + ", selectionnez 2 terrains de votre bibliotheque :", {
-                            {"<id>", "pour choisir cette carte"},
-                            {"reset", "pour annuler vos choix"},
-                            {"valid", "pour valider vos choix"} });
-
-                    for (auto c : m_library) {
-                        
-                        if (c->is_class(Card_class::LAND)) {
-
-                            Land* land = dynamic_cast<Land*>(c);
-
-                            std::cout<< i << " - " << land->get_name() <<std::endl;
-                            possible_lands.push_back(land);
-                            i++;
-                        }
-                    }
+                    std::vector<Land*> chosen_lands = {};
 
                     std::string cmd;
 
                     while (true) {
+
+                        cls();
+                        print();
+
+                        int i = 0;
+                        std::vector<std::pair<std::string, std::string>> print_lands = {};
+                        std::vector<Land*> possible_lands = {};
+
+                        print_actions(m_name + ", selectionnez 2 terrains de votre bibliotheque, vous la melangerez ensuite :", {
+                                {"<id>", "pour choisir cette carte"} });
+
+                        for (auto c : m_library) {
+                        
+                            if (c->is_class(Card_class::LAND)) {
+
+                                Land* land = dynamic_cast<Land*>(c);
+                                print_lands.push_back({std::to_string(i), land->get_name()});
+                                possible_lands.push_back(land);
+                                i++;
+                            }
+                        }
+
+                        print_list(print_lands);
                             
                         std::getline(std::cin, cmd);
                     
@@ -1376,6 +1385,7 @@ void Player::play_ritual(Ritual* r) {
                                     m_hand.push_back(land);
                                     remove( dynamic_cast<Card*>(land), m_library);
                                 }
+                                print_info("Bibliothèque mélangée");
                                 shuffle_library();
                                 break;
                             }
@@ -1390,6 +1400,8 @@ void Player::play_ritual(Ritual* r) {
                                 } else {
                                     if(chosen_lands.size() == 2){
                                         print_info("Vous avez deja fait 2 choix, tapez valid ou reset.");
+                                    } else if(contain(possible_lands[num], chosen_lands)){
+                                        print_info("Vous avez deja choisi " + possible_lands[num]->get_name());
                                     } else {
                                         chosen_lands.push_back(possible_lands[num]);  
                                         print_info("Vous avez ajouté " + possible_lands[num]->get_name() + " !");   
