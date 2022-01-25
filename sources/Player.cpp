@@ -476,7 +476,8 @@ void Player::choose_defenders(std::vector<Creature*> opponents) {
                         // Deflect attack for each opponent with the possible and chosen defender
                         this->deflect_attack(opponent, chosen_defenders);
                     } else {
-                        set_hp(m_opponent->get_hp() - opponent->get_power_current()); // TODO : check defeat
+                        set_hp(m_hp - opponent->get_power_current());
+                        print_info(m_name + " a maintenant " + std::to_string(m_hp) + " HP !");
                     }
                 }
             } else if (cmd.find("reset") != std::string::npos) {
@@ -657,8 +658,10 @@ void Player::battle_creature(Creature* opponent, Creature* defender) {
             print_err("bah yes hein");
             if (toughness_defender >= opponent->get_power_current()) {
                 m_opponent->set_hp(m_opponent->get_hp() + opponent->get_power_current());
+                print_info(m_opponent->get_name() + " a maintenant " + std::to_string(m_opponent->get_hp()) + " HP !");
             } else {
                 m_opponent->set_hp(m_opponent->get_hp() + toughness_defender);
+                print_info(m_opponent->get_name() + " a maintenant " + std::to_string(m_opponent->get_hp()) + " HP !");
             }
         }
         if (defender->get_toughness_current() <= 0) {
@@ -671,8 +674,10 @@ void Player::battle_creature(Creature* opponent, Creature* defender) {
         if (life_link_defender) {
             if (toughness_opponent >= defender->get_power_current()) {
                 this->set_hp(this->get_hp() + defender->get_power_current());
+                print_info(m_name + " a maintenant " + std::to_string(m_hp) + " HP !");
             } else {
                 this->set_hp(this->get_hp() + toughness_opponent);
+                print_info(m_name + " a maintenant " + std::to_string(m_hp) + " HP !");
             }
         }
         if (opponent->get_toughness_current() <= 0) {
@@ -695,8 +700,10 @@ void Player::battle_creature(Creature* opponent, Creature* defender) {
             if (life_link_opponent) {
                 if (toughness_defender >= opponent->get_power_current()) {
                     m_opponent->set_hp(m_opponent->get_hp() + opponent->get_power_current());
+                    print_info(m_opponent->get_name() + " a maintenant " + std::to_string(m_opponent->get_hp()) + " HP !");
                 } else {
                     m_opponent->set_hp(m_opponent->get_hp() + toughness_defender);
+                    print_info(m_opponent->get_name() + " a maintenant " + std::to_string(m_opponent->get_hp()) + " HP !");
                 }
             }
         }
@@ -710,8 +717,10 @@ void Player::battle_creature(Creature* opponent, Creature* defender) {
             if (life_link_defender) {
                 if (toughness_opponent >= defender->get_power_current()) {
                     this->set_hp(this->get_hp() + defender->get_power_current());
+                    print_info(m_name + " a maintenant " + std::to_string(m_hp) + " HP !");
                 } else {
                     this->set_hp(this->get_hp() + toughness_opponent);
+                    print_info(m_name + " a maintenant " + std::to_string(m_hp) + " HP !");
                 }
             }
         }
@@ -730,6 +739,7 @@ void Player::battle_creature(Creature* opponent, Creature* defender) {
     // Check Trampling ability
     if (!opponent_dead && trampling_opponent) {
         this->set_hp(this->get_hp() - opponent->get_power_current()); //TODO change power change
+        print_info(m_name + " a maintenant " + std::to_string(m_hp) + " HP !");
     }
 }
 
