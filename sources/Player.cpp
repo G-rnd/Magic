@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <iterator>
+#include <algorithm>
 #include <iomanip> 
 
 #include "Player.hpp"
@@ -197,21 +198,7 @@ void Player::discard_card(Card* c) {
 }
 
 void Player::shuffle_library() {
-
-/*
-    std::default_engine_generator generator;
-    std::uniform_int_distribution<int> distribution(1, 6);
-    int rand = distribution(generator);
-*/
-
-    std::vector<Card*> m_library_copy = m_library;
-    int i_lib = 0;
-    while(!m_library_copy.empty()){
-        int j = rand() % m_library_copy.size();
-        m_library[i_lib] = m_library_copy[j];
-        m_library_copy.erase(m_library_copy.begin() + j);
-        i_lib++;
-    }
+    std::random_shuffle(m_library.begin(), m_library.end());
 }
 
 void Player::play_card(Card* c) {

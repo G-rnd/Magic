@@ -434,6 +434,15 @@
 
 #BEGIN_CARD
 	#TYPE_CARD: Ritual
+	#NAME: Destroyer
+	#TOKEN: 0
+
+	#EFFECTS: 3
+	#COST: 1, 2, 0, 0, 0, 0
+#END_CARD
+
+#BEGIN_CARD
+	#TYPE_CARD: Ritual
 	#NAME: Placement
 	#TOKEN: 4
 
@@ -453,10 +462,40 @@
 // ENCHANTMENTS
 #BEGIN_CARD
 	#TYPE_CARD: Enchantment
-	#NAME: Mon super enchantement
-	#TOKEN: 3
+	#NAME: Green hand
+	#TOKEN: 4
 
 
 	#EFFECTS: 0
-	#COST: 1, 0, 0, 0, 0, 0
+	#COST: 1, 0, 0, 0, 0, 1
+#END_CARD
+
+#BEGIN_CARD
+	#TYPE_CARD: Enchantment
+	#NAME: Special mushroom
+	#TOKEN: 4
+
+
+	#EFFECTS: 1
+	#COST: 1, 0, 0, 0, 0, 2
+#END_CARD
+
+#BEGIN_CARD
+	#TYPE_CARD: Enchantment
+	#NAME: White power
+	#TOKEN: 0
+
+
+	#EFFECTS: 0
+	#COST: 2, 2, 0, 0, 0, 0
+#END_CARD
+
+#BEGIN_CARD
+	#TYPE_CARD: Enchantment
+	#NAME: New wings
+	#TOKEN: 0
+
+
+	#EFFECTS: 1
+	#COST: 0, 2, 0, 0, 0, 0
 #END_CARD
