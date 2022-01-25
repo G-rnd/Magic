@@ -10,7 +10,7 @@ class DeckBuild{
 
         std::string                m_filename;
         std::ofstream              m_file;
-        const int                  m_nb_cards = 30;
+        const int                  m_nb_cards = 40;
         int                        m_crea = 0;
         int                        m_land = 0;
         int                        m_ritu = 0;
