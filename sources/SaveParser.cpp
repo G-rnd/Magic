@@ -145,6 +145,7 @@ Player* SaveParser::extract_player(std::vector<std::string>& data) {
     std::vector<Card*> graveyard = extract_cards(cropped_data);
 
     Player* p = new Player(name);
+    p->set_hp(hp);
     p->set_played_land(played_land);
     p->set_hand(hand);
     p->set_library(library);

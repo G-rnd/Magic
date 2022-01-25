@@ -597,8 +597,9 @@ void Game::load_phase(size_t phase) {
 
         get_current_player()->print();
         m_player_turn = !m_player_turn;
+        next_phase();
     }
-    next_phase();
+    phases();
 }
 
 
@@ -695,7 +696,7 @@ void Game::exit() {
 }
 
 void Game::victory(Player* p) {
-    print_info("Bravo " + p->get_name() + "tu as vaincu " + p->get_opponent()->get_name() + " !");
+    print_info("Bravo " + p->get_name() + " tu as vaincu " + p->get_opponent()->get_name() + " !");
 }
 
 void Game::print_title_screen() {
