@@ -393,6 +393,7 @@ void Game::combat_phase() {
             }
             
             std::string cmd;
+            std::cin.clear();
             std::getline(std::cin, cmd);
 
             try {

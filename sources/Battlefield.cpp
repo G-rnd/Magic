@@ -553,7 +553,7 @@ void Battlefield::print() {
         std::cout << std::endl;
     }
 
-    size_t bc_size = m_basic_cards.size();
+    size_t bc_size = m_basic_cards.size() - 1;
     size_t m = (m_enchantments.size() % 8) == 0 ? 0 : 1;
 
     std::string white_effects[] = {"Win_1_HP_white", "Flight_Life_link"};
@@ -563,7 +563,7 @@ void Battlefield::print() {
     std::string green_effects[] = {"More_1_land", "More_G_G_creature"};
 
 // TODO : affichage enchantement ne fonctionne pas
-/*
+
     // print les enchantements
     for (size_t i = 0; i < (m_enchantments.size()/8) + m; i++) {
 
@@ -577,7 +577,7 @@ void Battlefield::print() {
             cards_states.push_back(State::Normal);
             std::cout<< top_card_basic;
 
-            if (num_card == m_enchantments.size() - 1 + bc_size)
+            if (num_card == m_enchantments.size() - 1)
                 break;
             std::cout << delimiter;
         }
@@ -592,7 +592,7 @@ void Battlefield::print() {
 
             // print the token on the first line background
             std::string token;
-            switch (m_basic_cards[num_card]->get_token())
+            switch (m_enchantments[num_card]->get_token())
             {
             case 0:
                 token = get_background_color(Color::White);
@@ -613,13 +613,13 @@ void Battlefield::print() {
                 break;
             }
             
-            if(m_basic_cards[num_card]->get_token() == 0){
-                std::cout << left[cards_states[j]]<< get_color(Color::Black) << token << num_card << std::setw(wid-diff) << std::setfill(' ') << "Creature" << get_color(Color::Reset) << get_background_color(Color::Reset) << right[cards_states[j]];
+            if(m_enchantments[num_card]->get_token() == 0){
+                std::cout << left[cards_states[j]]<< get_color(Color::Black) << token << num_card + bc_size << std::setw(wid-diff) << std::setfill(' ') << "Enchantment" << get_color(Color::Reset) << get_background_color(Color::Reset) << right[cards_states[j]];
             } else {
-                std::cout << left[cards_states[j]]<< token << num_card << std::setw(wid-diff) << std::setfill(' ') << "Creature" << get_background_color(Color::Reset) << right[cards_states[j]];
+                std::cout << left[cards_states[j]]<< token << num_card + bc_size << std::setw(wid-diff) << std::setfill(' ') << "Enchantment" << get_background_color(Color::Reset) << right[cards_states[j]];
             }
 
-            if (num_card == m_enchantments.size() - 1 + bc_size)
+            if (num_card == m_enchantments.size() - 1)
                 break;
             std::cout << delimiter;
         }
@@ -633,7 +633,7 @@ void Battlefield::print() {
 
             std::cout << left[cards_states[j]] << centered_string(m_enchantments[num_card]->get_name(), wid) << right[cards_states[j]];
 
-            if (num_card == m_enchantments.size() - 1 + bc_size)
+            if (num_card == m_enchantments.size() - 1)
                 break;
             std::cout << delimiter;
         }
@@ -660,19 +660,32 @@ void Battlefield::print() {
             std::cout<< std::setw((wid - 11)/2) << std::setfill(' ') << " " << right[cards_states[j]];
 
 
-            if (num_card == m_enchantments.size() - 1 + bc_size)
+            if (num_card == m_enchantments.size() - 1)
                 break;
             std::cout << delimiter;
 
         }
 
+        std::cout << std::endl;
+
+        // empty line
+        for (size_t j = 0; j < 8; j++) {
+
+            num_card = i*8 + j;
+
+            std::cout<< left[cards_states[j]] << std::setw(wid) << std::setfill(' ') << " " << right[cards_states[j]];
+
+            if (num_card == m_enchantments.size() - 1)
+                break;
+            std::cout << delimiter;
+        }
 
         std::cout << std::endl;
 
         // print first effect
         for (size_t j = 0; j < 8; j++) {
 
-            num_card = bc_size + i*8 + j;
+            num_card = i*8 + j;
 
             if ((m_enchantments[j]->get_effects()).empty()) {
                 std::cout<< left[cards_states[j]] << std::setw(wid) << std::setfill(' ') << " " << right[cards_states[j]];
@@ -707,7 +720,7 @@ void Battlefield::print() {
                 }
             }
 
-            if (num_card == m_enchantments.size() - 1 + bc_size)
+            if (num_card == m_enchantments.size() - 1)
                 break;
             std::cout << delimiter;
         }
@@ -717,7 +730,7 @@ void Battlefield::print() {
         // print second effect
         for (size_t j = 0; j < 8; j++) {
 
-            num_card = bc_size + i*8 + j;
+            num_card = i*8 + j;
 
             if ((m_enchantments[j]->get_effects()).size() < 2) {
                 std::cout<< left[cards_states[j]] << std::setw(wid) << std::setfill(' ') << " " << right[cards_states[j]];
@@ -751,12 +764,55 @@ void Battlefield::print() {
                         break;
                 }
             }
-            if (num_card == m_enchantments.size() - 1 + bc_size)
+            if (num_card == m_enchantments.size() - 1)
                 break;
             std::cout << delimiter;
         }
+
+        std::cout << std::endl;
+
+        // empty line
+        for (size_t j = 0; j < 8; j++) {
+
+            num_card = i*8 + j;
+
+            std::cout<< left[cards_states[j]] << std::setw(wid) << std::setfill(' ') << " " << right[cards_states[j]];
+            
+            if (num_card == m_enchantments.size() - 1)
+                break;
+            std::cout << delimiter;
+        }
+
+        std::cout << std::endl;
+
+        // empty line
+        for (size_t j = 0; j < 8; j++) {
+
+            num_card = i*8 + j;
+
+            std::cout<< left[cards_states[j]] << std::setw(wid) << std::setfill(' ') << " " << right[cards_states[j]];
+            
+            if (num_card == m_enchantments.size() - 1)
+                break;
+            std::cout << delimiter;
+        }
+
+        std::cout << std::endl;
+
+        // print bottom of the card
+        for (size_t j = 0; j < 8; j++) {
+
+            num_card = i*8 + j;
+
+            std::cout<< down_card_basic;
+
+            if (num_card == m_enchantments.size() - 1)
+                break;
+            std::cout << delimiter;
+        } 
+
         std::cout << std::endl;
         std::cout << std::endl;
     }
-    */
+    
 }

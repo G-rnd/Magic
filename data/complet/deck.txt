@@ -458,5 +458,5 @@
 
 
 	#EFFECTS: 0
-	#COST: 3, 0, 0, 0, 0, 0
+	#COST: 1, 0, 0, 0, 0, 0
 #END_CARD
