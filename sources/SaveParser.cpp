@@ -145,6 +145,7 @@ Player* SaveParser::extract_player(std::vector<std::string>& data) {
     std::vector<Card*> graveyard = extract_cards(cropped_data);
 
     Player* p = new Player(name);
+    p->set_hp(hp);
     p->set_played_land(played_land);
     p->set_hand(hand);
     p->set_library(library);
@@ -287,7 +288,7 @@ Ritual* SaveParser::extract_ritual(std::vector<std::string>& data) {
     if (name == "")
         throw std::invalid_argument("Name de Ritual non renseigné.");
     std::string cropped_line = extract_line(SaveParser::effects, data);
-    std::vector<int> effects = extract_int_list(SaveParser::power_toughness, cropped_line);
+    std::vector<int> effects = extract_int_list(SaveParser::effects, cropped_line);
 
     cropped_line = extract_line(SaveParser::cost, data);
     std::vector<int> cost = extract_int_list(SaveParser::cost, cropped_line);
@@ -309,7 +310,7 @@ Enchantment* SaveParser::extract_enchantment(std::vector<std::string>& data) {
         throw std::invalid_argument("Name d'Enchantment non renseigné.");
 
     std::string cropped_line = extract_line(SaveParser::effects, data);
-    std::vector<int> effects = extract_int_list(SaveParser::power_toughness, cropped_line);
+    std::vector<int> effects = extract_int_list(SaveParser::effects, cropped_line);
     cropped_line = extract_line(SaveParser::cost, data);
     std::vector<int> cost = extract_int_list(SaveParser::cost, cropped_line);
     if (cost.size() != 6)

@@ -121,7 +121,7 @@ void Player::set_name(std::string s) {
 
 void Player::set_hp(int i) {
     m_hp = i;
-    if(m_hp == 0) m_looser = true;
+    if(m_hp <= 0) m_looser = true;
 }
 
 void Player::set_graveyard(const std::vector<Card*>& cards) {
@@ -448,6 +448,7 @@ void Player::choose_defenders(std::vector<Creature*> opponents) {
             }
             print_list(print_creatures);
             
+            std::cin.clear();
             std::getline(std::cin, cmd);
         
             if (cmd.find("valid") != std::string::npos) {
@@ -476,7 +477,7 @@ void Player::choose_defenders(std::vector<Creature*> opponents) {
             } else {
                 try {
                     int num = std::stoi(cmd);
-                    if (num > i || num < 0) {
+                    if (num >= (int) id || num < 0) {
                         print_info("Id invalide");
                     } else {
                         if (contain(creatures[num], chosen_defenders)) {
@@ -548,7 +549,7 @@ std::vector<Creature*> Player::choose_defenders_orders(std::vector<Creature*> de
             } else {
                 try {
                     int num = std::stoi(cmd);
-                    if (num > i || num < 0) {
+                    if (num >= (int) id || num < 0) {
                         print_info("Id invalide");
                     } else {
                         if (contain(possible_defenders[num], chosen_defenders)) {
@@ -1575,10 +1576,10 @@ void Player::play_enchantment(Enchantment* e){
                             cls();
                             print();
 
-                            print_actions(m_name + ", selectionnez votre land à enchanter pour la controler :", {
+                            print_actions(m_name + ", selectionnez votre land pour lui donner 1 ressource de plus :", {
                                 {"<id>", "pour choisir cette carte"} });
 
-                            for (auto card : m_opponent->get_battlefield()->get_basic_cards()){
+                            for (auto card : m_battlefield->get_basic_cards()){
                                 if(card->is_class(Card_class::LAND)){
                                     Land* land = dynamic_cast<Land*>(card);
                                     print_lands.push_back({std::to_string(i), land->get_name()});
