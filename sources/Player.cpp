@@ -394,12 +394,15 @@ void Player::choose_defenders(std::vector<Creature*> opponents) {
         // Etablish opponent abilities
         bool threat_opponent = false;
         bool flight_opponent = false;
+        bool unblockable_opponent = false;
 
         for (auto ability_opponent : opponent->get_abilities()) {
             if (ability_opponent == Ability::Flight) {
                 flight_opponent = true;
             } else if (ability_opponent == Ability::Threat) {
                 threat_opponent = true;
+            } else if (ability_opponent == Ability::Unblockable){
+                unblockable_opponent = true;
             }
         }
 
@@ -446,10 +449,16 @@ void Player::choose_defenders(std::vector<Creature*> opponents) {
                 print_creatures.push_back({std::to_string(id), c->get_name()});
                 id++;
             }
-            print_list(print_creatures);
+
+            if(unblockable_opponent){
+                print_info(opponent->get_name() + " est imblocable !");
+                cmd = "valid";
+            } else {
+                print_list(print_creatures);
             
-            std::cin.clear();
-            std::getline(std::cin, cmd);
+                std::cin.clear();
+                std::getline(std::cin, cmd);
+            }
         
             if (cmd.find("valid") != std::string::npos) {
                 // Check Threat ability is respected
