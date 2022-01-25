@@ -457,6 +457,6 @@
 	#TOKEN: 3
 
 
-	#EFFECTS: 1
+	#EFFECTS: 0
 	#COST: 1, 0, 0, 0, 2, 0
 #END_CARD

@@ -1,0 +1,462 @@
+// Liste des cartes d'un deck
+
+// LANDS
+#BEGIN_CARD
+	#TYPE_CARD: Land
+	#NAME: Island
+	#TOKEN: 1
+
+	#VALUE: 1
+#END_CARD
+
+#BEGIN_CARD
+	#TYPE_CARD: Land
+	#NAME: Island
+	#TOKEN: 1
+
+	#VALUE: 1
+#END_CARD
+
+#BEGIN_CARD
+	#TYPE_CARD: Land
+	#NAME: Island
+	#TOKEN: 1
+
+	#VALUE: 1
+#END_CARD
+
+#BEGIN_CARD
+	#TYPE_CARD: Land
+	#NAME: Island
+	#TOKEN: 1
+
+	#VALUE: 1
+#END_CARD
+
+#BEGIN_CARD
+	#TYPE_CARD: Land
+	#NAME: Island
+	#TOKEN: 1
+
+	#VALUE: 1
+#END_CARD
+
+#BEGIN_CARD
+	#TYPE_CARD: Land
+	#NAME: Island
+	#TOKEN: 1
+
+	#VALUE: 1
+#END_CARD
+
+#BEGIN_CARD
+	#TYPE_CARD: Land
+	#NAME: Island
+	#TOKEN: 1
+
+	#VALUE: 1
+#END_CARD
+
+#BEGIN_CARD
+	#TYPE_CARD: Land
+	#NAME: Swamp
+	#TOKEN: 2
+
+	#VALUE: 1
+#END_CARD
+
+#BEGIN_CARD
+	#TYPE_CARD: Land
+	#NAME: Swamp
+	#TOKEN: 2
+
+	#VALUE: 1
+#END_CARD
+
+#BEGIN_CARD
+	#TYPE_CARD: Land
+	#NAME: Swamp
+	#TOKEN: 2
+
+	#VALUE: 1
+#END_CARD
+
+#BEGIN_CARD
+	#TYPE_CARD: Land
+	#NAME: Swamp
+	#TOKEN: 2
+
+	#VALUE: 1
+#END_CARD
+
+#BEGIN_CARD
+	#TYPE_CARD: Land
+	#NAME: Swamp
+	#TOKEN: 2
+
+	#VALUE: 1
+#END_CARD
+
+#BEGIN_CARD
+	#TYPE_CARD: Land
+	#NAME: Swamp
+	#TOKEN: 2
+
+	#VALUE: 1
+#END_CARD
+
+#BEGIN_CARD
+	#TYPE_CARD: Land
+	#NAME: Swamp
+	#TOKEN: 2
+
+	#VALUE: 1
+#END_CARD
+
+
+// CREATURES
+#BEGIN_CARD
+	#TYPE_CARD: Creature
+	#NAME: Kalonian Tusker
+	#TOKEN: 2
+
+	#POWER: 3
+	#TOUGHNESS: 3
+	// types : <ability_1, ... ability_n>
+	#ABILITIES:
+	
+	// types : <white, black, red, blue, green>
+	#TYPES: 7
+	
+	// cost : <any>, <white>, <black>, <red>, <blue>, <green>
+	#COST: 0, 0, 2, 0, 0, 0
+#END_CARD
+
+#BEGIN_CARD
+	#TYPE_CARD: Creature
+	#NAME: Tireless Hauler
+	#TOKEN: 2
+
+	#POWER: 4
+	#TOUGHNESS: 5
+	// types : <ability_1, ... ability_n>
+	#ABILITIES: 3, 10
+	
+	// types : <white, black, red, blue, green>
+	#TYPES: 2
+	
+	// cost : <any>, <white>, <black>, <red>, <blue>, <green>
+	#COST: 3, 0, 2, 0, 0, 0
+#END_CARD
+
+#BEGIN_CARD
+	#TYPE_CARD: Creature
+	#NAME: Library Theft
+	#TOKEN: 1
+
+	#POWER: 1
+	#TOUGHNESS: 2
+	// types : <ability_1, ... ability_n>
+	#ABILITIES: 8
+	
+	// types : <white, black, red, blue, green>
+	#TYPES: 6, 9
+	
+	// cost : <any>, <white>, <black>, <red>, <blue>, <green>
+	#COST: 1, 0, 1, 0, 0, 0
+#END_CARD
+
+#BEGIN_CARD
+	#TYPE_CARD: Creature
+	#NAME: Singing Mermaid
+	#TOKEN: 2
+
+	#POWER: 3
+	#TOUGHNESS: 2
+	// types : <ability_1, ... ability_n>
+	#ABILITIES:
+	
+	// types : <white, black, red, blue, green>
+	#TYPES: 9
+	
+	// cost : <any>, <white>, <black>, <red>, <blue>, <green>
+	#COST: 0, 0, 2, 0, 0, 0
+#END_CARD
+
+#BEGIN_CARD
+	#TYPE_CARD: Creature
+	#NAME: Iron Geist
+	#TOKEN: 2
+
+	#POWER: 0
+	#TOUGHNESS: 5
+	// types : <ability_1, ... ability_n>
+	#ABILITIES: 4
+	
+	// types : <white, black, red, blue, green>
+	#TYPES: 0
+	
+	// cost : <any>, <white>, <black>, <red>, <blue>, <green>
+	#COST: 3, 0, 1, 0, 0, 0
+#END_CARD
+
+#BEGIN_CARD
+	#TYPE_CARD: Creature
+	#NAME: Serra Demons
+	#TOKEN: 2
+
+	#POWER: 4
+	#TOUGHNESS: 4
+	// types : <ability_1, ... ability_n>
+	#ABILITIES: 6, 7
+	
+	// types : <white, black, red, blue, green>
+	#TYPES: 5
+	
+	// cost : <any>, <white>, <black>, <red>, <blue>, <green>
+	#COST: 2, 0, 0, 3, 0, 0
+#END_CARD
+
+#BEGIN_CARD
+	#TYPE_CARD: Creature
+	#NAME: Serra Demons
+	#TOKEN: 2
+
+	#POWER: 4
+	#TOUGHNESS: 4
+	// types : <ability_1, ... ability_n>
+	#ABILITIES: 6, 7
+	
+	// types : <white, black, red, blue, green>
+	#TYPES: 5
+	
+	// cost : <any>, <white>, <black>, <red>, <blue>, <green>
+	#COST: 2, 0, 0, 3, 0, 0
+#END_CARD
+
+#BEGIN_CARD
+	#TYPE_CARD: Creature
+	#NAME: Intrepid Adversary
+	#TOKEN: 1
+
+	#POWER: 3
+	#TOUGHNESS: 1
+	// types : <ability_1, ... ability_n>
+	#ABILITIES: 3
+	
+	// types : <white, black, red, blue, green>
+	#TYPES: 5
+	
+	// cost : <any>, <white>, <black>, <red>, <blue>, <green>
+	#COST: 1, 0, 2, 0, 0, 0
+#END_CARD
+
+#BEGIN_CARD
+	#TYPE_CARD: Creature
+	#NAME: Mesa Whale
+	#TOKEN: 1
+
+	#POWER: 3
+	#TOUGHNESS: 1
+	// types : <ability_1, ... ability_n>
+	#ABILITIES: 0, 8
+	
+	// types : <white, black, red, blue, green>
+	#TYPES: 1
+	
+	// cost : <any>, <white>, <black>, <red>, <blue>, <green>
+	#COST: 2, 0, 3, 0, 0, 0
+#END_CARD
+
+#BEGIN_CARD
+	#TYPE_CARD: Creature
+	#NAME: Infernal Shark
+	#TOKEN: 1
+
+	#POWER: 2
+	#TOUGHNESS: 3
+	// types : <ability_1, ... ability_n>
+	#ABILITIES: 
+	
+	// types : <white, black, red, blue, green>
+	#TYPES: 1
+	
+	// cost : <any>, <white>, <black>, <red>, <blue>, <green>
+	#COST: 1, 0, 1, 0, 0, 0
+#END_CARD
+
+#BEGIN_CARD
+	#TYPE_CARD: Creature
+	#NAME: Infernal Troll
+	#TOKEN: 1
+
+	#POWER: 2
+	#TOUGHNESS: 3
+	// types : <ability_1, ... ability_n>
+	#ABILITIES: 
+	
+	// types : <white, black, red, blue, green>
+	#TYPES: 10
+	
+	// cost : <any>, <white>, <black>, <red>, <blue>, <green>
+	#COST: 1, 0, 0, 1, 0, 0
+#END_CARD
+
+#BEGIN_CARD
+	#TYPE_CARD: Creature
+	#NAME: Infernal Shark
+	#TOKEN: 1
+
+	#POWER: 2
+	#TOUGHNESS: 3
+	// types : <ability_1, ... ability_n>
+	#ABILITIES: 
+	
+	// types : <white, black, red, blue, green>
+	#TYPES: 1
+	
+	// cost : <any>, <white>, <black>, <red>, <blue>, <green>
+	#COST: 1, 0, 1, 0, 0, 0
+#END_CARD
+
+#BEGIN_CARD
+	#TYPE_CARD: Creature
+	#NAME: Fancing SeaBird
+	#TOKEN: 1
+
+	#POWER: 0
+	#TOUGHNESS: 4
+	// types : <ability_1, ... ability_n>
+	#ABILITIES: 4, 0
+	
+	// types : <white, black, red, blue, green>
+	#TYPES: 0
+	
+	// cost : <any>, <white>, <black>, <red>, <blue>, <green>
+	#COST: 1, 0, 2, 0, 0, 0
+#END_CARD
+
+#BEGIN_CARD
+	#TYPE_CARD: Creature
+	#NAME: Lost Lightspirit
+	#TOKEN: 1
+
+	#POWER: 4
+	#TOUGHNESS: 2
+	// types : <ability_1, ... ability_n>
+	#ABILITIES: 2, 5
+	
+	// types : <white, black, red, blue, green>
+	#TYPES: 9
+	
+	// cost : <any>, <white>, <black>, <red>, <blue>, <green>
+	#COST: 2, 0, 3, 0, 0, 0
+#END_CARD
+
+#BEGIN_CARD
+	#TYPE_CARD: Creature
+	#NAME: Tefeiri's protégé
+	#TOKEN: 1
+
+	#POWER: 6
+	#TOUGHNESS: 5
+	// types : <ability_1, ... ability_n>
+	#ABILITIES: 5
+	
+	// types : <white, black, red, blue, green>
+	#TYPES: 6
+	
+	// cost : <any>, <white>, <black>, <red>, <blue>, <green>
+	#COST: 2, 0, 3, 0, 0, 0
+#END_CARD
+
+#BEGIN_CARD
+	#TYPE_CARD: Creature
+	#NAME: Taruju Paragon
+	#TOKEN: 2
+
+	#POWER: 3
+	#TOUGHNESS: 2
+	// types : <ability_1, ... ability_n>
+	#ABILITIES:
+	
+	// types : <white, black, red, blue, green>
+	#TYPES: 9
+	
+	// cost : <any>, <white>, <black>, <red>, <blue>, <green>
+	#COST: 1, 0, 0, 1, 0, 0
+#END_CARD
+
+#BEGIN_CARD
+	#TYPE_CARD: Creature
+	#NAME: Kraken of Tolaria
+	#TOKEN: 1
+
+	#POWER: 3
+	#TOUGHNESS: 3
+	// types : <ability_1, ... ability_n>
+	#ABILITIES:
+	
+	// types : <white, black, red, blue, green>
+	#TYPES: 1
+	
+	// cost : <any>, <white>, <black>, <red>, <blue>, <green>
+	#COST: 2, 0, 1, 0, 0, 0
+#END_CARD
+
+// RITUALS
+#BEGIN_CARD
+	#TYPE_CARD: Ritual
+	#NAME: Tide Reader
+	#TOKEN: 1
+
+	#EFFECTS: 0
+	#COST: 1, 0, 2, 0, 0, 0
+#END_CARD
+
+#BEGIN_CARD
+	#TYPE_CARD: Ritual
+	#NAME: Truth Forecast
+	#TOKEN: 1
+
+	#EFFECTS: 1
+	#COST: 1, 0, 3, 0, 0, 0
+#END_CARD
+
+#BEGIN_CARD
+	#TYPE_CARD: Ritual
+	#NAME: Killer
+	#TOKEN: 2
+
+	#EFFECTS: 1
+	#COST: 1, 0, 0, 2, 0, 0
+#END_CARD
+
+#BEGIN_CARD
+	#TYPE_CARD: Ritual
+	#NAME: DEmon Killer
+	#TOKEN: 2
+
+	#EFFECTS: 1
+	#COST: 0, 0, 0, 3, 0, 0
+#END_CARD
+
+// ENCHANTMENTS
+#BEGIN_CARD
+	#TYPE_CARD: Enchantment
+	#NAME: Graveyard Link
+	#TOKEN: 2
+
+	#EFFECTS: 0
+	#COST: 1, 0, 0, 2, 0, 0
+#END_CARD
+
+#BEGIN_CARD
+	#TYPE_CARD: Enchantment
+	#NAME: Mesmerising Potion
+	#TOKEN: 1
+
+
+	#EFFECTS: 0
+	#COST: 1, 0, 2, 0, 0, 0
+#END_CARD
