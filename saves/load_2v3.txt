@@ -611,7 +611,7 @@
 
 #BEGIN_CARD
 #CLASS: 0
-#NAME: Placeholder
+#NAME: Juggernaut
 #TOKEN: 3
 #ENGAGED: 0
 #BEGIN_ENCHANTMENTS
