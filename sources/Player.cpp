@@ -645,6 +645,7 @@ void Player::battle_creature(Creature* opponent, Creature* defender) {
         defender->set_toughness_current(defender->get_toughness_current() - opponent->get_power_current());
         // Check life_link ability
         if (life_link_opponent) {
+            print_err("bah yes hein");
             if (toughness_defender >= opponent->get_power_current()) {
                 m_opponent->set_hp(m_opponent->get_hp() + opponent->get_power_current());
             } else {
