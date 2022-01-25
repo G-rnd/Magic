@@ -796,24 +796,31 @@ void Player::play_ritual(Ritual* r) {
 
                         int i = 0;
                         std::vector<Creature*> possible_creatures;
-
-                        print_info("Selectionnez une creature pour le detruire de la partie :");
-
-                        for (auto bc : m_opponent->get_battlefield()->get_basic_cards()) {
-                            if (bc->is_class(Card_class::CREATURE)) {
-                                Creature* creature = dynamic_cast<Creature*>(bc);
-
-                                if (creature->get_engaged()) {
-                                    std::cout<< i << " - " << creature->get_name() <<std::endl;
-                                    possible_creatures.push_back(creature);
-                                    i++;
-                                }
-                            }
-                        }
+                        std::vector<std::pair<std::string, std::string>> print_creatures;
 
                         std::string cmd;
 
                         while (true) {
+
+                            cls();
+                            print();
+
+                            print_actions(m_name + ", selectionnez une creature pour le detruire de la partie :", {
+                                {"<id>", "pour choisir cette carte"} });
+
+                            for (auto bc : m_opponent->get_battlefield()->get_basic_cards()) {
+                                if (bc->is_class(Card_class::CREATURE)) {
+                                    Creature* creature = dynamic_cast<Creature*>(bc);
+                                    if (creature->get_engaged()) {
+                                        possible_creatures.push_back(creature);
+                                        print_creatures.push_back({std::to_string(i), creature->get_name()});
+                                        i++;
+                                    }
+                                }
+                            }
+
+                            print_list(print_creatures);
+
                             std::getline(std::cin, cmd);
 
                             try {
@@ -838,33 +845,38 @@ void Player::play_ritual(Ritual* r) {
                     // The player destroy an enchantment of its opponent
                     case White_ritual_effects::Destroy_enchantment: {
 
-                        int i = 0;
-                        std::vector<Enchantment*> possible_enchantments;
-
-                        // TODO : ne marche pas
-                        print_info("Selectionnez un enchantement pour le detruire de la partie :");
-
-                        // Each enchantment on the battlefield of the opponent
-                        for (auto e : m_opponent->get_battlefield()->get_enchantments()) {
-                            
-                            std::cout<< i << " - " << e->get_name() << " global " <<std::endl;
-                            possible_enchantments.push_back(e);
-                            i++;
-                        }
-                        // Each enchantment of a basic card on the battlefield of the opponent
-                        for (auto bc : m_opponent->get_battlefield()->get_basic_cards()) {
-                            for (auto e : bc->get_enchantments()) {
-                                
-                                std::cout<< i << " - " << e->get_name() << " : " << bc->get_name() <<std::endl;
-                                possible_enchantments.push_back(e);
-                                i++;
-
-                            }
-                        }
-
                         std::string cmd;
 
                         while (true) {
+
+                            cls();
+                            print();
+
+                            int i = 0;
+                            std::vector<Enchantment*> possible_enchantments = {};
+                            std::vector<std::pair<std::string, std::string>> print_creatures = {};
+
+                            print_actions(m_name + ", selectionnez un enchantement pour le detruire de la partie :", {
+                                {"<id>", "pour choisir cette carte"} });
+
+                            // Each enchantment on the battlefield of the opponent
+                            for (auto e : m_opponent->get_battlefield()->get_enchantments()) {
+                                print_creatures.push_back({std::to_string(i), e->get_name()});
+                                possible_enchantments.push_back(e);
+                                i++;
+                            }
+                            // Each enchantment of a basic card on the battlefield of the opponent
+                            for (auto bc : m_opponent->get_battlefield()->get_basic_cards()) {
+                                for (auto e : bc->get_enchantments()) {
+                                    print_creatures.push_back({std::to_string(i), e->get_name()});
+                                    possible_enchantments.push_back(e);
+                                    i++;
+
+                                }
+                            }
+
+                            print_list(print_creatures);
+
                             std::getline(std::cin, cmd);
 
                             try {
@@ -1212,6 +1224,9 @@ void Player::play_ritual(Ritual* r) {
                                             chosen_creature->set_toughness_current(chosen_creature->get_toughness_current() - 3);
                                         }
                                         print_info("Vous venez d'infliger 3 dégâts à " + chosen_creature->get_name()  + " ! ");
+                                        if(chosen_creature->get_toughness_current() <= 0){
+                                            destroy_card(chosen_creature);
+                                        }
                                         break;
                                     }
                                 } catch (std::invalid_argument &e) {
@@ -1231,9 +1246,13 @@ void Player::play_ritual(Ritual* r) {
                 
                 case Red_ritual_effects::Damage_4_creatures: {
 
+                    cls();
+                    print();
+
                     int i = 0;
                     std::vector<Creature*> possible_creatures;
                     std::vector<Creature*> chosen_creatures;
+                    std::vector<Creature*> dead_creatures;
 
                     print_actions(m_name + ", selectionnez au plus 4 créatures pour leur infliger 1 dégâts (doublons acceptés) :", {
                             {"<id>", "pour choisir cette carte"},
@@ -1262,6 +1281,14 @@ void Player::play_ritual(Ritual* r) {
                             for (auto creature : chosen_creatures) {
                                 print_info("Vous infligez 1 dégât à " + creature->get_name() + " ! ");
                                 creature->set_toughness_current(creature->get_toughness_current() - 1);
+                                if(creature->get_toughness_current() <= 0){
+                                    if(!contain(creature, dead_creatures)){
+                                        dead_creatures.push_back(creature);
+                                    }
+                                }
+                            }
+                            for (auto c : dead_creatures){
+                                m_opponent->destroy_card(c);
                             }
                             break;
                         } else if (cmd.find("reset") != std::string::npos) {
@@ -1273,13 +1300,8 @@ void Player::play_ritual(Ritual* r) {
                                 if (num > i || num < 0) {
                                     print_info("Id invalide");
                                 } else {
-                                    if (contain(possible_creatures[num], chosen_creatures)) {
-                                        print_info(std::to_string(num) + " deja choisie"); 
-                                    } else {
-                                        chosen_creatures.push_back(possible_creatures[num]);
-                                        print_info("Vous avez ajouté " + possible_creatures[num-1]->get_name() + " !");
-
-                                    }
+                                    chosen_creatures.push_back(possible_creatures[num]);
+                                    print_info("Vous avez ajouté " + possible_creatures[num]->get_name() + " !");
                                 }
                             } catch (std::invalid_argument &e) {
                                 print_info("Commande Invalide");    
