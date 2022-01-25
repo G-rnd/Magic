@@ -1576,10 +1576,10 @@ void Player::play_enchantment(Enchantment* e){
                             cls();
                             print();
 
-                            print_actions(m_name + ", selectionnez votre land à enchanter pour la controler :", {
+                            print_actions(m_name + ", selectionnez votre land pour lui donner 1 ressource de plus :", {
                                 {"<id>", "pour choisir cette carte"} });
 
-                            for (auto card : m_opponent->get_battlefield()->get_basic_cards()){
+                            for (auto card : m_battlefield->get_basic_cards()){
                                 if(card->is_class(Card_class::LAND)){
                                     Land* land = dynamic_cast<Land*>(card);
                                     print_lands.push_back({std::to_string(i), land->get_name()});
