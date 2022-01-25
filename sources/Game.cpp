@@ -435,7 +435,7 @@ void Game::turn_end_phase() {
             while (true) {
                 cls();
                 print_actions("Vous devez défausser " + std::to_string(get_current_player()->get_hand().size() - 7)+ " cartes !", {
-                    {"<id>", "pour défausser une carte."},
+                    {"<id>", "pour défausser une carte"},
                     {"reset", "pour réinitialiser vos choix"}
                 });
             
@@ -462,7 +462,7 @@ void Game::turn_end_phase() {
                 } else {
                     try {
                         int num = std::stoi(cmd);
-                        if (num > i || num < 0) {
+                        if (num >= i || num < 0) {
                             print_info("Id invalide.");
                         } else {
                             print_info("Carte choisie : " + possible_cards[num]->get_name());
