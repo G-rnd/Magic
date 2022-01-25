@@ -380,10 +380,10 @@ std::vector<Creature*> Player::attack() {
 
 void Player::choose_defenders(std::vector<Creature*> opponents) {
 
-    std::vector<Creature*> availabled_creature = m_battlefield->get_available_creatures();
-    std::vector<std::pair<std::string, std::string> > print_creatures = {};
-
     for (auto opponent : opponents) {
+
+        std::vector<Creature*> availabled_creature = m_battlefield->get_available_creatures();
+        std::vector<std::pair<std::string, std::string> > print_creatures = {};
 
         std::string cmd;
         int i = 0;
@@ -502,31 +502,31 @@ std::vector<Creature*> Player::choose_defenders_orders(std::vector<Creature*> de
     std::vector<std::pair<std::string, std::string> > print_creatures = {};
 
     std::string cmd;
-    int i = 0;
     bool quit = false;
     std::vector<Creature*> possible_defenders = defenders;
     std::vector<Creature*> chosen_defenders = {};
 
     while(!possible_defenders.empty()){
 
-        cls();
-        this->print();
-
-        print_actions(m_name + ", selectionnez l'ordre des defenseurs que " + opponent->get_name() + " va attaquer :", {
-        {"<id>", "pour selectionner cette carte"},
-        {"reset", "pour annuler vos choix"},
-        {"valid", "pour valider vos choix"} });
-
-        size_t id = 0;
-        print_creatures = {};
-        for(auto& c : possible_defenders) {
-            print_creatures.push_back({std::to_string(id), c->get_name()});
-            id++;
-        }
-        print_list(print_creatures);
-
         // Interaction with player : choices
         while (!quit) {
+
+            cls();
+            this->print();
+
+            print_actions(m_name + ", selectionnez l'ordre des defenseurs que " + opponent->get_name() + " va attaquer :", {
+            {"<id>", "pour selectionner cette carte"},
+            {"reset", "pour annuler vos choix"},
+            {"valid", "pour valider vos choix"} });
+
+            size_t id = 0;
+            print_creatures = {};
+            for(auto& c : possible_defenders) {
+                print_creatures.push_back({std::to_string(id), c->get_name()});
+                id++;
+            }
+            print_list(print_creatures);
+
             std::getline(std::cin, cmd);
             
         
@@ -841,6 +841,7 @@ void Player::play_ritual(Ritual* r) {
                         int i = 0;
                         std::vector<Enchantment*> possible_enchantments;
 
+                        // TODO : ne marche pas
                         print_info("Selectionnez un enchantement pour le detruire de la partie :");
 
                         // Each enchantment on the battlefield of the opponent

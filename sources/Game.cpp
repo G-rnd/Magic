@@ -341,16 +341,18 @@ void Game::combat_phase() {
     cls();
 
     for (auto ench : get_current_player()->get_battlefield()->get_enchantments()){
-        for (auto effect : ench->get_effects()){
-            if(effect == Red_enchantment_effects::More_1_0_attack_creatures){
-                for (auto card : get_current_player()->get_battlefield()->get_basic_cards()){
-                    if(card->is_class(Card_class::CREATURE)){
-                        Creature *creature = dynamic_cast<Creature*>(card);
-                        creature->set_power_current(creature->get_power_current() + 1);
-                        creature->set_power(creature->get_power() + 1);
-                        print_info(creature->get_name() + " gagne 1 / 0 grace a " + ench->get_name() + " !");
-                    }
-                }   
+        if(ench->get_token() == Token::Red){
+            for (auto effect : ench->get_effects()){
+                if(effect == Red_enchantment_effects::More_1_0_attack_creatures){
+                    for (auto card : get_current_player()->get_battlefield()->get_basic_cards()){
+                        if(card->is_class(Card_class::CREATURE)){
+                            Creature *creature = dynamic_cast<Creature*>(card);
+                            creature->set_power_current(creature->get_power_current() + 1);
+                            creature->set_power(creature->get_power() + 1);
+                            print_info(creature->get_name() + " gagne 1 / 0 grace a " + ench->get_name() + " !");
+                        }
+                    }   
+                }
             }
         }
     }

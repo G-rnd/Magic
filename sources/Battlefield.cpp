@@ -562,8 +562,6 @@ void Battlefield::print() {
     std::string red_effects[]   = {"More_1_0_attack_creatures"};
     std::string green_effects[] = {"More_1_land", "More_G_G_creature"};
 
-// TODO : affichage enchantement ne fonctionne pas
-
     // print les enchantements
     for (size_t i = 0; i < (m_enchantments.size()/8) + m; i++) {
 
@@ -588,7 +586,7 @@ void Battlefield::print() {
         for (size_t j = 0; j < 8; j++) {
 
             num_card = i*8 + j;
-            int diff = num_card > 9 ? 2:1;
+            int diff = num_card + bc_size > 9 ? 2:1;
 
             // print the token on the first line background
             std::string token;
