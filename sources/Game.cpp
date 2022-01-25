@@ -73,14 +73,13 @@ void Game::start() {
 
     cls();
     print_actions("Bienvenue dans votre partie !", {}, "Saisir le nom du premier joueur");
-
-    std::cin.ignore();
+    std::cin.clear();
     std::getline(std::cin, p_name_1);
     Player* p1 = new Player(p_name_1);
     
     cls();
     print_actions("Bienvenue dans votre partie !", {}, "Saisir le nom du second joueur");
-    std::cin.ignore();
+    std::cin.clear();
     std::getline(std::cin, p_name_2);
     Player* p2 = new Player(p_name_2);
 
