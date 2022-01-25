@@ -98,7 +98,7 @@ void Game::start() {
     for (const auto & file : std::filesystem::directory_iterator(path))
         available_decks.push_back({"", (file.path()).string().substr(path.size())});
     for(size_t i = 0; i < available_decks.size(); i++) {
-        available_decks[i].first = (available_decks.size() > 10) ? ((i/10 == 1) ? " " : "") : "" + std::to_string(i);
+        available_decks[i].first = std::to_string(i);
     }
 
     if (available_decks.size() == 0) {
@@ -613,8 +613,9 @@ void Game::load() {
 
     for (const auto & file : std::filesystem::directory_iterator(path))
         available_saves.push_back({"", (file.path()).string().substr(path.size())});
+
     for(size_t i = 0; i < available_saves.size(); i++) {
-        available_saves[i].first = (available_saves.size() > 10) ? ((i/10 == 1) ? " " : "") : "" + std::to_string(i);
+        available_saves[i].first = std::to_string(i);
     }
 
     if (available_saves.size() == 0) {
@@ -708,6 +709,6 @@ void Game::print_title_screen() {
         { "play",         "pour lancer une nouvelle partie" },
         { "load",         "pour charger une de vos parties" },
         { "deck-builder", "pour créer votre propre deck" },
-        { "exit",         "pour quitter le jeu." }
+        { "exit",         "pour quitter le jeu" }
     }, "Choisissez votre mode de jeu :");
 }
