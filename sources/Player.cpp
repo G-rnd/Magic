@@ -476,6 +476,9 @@ void Player::choose_defenders(std::vector<Creature*> opponents) {
                         // Deflect attack for each opponent with the possible and chosen defender
                         this->deflect_attack(opponent, chosen_defenders);
                     } else {
+                        std::vector<int> v = opponent->get_abilities();
+                        if (!std::all_of(v.begin(), v.end(), [] (auto i) { return i != Ability::Life_link;}))
+                            get_opponent()->set_hp(get_opponent()->get_hp() + opponent->get_power_current());
                         set_hp(m_hp - opponent->get_power_current());
                         print_info(m_name + " a maintenant " + std::to_string(m_hp) + " HP !");
                     }

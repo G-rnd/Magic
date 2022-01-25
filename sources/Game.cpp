@@ -393,9 +393,11 @@ void Game::combat_phase() {
                     break;
                 } else {
                     for (auto creature : chosen_opponent) {
+
                         std::vector<int> v = creature->get_abilities();
                         if (!std::all_of(v.begin(), v.end(), [] (auto i) { return i != Ability::Life_link;}))
                             get_current_player()->set_hp(get_current_player()->get_hp() + creature->get_power_current());
+                            
                         print_info(get_current_player()->get_opponent()->get_name() + " perd " + std::to_string(creature->get_power_current()) + " PV !");
                         get_current_player()->get_opponent()->set_hp(get_current_player()->get_opponent()->get_hp() - creature->get_power_current());
                     }
