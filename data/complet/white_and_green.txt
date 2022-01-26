@@ -59,6 +59,38 @@
 
 #BEGIN_CARD
 	#TYPE_CARD: Land
+	#NAME: Plains
+	#TOKEN: 0
+
+	#VALUE: 1
+#END_CARD
+
+#BEGIN_CARD
+	#TYPE_CARD: Land
+	#NAME: Plains
+	#TOKEN: 0
+
+	#VALUE: 1
+#END_CARD
+
+#BEGIN_CARD
+	#TYPE_CARD: Land
+	#NAME: Forest
+	#TOKEN: 4
+
+	#VALUE: 1
+#END_CARD
+
+#BEGIN_CARD
+	#TYPE_CARD: Land
+	#NAME: Forest
+	#TOKEN: 4
+
+	#VALUE: 1
+#END_CARD
+
+#BEGIN_CARD
+	#TYPE_CARD: Land
 	#NAME: Forest
 	#TOKEN: 4
 

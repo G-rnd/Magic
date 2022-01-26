@@ -59,6 +59,38 @@
 
 #BEGIN_CARD
 	#TYPE_CARD: Land
+	#NAME: Island
+	#TOKEN: 1
+
+	#VALUE: 1
+#END_CARD
+
+#BEGIN_CARD
+	#TYPE_CARD: Land
+	#NAME: Island
+	#TOKEN: 1
+
+	#VALUE: 1
+#END_CARD
+
+#BEGIN_CARD
+	#TYPE_CARD: Land
+	#NAME: Swamp
+	#TOKEN: 2
+
+	#VALUE: 1
+#END_CARD
+
+#BEGIN_CARD
+	#TYPE_CARD: Land
+	#NAME: Swamp
+	#TOKEN: 2
+
+	#VALUE: 1
+#END_CARD
+
+#BEGIN_CARD
+	#TYPE_CARD: Land
 	#NAME: Swamp
 	#TOKEN: 2
 
@@ -434,10 +466,10 @@
 
 #BEGIN_CARD
 	#TYPE_CARD: Ritual
-	#NAME: DEmon Killer
+	#NAME: Demon Killer
 	#TOKEN: 2
 
-	#EFFECTS: 1
+	#EFFECTS: 2
 	#COST: 0, 0, 0, 3, 0, 0
 #END_CARD
 

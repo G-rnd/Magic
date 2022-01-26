@@ -246,11 +246,7 @@ void Player::disengage_card(BasicCard* bc) {
     bc->set_engaged(false);
 }
 
-/*
-- Vigilance
-- Defender
-- Haste
-*/
+// TODO : double initiative s'il n'y a pas de defenseurs
 std::vector<Creature*> Player::attack() {
 
     int i = 0;
@@ -699,6 +695,7 @@ void Player::battle_creature(Creature* opponent, Creature* defender) {
             } 
         } else if (!initiative_opponent) {
             defender->set_toughness_current(defender->get_toughness_current() - opponent->get_power_current());
+            std::cout<<defender->get_toughness_current()<<std::endl; // TODO
             // Check Life_link ability
             if (life_link_opponent) {
                 if (toughness_defender >= opponent->get_power_current()) {
@@ -716,6 +713,7 @@ void Player::battle_creature(Creature* opponent, Creature* defender) {
             } 
         } else if (!initiative_defender) {
             opponent->set_toughness_current(opponent->get_toughness_current() - defender->get_power_current());
+            std::cout<< opponent->get_toughness_current(); // TODO
             // Check life_link ability
             if (life_link_defender) {
                 if (toughness_opponent >= defender->get_power_current()) {
@@ -730,10 +728,14 @@ void Player::battle_creature(Creature* opponent, Creature* defender) {
 
         // If the creatures are dead, deplace them into the graveyard
         if (opponent->get_toughness_current() <= 0) {
+
+            std::cout<< "AAAAAAAAAAAAAAAA"; // TODO
             opponent_dead = true;
             m_opponent->destroy_card(opponent);
         }
         if (defender->get_toughness_current() <= 0) {
+
+            std::cout<< "AAAAAAAAAAAAAAAA"; // TODO
             defender_dead = true;
             destroy_card(defender);
         }
@@ -761,26 +763,30 @@ void Player::destroy_card(Card* c) {
         // Check the enchantment : remove 1 hp to the opponent when a creature die
         if(c->is_class(Card_class::CREATURE)){
             for (auto ench : m_battlefield->get_enchantments()){
-                for (auto effect : ench->get_effects()){
-                    if(effect == Black_enchantment_effects::Less_HP_death_creature){
-                        m_opponent->set_hp(m_opponent->get_hp() - 1);
-                        print_info("Une creature est morte, " + m_opponent->get_name() + " perd un point de vie !");
+                if(ench->get_token() == Token::Black){
+                    for (auto effect : ench->get_effects()){
+                        if(effect == Black_enchantment_effects::Less_HP_death_creature){
+                            m_opponent->set_hp(m_opponent->get_hp() - 1);
+                            print_info(c->get_name() + " est morte, " + m_opponent->get_name() + " perd un point de vie !");
+                        }
                     }
                 }
             }
             for (auto ench : m_opponent->get_battlefield()->get_enchantments()){
-                for (auto effect : ench->get_effects()){
-                    if(effect == Black_enchantment_effects::Less_HP_death_creature){
-                        m_hp--;
-                        print_info("Une creature est morte, " + m_name + " perd un point de vie !");
+                if(ench->get_token() == Token::Black){    
+                    for (auto effect : ench->get_effects()){
+                        if(effect == Black_enchantment_effects::Less_HP_death_creature){
+                            m_hp--;
+                            print_info(c->get_name() + " est morte, " + m_name + " perd un point de vie !");
+                        }
                     }
                 }
               }
         }
 
     } 
-    // If c is a Ritual, we place it into the graveyard
-    else if (c->is_class(Card_class::RITUAL)) {
+    // If c is a Ritual or an enchantment, we place it into the graveyard
+    else if (c->is_class(Card_class::RITUAL) || c->is_class(Card_class::ENCHANTEMENT)) {
         m_graveyard.push_back(c);
     }
 }
@@ -922,7 +928,6 @@ void Player::play_ritual(Ritual* r) {
                     break;
 
                     default :
-                        // TODO error
                         break;
 
                 }
@@ -949,24 +954,30 @@ void Player::play_ritual(Ritual* r) {
 
                     int i = 0;
                     std::vector<Creature*> possible_creatures;
-
-                    print_info("Selectionnez une creature pour la renvoyer dans la main de votre adversaire :");
-
-                    for (auto bc : m_opponent->get_battlefield()->get_basic_cards()) {
-                        
-                        if (bc->is_class(Card_class::CREATURE)) {
-
-                            Creature* creature = dynamic_cast<Creature*>(bc);
-
-                            std::cout<< i << " - " << creature->get_name() <<std::endl;
-                            possible_creatures.push_back(creature);
-                            i++;
-                        }
-                    }
+                    std::vector<std::pair<std::string, std::string>> print_creatures = {};
 
                     std::string cmd;
 
                     while (true) {
+
+                        cls();
+                        print();
+
+                        print_actions(m_name + ", selectionnez une creature pour la renvoyer dans la main de votre adversaire :", {
+                                {"<id>", "pour choisir cette carte"} });
+
+                        for (auto bc : m_opponent->get_battlefield()->get_basic_cards()) {
+                        
+                            if (bc->is_class(Card_class::CREATURE)) {
+                                Creature* creature = dynamic_cast<Creature*>(bc);
+                                print_creatures.push_back({std::to_string(i), bc->get_name()});
+                                possible_creatures.push_back(creature);
+                                i++;
+                            }
+                        }
+
+                        print_list(print_creatures);
+
                         std::getline(std::cin, cmd);
 
                         try {
@@ -1052,26 +1063,31 @@ void Player::play_ritual(Ritual* r) {
 
                     int i = 0;
                     std::vector<Creature*> possible_creatures;
-
-                    print_info("Selectionnez une creature avec plus de 2 de force pour la tuer : ");
-
-                    for (auto bc : m_opponent->get_battlefield()->get_basic_cards()) {
-                        
-                        if (bc->is_class(Card_class::CREATURE)) {
-
-                            Creature* creature = dynamic_cast<Creature*>(bc);
-
-                            if (creature->get_power_current() <= 2) {
-                                std::cout<< i << " - " << creature->get_name() <<std::endl;
-                                possible_creatures.push_back(creature);
-                                i++;
-                            }
-                        }
-                    }
+                    std::vector<std::pair<std::string, std::string>> print_creatures = {};
 
                     std::string cmd;
 
                     while (true) {
+
+                        cls();
+                        print();
+
+                        print_actions(m_name + ", selectionnez une creature avec plus de 2 de force pour la tuer :", {
+                                {"<id>", "pour choisir cette carte"} });
+
+                        for (auto bc : m_opponent->get_battlefield()->get_basic_cards()) {
+                            if (bc->is_class(Card_class::CREATURE)) {
+                                Creature* creature = dynamic_cast<Creature*>(bc);
+                                if (creature->get_power_current() <= 2) {
+                                    print_creatures.push_back({std::to_string(i), creature->get_name()});
+                                    possible_creatures.push_back(creature);
+                                    i++;
+                                }
+                            }
+                        }
+
+                        print_list(print_creatures);
+
                         std::getline(std::cin, cmd);
 
                         try {
@@ -1097,31 +1113,35 @@ void Player::play_ritual(Ritual* r) {
 
                     int i = 0;
                     std::vector<Creature*> possible_creatures;
-
-                    print_info("Selectionnez une creature qui n'est pas un Ange pour la tuer : ");
-
-                    for (auto bc : m_opponent->get_battlefield()->get_basic_cards()) {
-                        
-                        if (bc->is_class(Card_class::CREATURE)) {
-
-                            Creature* creature = dynamic_cast<Creature*>(bc);
-                            bool is_angel = false;
-
-                            for (auto type_creature : creature->get_types()) {
-                                if(type_creature == Type::Angel) is_angel = true;
-                            }
-                            
-                            if (!is_angel) {
-                                std::cout << i << " - " << creature->get_name() << std::endl;
-                                possible_creatures.push_back(creature);
-                                i++;
-                            }
-                        }
-                    }
+                    std::vector<std::pair<std::string, std::string>> print_creatures = {};
 
                     std::string cmd;
 
                     while (true) {
+
+                        cls();
+                        print();
+
+                        print_actions(m_name + ", selectionnez une creature qui n'est pas un Ange pour la tuer :", {
+                                {"<id>", "pour choisir cette carte"} });
+
+                        for (auto bc : m_opponent->get_battlefield()->get_basic_cards()) {
+                            if (bc->is_class(Card_class::CREATURE)) {
+                                Creature* creature = dynamic_cast<Creature*>(bc);
+                                bool is_angel = false;
+                                for (auto type_creature : creature->get_types()) {
+                                    if(type_creature == Type::Angel) is_angel = true;
+                                }
+                                if (!is_angel) {
+                                    print_creatures.push_back({std::to_string(i), creature->get_name()});
+                                    possible_creatures.push_back(creature);
+                                    i++;
+                                }
+                            }
+                        }
+
+                        print_list(print_creatures);
+
                         std::getline(std::cin, cmd);
 
                         try {
@@ -1145,24 +1165,29 @@ void Player::play_ritual(Ritual* r) {
 
                     int i = 0;
                     std::vector<Creature*> possible_creatures;
-
-                    print_info("Selectionnez une creature pour lui infligez -2 / -2 :");
-
-                    for (auto bc : m_opponent->get_battlefield()->get_basic_cards()) {
-                        
-                        if (bc->is_class(Card_class::CREATURE)) {
-
-                            Creature* creature = dynamic_cast<Creature*>(bc);
-
-                            std::cout<< i << " - " << creature->get_name() <<std::endl;
-                            possible_creatures.push_back(creature);
-                            i++;
-                        }
-                    }
-
+                    std::vector<std::pair<std::string, std::string>> print_creatures = {};
+                    
                     std::string cmd;
 
                     while (true) {
+
+                        cls();
+                        print();
+
+                        print_actions(m_name + ", selectionnez une creature pour lui infligez -2 / -2 :", {
+                                {"<id>", "pour choisir cette carte"} });
+
+                        for (auto bc : m_opponent->get_battlefield()->get_basic_cards()) {
+                            if (bc->is_class(Card_class::CREATURE)) {
+                                Creature* creature = dynamic_cast<Creature*>(bc);
+                                print_creatures.push_back({std::to_string(i), creature->get_name()});
+                                possible_creatures.push_back(creature);
+                                i++;
+                            }
+                        }
+
+                        print_list(print_creatures);
+
                         std::getline(std::cin, cmd);
 
                         try {
@@ -1172,6 +1197,7 @@ void Player::play_ritual(Ritual* r) {
                             } else {
                                 Creature* chosen_creature = possible_creatures[num];
 
+                                print_info("Vous venez d'affecter -2 / -2 à " + chosen_creature->get_name() + ".");
                                 if (chosen_creature->get_power_current() < 3) {
                                     chosen_creature->set_power_current(0);
                                 } else {
@@ -1183,8 +1209,6 @@ void Player::play_ritual(Ritual* r) {
                                 } else {
                                     chosen_creature->set_toughness_current(chosen_creature->get_toughness_current() - 2);
                                 }
-
-                                print_info("Vous venez d'affecter -2 / -2 à " + chosen_creature->get_name() + ".");
                                 break;
                             }
                         } catch (std::invalid_argument &e) {
@@ -1213,6 +1237,9 @@ void Player::play_ritual(Ritual* r) {
 
                     while (true) {
 
+                        cls();
+                        print();
+
                         print_actions("Faites votre choix !", {
                             {"crea", "pour infliger 3 dégâts à une créature"},
                             {"player", "pour infliger 3 dégâts à votre adversaire"} });
@@ -1226,37 +1253,45 @@ void Player::play_ritual(Ritual* r) {
                         } else if (cmd == "crea") {
                             int i = 0;
                             std::vector<Creature*> possible_creatures;
+                            std::vector<std::pair<std::string, std::string>> print_creatures = {};
 
-                            for (auto bc : m_opponent->get_battlefield()->get_basic_cards()) {
-                                
-                                if (bc->is_class(Card_class::CREATURE)) {
-
-                                    Creature* creature = dynamic_cast<Creature*>(bc);
-
-                                    std::cout<< i << " - " << creature->get_name() <<std::endl;
-                                    possible_creatures.push_back(creature);
-                                    i++;
-                                }
-                            }
+                            std::string cmd1;
 
                             while (true) {
-                                std::getline(std::cin, cmd);
+
+                                cls();
+                                print();
+
+                                print_actions(m_name + ", selectionnez une creature pour lui infliger 3 degats :", {
+                                        {"<id>", "pour choisir cette carte"} });
+
+                                for (auto bc : m_opponent->get_battlefield()->get_basic_cards()) {
+                                
+                                    if (bc->is_class(Card_class::CREATURE)) {
+                                        Creature* creature = dynamic_cast<Creature*>(bc);
+                                        print_creatures.push_back({std::to_string(i), creature->get_name()});
+                                        possible_creatures.push_back(creature);
+                                        i++;
+                                    }
+                                }
+
+                                print_list(print_creatures);
+
+                                std::getline(std::cin, cmd1);
 
                                 try {
-                                    int num = std::stoi(cmd);
+                                    int num = std::stoi(cmd1);
                                     if (num > i || num < 0) {
                                         print_info("Id invalide.");
                                     } else {
                                         Creature* chosen_creature = possible_creatures[num];
 
-                                        if (chosen_creature->get_toughness_current() < 4) {
-                                            destroy_card(chosen_creature);
-                                        } else {
-                                            chosen_creature->set_toughness_current(chosen_creature->get_toughness_current() - 3);
-                                        }
                                         print_info("Vous venez d'infliger 3 dégâts à " + chosen_creature->get_name()  + " ! ");
+
+                                        chosen_creature->set_toughness_current(chosen_creature->get_toughness_current() - 3);
                                         if(chosen_creature->get_toughness_current() <= 0){
-                                            destroy_card(chosen_creature);
+                                            print_info(chosen_creature->get_name() + "est morte !");
+                                            m_opponent->destroy_card(chosen_creature); 
                                         }
                                         break;
                                     }
@@ -1587,7 +1622,7 @@ void Player::play_enchantment(Enchantment* e){
             for (auto effect : e->get_effects()) {
 
                 switch (effect) {
-                
+                    // TODO : ne fonctionne pas
                     case Black_enchantment_effects::Less_HP_death_creature :{
                         m_battlefield->place_enchantment(e);
                         print_info("Chaque fois qu'une creature meurt, l'avdersaire perd un point de vie !");

@@ -59,6 +59,38 @@
 
 #BEGIN_CARD
 	#TYPE_CARD: Land
+	#NAME: Mountain
+	#TOKEN: 3
+
+	#VALUE: 1
+#END_CARD
+
+#BEGIN_CARD
+	#TYPE_CARD: Land
+	#NAME: Mountain
+	#TOKEN: 3
+
+	#VALUE: 1
+#END_CARD
+
+#BEGIN_CARD
+	#TYPE_CARD: Land
+	#NAME: Swamp
+	#TOKEN: 2
+
+	#VALUE: 1
+#END_CARD
+
+#BEGIN_CARD
+	#TYPE_CARD: Land
+	#NAME: Swamp
+	#TOKEN: 2
+
+	#VALUE: 1
+#END_CARD
+
+#BEGIN_CARD
+	#TYPE_CARD: Land
 	#NAME: Swamp
 	#TOKEN: 2
 
@@ -416,7 +448,7 @@
 
 #BEGIN_CARD
 	#TYPE_CARD: Ritual
-	#NAME: Related Strengths
+	#NAME: Slayer of Strengths
 	#TOKEN: 2
 
 	#EFFECTS: 3
