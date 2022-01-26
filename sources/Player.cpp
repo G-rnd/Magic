@@ -1719,10 +1719,10 @@ void Player::play_enchantment(Enchantment* e){
                             cls();
                             print();
 
-                            print_actions(m_name + ", selectionnez votre land à enchanter pour la controler :", {
+                            print_actions(m_name + ", selectionnez votre creature à enchanter qu'elle gagne 2 / 2 :", {
                                 {"<id>", "pour choisir cette carte"} });
 
-                            for (auto card : m_opponent->get_battlefield()->get_basic_cards()){
+                            for (auto card : get_battlefield()->get_basic_cards()){
                                 if(card->is_class(Card_class::CREATURE)){
                                     Creature* creature = dynamic_cast<Creature*>(card);
                                     print_creatures.push_back({std::to_string(i), creature->get_name()});
