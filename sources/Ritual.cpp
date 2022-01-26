@@ -17,6 +17,9 @@ Ritual::~Ritual() {
     //std::cout << "[Ritual] : Destruction de " << this << std::endl;
 }
 
+/*
+    Affiche un Ritual.
+*/
 void Ritual::print() {
     print_info("Voici les information de " + get_name() + " :");
 
@@ -105,6 +108,9 @@ void Ritual::print() {
     }
 }
 
+/*
+    Renvoie les données du Ritual au le format utilisé pour sauvegarder une partie.
+*/
 std::string Ritual::to_string() {
     std::string s = "";
 

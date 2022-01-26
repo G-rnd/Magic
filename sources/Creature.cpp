@@ -21,70 +21,118 @@ Creature::~Creature() {
     //std::cout << "[Creature] : Destruction de " << this << std::endl;
 }
 
+/*
+    Renvoie l'attribut m_power de Creature.
+*/
 int Creature::get_power() const {
     return m_power;
 }
 
+/*
+    Renvoie l'attribut m_toughness de Creature.
+*/
 int Creature::get_toughness() const {
     return m_toughness;
 }
 
+/*
+    Renvoie l'attribut m_power_current de Creature.
+*/
 int Creature::get_power_current() const {
     return m_power_current;
 }
 
+/*
+    Renvoie l'attribut m_toughness_current de Creature.
+*/
 int Creature::get_toughness_current() const {
     return m_toughness_current;
 }
 
+/*
+    Renvoie l'attribut m_abilities de Creature.
+*/
 std::vector<int> Creature::get_abilities() const {
     return m_abilities;
 }
 
+/*
+    Renvoie l'attribut m_types de Creature.
+*/
 std::vector<int> Creature::get_types() const {
     return m_types;
 }
 
+/*
+    Renvoie l'attribut m_cost de Creature.
+*/
 Cost* Creature::get_cost() const {
     return m_cost;
 }
 
+/*
+    Renvoie l'attribut m_is_first_turn de Creature.
+*/
 bool Creature::get_is_first_turn() const {
     return m_is_first_turn;
 }
 
+/*
+    Met à jour l'attribut m_power de Creature.
+*/
 void Creature::set_power(int power) {
     m_power = power;
 }
 
+/*
+    Met à jour l'attribut m_toughness de Creature.
+*/
 void Creature::set_toughness(int toughness) {
     m_toughness = toughness;
 }
 
+/*
+    Met à jour l'attribut m_power_current de Creature.
+*/
 void Creature::set_power_current(int power_c) {
     m_power_current = power_c;
 }
 
+/*
+    Met à jour l'attribut m_toughness_current de Creature.
+*/
 void Creature::set_toughness_current(int toughness_c) {
     m_toughness_current = toughness_c;
 }
 
+/*
+    Met à jour l'attribut m_is_first_turn de Creature.
+*/
 void Creature::set_is_first_turn(bool is_first_turn) {
     m_is_first_turn = is_first_turn;
 }
 
+/*
+    Ajoute l'id de ability au membre m_abilities s'il n'est pas présent.
+*/
 void Creature::add_ability(int ability) {
     if(std::find(m_abilities.begin(), m_abilities.end(), ability) == m_abilities.end()) {
         m_abilities.push_back(ability);
     }
 }
 
+/*
+    Ajoute l'id de type au membre m_types s'il n'est pas présent.
+*/
 void Creature::add_type(int type) {
     if(std::find(m_types.begin(), m_types.end(), type) == m_types.end()) {
         m_types.push_back(type);
     }
 }
 
+/*
+    Renvoie les données de Creature au le format utilisé pour sauvegarder une partie
+*/
 std::string Creature::to_string() {
     std::string s = "";
     s += SaveParser::begin_card + "\n";
@@ -108,6 +156,9 @@ std::string Creature::to_string() {
     return s;
 }
 
+/*
+    Affiche les données d'une Creature.
+*/
 void Creature::print(){
     print_info("Voici les information de " + get_name() + " :");
 

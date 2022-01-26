@@ -16,14 +16,23 @@ Land::~Land(){
     //std::cout << "[Land] : Destruction de " << this << std::endl;
 }
 
+/*
+    Renvoie l'attribut m_value de Land.
+*/
 int Land::get_value() const{
     return m_value;
 }
 
+/*
+    Met à jour l'attribut m_value de Land.
+*/
 void Land::set_value(int value){
     m_value = value;
 }
 
+/*
+    Affiche un Land.
+*/
 void Land::print(){
     
     print_info("Voici les information de " + get_name() + " :");
@@ -58,6 +67,9 @@ void Land::print(){
 
 }
 
+/*
+    Renvoie les données du Land au le format utilisé pour sauvegarder une partie.
+*/
 std::string Land::to_string() {
     std::string s = "";
     

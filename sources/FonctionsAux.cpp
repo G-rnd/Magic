@@ -31,6 +31,9 @@ void print_info(const std::string& s)  {
     std::getline(std::cin, cmd);
 }
 
+/*
+    Affiche une erreur dans la console.
+*/
 void print_err(const std::string& s)  {
     std::cin.clear();  
     
@@ -46,6 +49,9 @@ void print_err(const std::string& s)  {
     std::getline(std::cin, cmd);
 }
 
+/*
+    Affiche une liste de paires en ajoutant un séparateur spécifique entre les deux éléments de la paire.
+*/
 void print_list(const std::vector<std::pair<std::string, std::string>>& options, const std::string& separator) {
     size_t max_title_size = 0;
     for (auto i : options)
@@ -60,6 +66,9 @@ void print_list(const std::vector<std::pair<std::string, std::string>>& options,
 
 }
 
+/*
+    Affiche une liste de paires en ajoutant un titre avant et après les éléments de cette liste.
+*/
 void print_actions(const std::string& title, const std::vector<std::pair<std::string, std::string> >& options, const std::string& end_message, bool dot_opt, const std::string& separator) {
     size_t size = title.size();
     if (end_message.size() > size)
@@ -187,6 +196,9 @@ std::string get_color(Color c) {
     }
 }
 
+/*
+    Renvoie une chaîne de caractères correspondant aux éléments de l séparés par ", "
+*/
 std::string list_int_to_string(std::vector<int> l) {
     std::string s = "";
     if (l.size() == 0)
@@ -199,6 +211,9 @@ std::string list_int_to_string(std::vector<int> l) {
     return s;
 }
 
+/*
+    Renvoie une chaîne de caractères centrée pour une taille de width.
+*/
 std::string centered_string(std::string s, int width){
     int margin = width - s.length();
     if (margin <= 0){

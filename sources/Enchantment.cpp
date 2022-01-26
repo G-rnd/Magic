@@ -17,6 +17,9 @@ Enchantment::~Enchantment() {
     //std::cout << "[Enchantment] : Destruction de " << this << std::endl;
 }
 
+/*
+    Affiche l'Enchantement.
+*/
 void Enchantment::print() {
     print_info("Voici les information de " + get_name() + " :");
 
@@ -105,6 +108,9 @@ void Enchantment::print() {
     }
 }
 
+/*
+    Renvoie les données de l'Enchantment au le format utilisé pour sauvegarder une partie.
+*/
 std::string Enchantment::to_string() {
     std::string s = "";
 
@@ -119,6 +125,9 @@ std::string Enchantment::to_string() {
     return s;
 }
 
+/*
+    Renvoie vrai si l'Enchantment est valide
+*/
 bool Enchantment::is_valid(size_t token, size_t id) {
     switch (token) {
         case Token::Black:

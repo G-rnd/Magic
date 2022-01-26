@@ -41,22 +41,37 @@ Battlefield::~Battlefield() {
     //std::cout << "[Battlefield] : Destruction de " << this << std::endl;
 }
 
+/*
+    Retourne l'attribut m_basic_cards de Battlefield.
+*/
 std::vector<BasicCard*> Battlefield::get_basic_cards() const {
     return m_basic_cards;
 }
 
+/*
+    Retourne l'attribut m_enchantments de Battlefield.
+*/
 std::vector<Enchantment*> Battlefield::get_enchantments() const {
     return m_enchantments;
 }
 
+/*
+    Met à jour le membre m_basic_cards de Battlefield.
+*/
 void Battlefield::set_basic_cards(std::vector<BasicCard*> bc) {
     m_basic_cards = bc;
 }
 
+/*
+    Met à jour le membre m_enchantments de Battlefield.
+*/
 void Battlefield::set_enchantments(std::vector<Enchantment*> e) {
     m_enchantments = e;
 }
 
+/*
+    Trie les cartes dans l'attribut m_basic_cards en mettant d'abord les terrains puis les créatures.
+*/
 void Battlefield::sort_basic_cards() {
 
     std::vector<BasicCard*> bc_sort;
@@ -74,14 +89,23 @@ void Battlefield::sort_basic_cards() {
     set_basic_cards(bc_sort);
 }
 
+/*
+    Retire la BasicCard bc de l'attribut m_basic_cards.
+*/
 void Battlefield::remove_basic_card(BasicCard* bc) {
     remove(bc, m_basic_cards);
 }
 
+/*
+    Retire l'Enchantment e de l'attribut m_enchantments.
+*/
 void Battlefield::remove_enchantment(Enchantment* e) {
     remove(e, m_enchantments);
 }
 
+/*
+    Retourne les créatures engagées du champ de bataille.
+*/
 std::vector<Creature*> Battlefield::get_engaged_creatures() {
     std::vector<Creature*> v = {};
 
@@ -93,6 +117,9 @@ std::vector<Creature*> Battlefield::get_engaged_creatures() {
     return v;
 }
 
+/*
+    Retourne les créatures non engagées du champ de bataille.
+*/
 std::vector<Creature*> Battlefield::get_available_creatures() {
     std::vector<Creature*> v = {};
 
@@ -111,6 +138,10 @@ std::vector<Creature*> Battlefield::get_available_creatures() {
     }
     return v;
 }
+
+/*
+    Retourne les terrains non engagés du champ de bataille.
+*/
 std::vector<Land*> Battlefield::get_available_lands() {
     std::vector<Land*> v = {};
     
@@ -123,16 +154,25 @@ std::vector<Land*> Battlefield::get_available_lands() {
     return v;
 }
 
+/*
+    Ajoute la BasicCard bc à l'attribut m_basic_cards de Battlefield.
+*/
 void Battlefield::place_basic_card(BasicCard* bc) {
     if(bc != nullptr)
         m_basic_cards.push_back(bc);
 }
 
+/*
+    Ajoute l'Enchantment e à l'attribut m_enchantments de Battlefield.
+*/
 void Battlefield::place_enchantment(Enchantment* e) {
     if(e != nullptr)
         m_enchantments.push_back(e);
 }
 
+/*
+    Desengage la BasicCard bc.
+*/
 void Battlefield::disengage_card(BasicCard* bc) {
     if(bc->is_class(Card_class::CREATURE)){
         Creature* c = dynamic_cast<Creature*>(bc);
@@ -141,7 +181,9 @@ void Battlefield::disengage_card(BasicCard* bc) {
     bc->set_engaged(false);
 }
 
-// Renvoie vrai si le champ de bataille comporte assez de cartes terrains pour jouer la carte c
+/*
+    Renvoie vrai si le champ de bataille comporte assez de cartes terrains pour jouer la carte c
+*/
 bool Battlefield::is_playable(Card* card) {
     Cost c = Cost(0, 0, 0, 0, 0, 0);
     switch (card->get_class()) {
@@ -163,8 +205,6 @@ bool Battlefield::is_playable(Card* card) {
         // Si la carte n'a pas besoin de terrains typés ou que tous ses terrains colorés ont déjà été comptés
         if (c.is_color_null()) {
             c.set_any(c.get_any() - lands[i]->get_value());
-            //lands.erase(lands.begin() + i);
-            //i--;
         } else {
             // On commence par compter les terrains typés
             switch(lands[i]->get_token()){
@@ -207,12 +247,14 @@ bool Battlefield::is_playable(Card* card) {
                     break;
 
             }
-            //lands.erase(lands.begin() + i);
         }
     }
     return c.is_null();
 }
 
+/*
+    Engage les terrains correspondant au Cost c
+*/
 void Battlefield::engage_lands(Cost* c){
 
     std::vector<Land*> lands = get_available_lands();
@@ -231,6 +273,9 @@ void Battlefield::engage_lands(Cost* c){
 
 }
 
+/*
+    Renvoie les données du Battlefield au le format utilisé pour sauvegarder une partie
+*/
 std::string Battlefield::to_string() {
     std::string s = "";
     s += SaveParser::begin_card_list + "\n";
@@ -246,6 +291,9 @@ std::string Battlefield::to_string() {
     return s;
 }
 
+/*
+    Affiche le Battlefield.
+*/
 void Battlefield::print() {
 
     sort_basic_cards();
