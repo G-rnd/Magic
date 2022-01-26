@@ -15,10 +15,16 @@ SpecialCard::~SpecialCard() {
     //std::cout << "[SpecialCard] : Destruction de " << this << std::endl;
 }
 
+/*
+    Renvoie l'attribut m_cost de SpecialCard.
+*/
 Cost* SpecialCard::get_cost() const {
     return m_cost;
 }
 
+/*
+    Renvoie l'attribut m_effects de SpecialCard.
+*/
 std::vector<int> SpecialCard::get_effects() const {
     return m_effects;
 }
