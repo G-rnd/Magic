@@ -409,7 +409,7 @@ void Battlefield::print() {
 
             if (m_basic_cards[num_card]->is_class(Card_class::CREATURE)) {
                 Creature* creature = dynamic_cast<Creature*>(m_basic_cards[num_card]);
-                std::vector<std::string> types{"Angel", "Beast", "Human_werewolf", "HippoGriff", "Kor_warrior", "Dinosaur", "Humans", "Vampire", "Spider", "Elf", "Troll"}; // TODO : mettre à jour
+                std::vector<std::string> types{"Angel", "Beast", "Human_werewolf", "HippoGriff", "Kor_warrior", "Dinosaur", "Humans", "Vampire", "Spider", "Elf", "Troll"};
                 std::vector<int> creat_type = creature->get_types();
                 std::string s = "";
 
@@ -420,8 +420,6 @@ void Battlefield::print() {
                 } else if(creat_type.size() == 2){
                     s = types[creat_type[0]] + types[creat_type[1]];
                     std::cout<< left[cards_states[j]] << centered_string(s, wid) << right[cards_states[j]];
-                } else {
-                    // TODO
                 }
 
                 

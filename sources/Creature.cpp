@@ -134,7 +134,7 @@ void Creature::print(){
     }
 
     std::string str_types = "";
-    std::vector<std::string> types{"Angel", "Beast", "Human_werewolf", "HippoGriff", "Kor_warrior", "Dinosaur", "Humans", "Vampire", "Spider", "Elf", "Troll"}; // TODO : mettre à jour
+    std::vector<std::string> types{"Angel", "Beast", "Human_werewolf", "HippoGriff", "Kor_warrior", "Dinosaur", "Humans", "Vampire", "Spider", "Elf", "Troll"}; 
     for (size_t i = 0; i < m_types.size(); i++){
         if(i == m_types.size() - 1){
             str_types += types[m_types[i]];

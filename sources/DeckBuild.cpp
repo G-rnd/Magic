@@ -345,8 +345,6 @@ void DeckBuild::create_creature(){
     std::cout<<std::endl<<std::endl;
 
     // Types
-    // TODO : mettre à jour types
-    // TODO : printactions dans boucle
     print_list({
     {"0 ", "Ange"}, 
     {"1 ", "Bête"},

@@ -307,8 +307,6 @@ std::vector<Creature*> Player::attack() {
                     possible_creatures.push_back(creature);
                     i++;
                 }
-            } else {
-                // TODO error
             }
         }
     }
@@ -415,7 +413,7 @@ void Player::choose_defenders(std::vector<Creature*> opponents) {
         int i = 0;
         bool quit = false;
         std::vector<Creature*> possible_defenders = {};
-        std::vector<Creature*> chosen_defenders = {}; //TODO si des creatures meurent
+        std::vector<Creature*> chosen_defenders = {};
 
         // Etablish opponent abilities
         bool threat_opponent = false;
@@ -739,11 +737,9 @@ void Player::battle_creature(Creature* opponent, Creature* defender) {
         if (touch_of_death_opponent) {
             if (opponent->get_power_current() > 0) {
                 defender->set_toughness_current(0);
-                // TODO : Life link et Touch of death non compatible ?
             } 
         } else if (!initiative_opponent) {
             defender->set_toughness_current(defender->get_toughness_current() - opponent->get_power_current());
-            std::cout<<defender->get_toughness_current()<<std::endl; // TODO
             // Check Life_link ability
             if (life_link_opponent) {
                 if (toughness_defender >= opponent->get_power_current()) {
@@ -761,7 +757,6 @@ void Player::battle_creature(Creature* opponent, Creature* defender) {
             } 
         } else if (!initiative_defender) {
             opponent->set_toughness_current(opponent->get_toughness_current() - defender->get_power_current());
-            std::cout<< opponent->get_toughness_current(); // TODO
             // Check life_link ability
             if (life_link_defender) {
                 if (toughness_opponent >= defender->get_power_current()) {
@@ -776,14 +771,10 @@ void Player::battle_creature(Creature* opponent, Creature* defender) {
 
         // If the creatures are dead, deplace them into the graveyard
         if (opponent->get_toughness_current() <= 0) {
-
-            std::cout<< "AAAAAAAAAAAAAAAA"; // TODO
             opponent_dead = true;
             m_opponent->destroy_card(opponent);
         }
         if (defender->get_toughness_current() <= 0) {
-
-            std::cout<< "AAAAAAAAAAAAAAAA"; // TODO
             defender_dead = true;
             destroy_card(defender);
         }
@@ -791,7 +782,7 @@ void Player::battle_creature(Creature* opponent, Creature* defender) {
 
     // Check Trampling ability
     if (!opponent_dead && trampling_opponent) {
-        this->set_hp(this->get_hp() - opponent->get_power_current()); //TODO change power change
+        this->set_hp(this->get_hp() - opponent->get_power_current());
         print_info(m_name + " a maintenant " + std::to_string(m_hp) + " HP !");
     }
 }
@@ -916,7 +907,6 @@ void Player::play_ritual(Ritual* r) {
                                     print_info("Id invalide.");
                                 } else {
                                     Creature* chosen_creature = possible_creatures[num];
-                                    // TODO : tester si le delete fonctionne
                                     m_opponent->get_battlefield()->remove_basic_card(chosen_creature);
                                     print_info("Vous venez de détruire " + chosen_creature->get_name() + ".");
                                     delete chosen_creature;
@@ -972,7 +962,6 @@ void Player::play_ritual(Ritual* r) {
                                     print_info("Id invalide.");
                                 } else {
                                     Enchantment* chosen_enchantment = possible_enchantments[num];
-                                    // TODO : tester si delete fonctionne
                                     m_opponent->get_battlefield()->remove_enchantment(chosen_enchantment);
                                     print_info("Vous venez de détruire " + chosen_enchantment->get_name() + ".");
                                     delete chosen_enchantment;
@@ -1540,8 +1529,7 @@ void Player::play_ritual(Ritual* r) {
         break;
 
         default:
-            // TODO error
-            break;
+        break;
     }
     destroy_card(r);
 }
@@ -1685,7 +1673,6 @@ void Player::play_enchantment(Enchantment* e){
             for (auto effect : e->get_effects()) {
 
                 switch (effect) {
-                    // TODO : ne fonctionne pas
                     case Black_enchantment_effects::Less_HP_death_creature :{
                         m_battlefield->place_enchantment(e);
                         print_info("Chaque fois qu'une creature meurt, l'avdersaire perd un point de vie !");
@@ -2029,7 +2016,7 @@ void Player::print_hand(){
             if (m_hand[num_card]->is_class(Card_class::CREATURE)) {
 
                 Creature* creature = dynamic_cast<Creature*>(m_hand[num_card]);
-                std::vector<std::string> types{"Angel", "Beast", "Human_werewolf", "HippoGriff", "Kor_warrior", "Dinosaur", "Humans", "Vampire", "Spider", "Elf", "Troll"}; // TODO : mettre à jour
+                std::vector<std::string> types{"Angel", "Beast", "Human_werewolf", "HippoGriff", "Kor_warrior", "Dinosaur", "Humans", "Vampire", "Spider", "Elf", "Troll"};
                 std::vector<int> creat_type = creature->get_types();
                 std::string s = "";
 
@@ -2040,9 +2027,7 @@ void Player::print_hand(){
                 } else if(creat_type.size() == 2){
                     s = types[creat_type[0]] + types[creat_type[1]];
                     std::cout<< "│ " << centered_string(s, wid) << " │";
-                } else {
-                    // TODO
-                }
+                } 
 
                 
             } else {
