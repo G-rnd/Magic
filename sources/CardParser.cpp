@@ -13,6 +13,9 @@
 #include "Ritual.hpp"
 #include "FonctionsAux.hpp"
 
+/*
+    Tokens utilisés pour parser une carte
+*/
 const std::string CardParser::begin_card    = "#BEGIN_CARD";
 const std::string CardParser::end_card      = "#END_CARD";
 const std::string CardParser::type_card     = "#TYPE_CARD: ";
@@ -31,6 +34,9 @@ const std::string CardParser::land          = "Land";
 const std::string CardParser::enchantment   = "Enchantment";
 const std::string CardParser::ritual        = "Ritual";
 
+/*
+    Retire les espaces en début et en fin de string. Si une ligne est vide, elle est retirée. 
+*/
 void CardParser::clean_data(std::vector<std::string>& data) {
     std::transform(data.begin(), data.end(), data.begin(), [] (std::string& s) {
         s.erase(std::remove(s.begin(), s.end(), '\t'), s.end());
@@ -42,6 +48,9 @@ void CardParser::clean_data(std::vector<std::string>& data) {
     });
 }
 
+/*
+    Transforme un string en tableau de string. Utilise '\n' pour séparer les lignes.
+*/
 std::vector<std::string> CardParser::get_line_data(const std::string& data) {
 	std::vector<std::string> array{ "" };
 
@@ -54,6 +63,9 @@ std::vector<std::string> CardParser::get_line_data(const std::string& data) {
     return array;
 }
 
+/*
+    Renvoie un vecteur de cartes lues sur un fichier
+*/
 std::vector<Card*> CardParser::parse_string(const std::string& read_file) {
     std::vector<Card*> v{};
     
@@ -85,6 +97,10 @@ std::vector<Card*> CardParser::parse_string(const std::string& read_file) {
     }
     return v;
 }
+
+/*
+    Renvoie les cartes contenues sur filename après les avoir parsées.
+*/
 std::vector<Card*> CardParser::parse(const std::string& filename) {
     std::string read_file;
 	std::getline(std::ifstream(filename), read_file, '\0');
@@ -92,6 +108,9 @@ std::vector<Card*> CardParser::parse(const std::string& filename) {
     return parse_string(read_file);
 }
 
+/*
+    Parse et renvoie la carte lue dans data.
+*/
 Card* CardParser::parse_card(const std::vector<std::string>& data) {
     if (data.size() > 0) {
         std::string type_card = data[0].substr(CardParser::type_card.size());
@@ -111,6 +130,9 @@ Card* CardParser::parse_card(const std::vector<std::string>& data) {
     return nullptr;
 }
 
+/*
+    Parse et renvoie une créature lue dans data.
+*/
 Creature* CardParser::parse_creature(const std::vector<std::string>& data) {
     uint8_t valid = 0;
 
@@ -183,6 +205,10 @@ Creature* CardParser::parse_creature(const std::vector<std::string>& data) {
     return nullptr;
 }
 
+
+/*
+    Parse et renvoie le terrain lu dans data.
+*/
 Land* CardParser::parse_land(const std::vector<std::string>& data) {
     uint8_t valid = 0;
 
@@ -220,6 +246,9 @@ Land* CardParser::parse_land(const std::vector<std::string>& data) {
     return nullptr;
 }
 
+/*
+    Parse et renvoie un enchantement lu dans data.
+*/
 Enchantment* CardParser::parse_enchantment(const std::vector<std::string>& data) {
     uint8_t valid = 0;
 
@@ -269,6 +298,9 @@ Enchantment* CardParser::parse_enchantment(const std::vector<std::string>& data)
     return nullptr;
 }
 
+/*
+    Parse et renvoie un rituel lu dans data.
+*/
 Ritual* CardParser::parse_ritual(const std::vector<std::string>& data) {
     uint8_t valid = 0;
 
@@ -317,6 +349,10 @@ Ritual* CardParser::parse_ritual(const std::vector<std::string>& data) {
     return nullptr;
 }
 
+
+/*
+    Parse et renvoie un tableau d'entiers.
+*/
 std::vector<int> CardParser::parse_int_list(std::string& s) {
     std::vector<int> l{};
 

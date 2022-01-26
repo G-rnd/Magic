@@ -16,6 +16,9 @@
 #include "Battlefield.hpp"
 #include "FonctionsAux.hpp"
 
+/*
+    Tokens utilisés pour parser une save
+*/
 const std::string SaveParser::begin_game = "#BEGIN_GAME";
 const std::string SaveParser::end_game = "#END_GAME";
 const std::string SaveParser::player_turn = "#PLAYER_TURN: ";
@@ -51,6 +54,9 @@ const std::string SaveParser::effects = "#EFFECTS: ";
 const std::string SaveParser::value = "#VALUE: ";
 
 
+/*
+    Renvoie toutes les lignes contenues entre la première apparition du token begin et la première apparition du token end dans data.
+*/
 std::vector<std::string> SaveParser::crop(const std::string& begin, const std::string& end, std::vector<std::string>& data) {
     std::vector<std::string> ret = {};
     for(unsigned int i = 0; i < data.size(); i++) {
@@ -122,6 +128,9 @@ std::string SaveParser::extract_line(const std::string& key, std::vector<std::st
     }
 }
 
+/*
+    Parse et renvoie le player lu dans data.
+*/
 Player* SaveParser::extract_player(std::vector<std::string>& data) {
     if (data.size() == 0)
         throw std::invalid_argument("Lecture de Player");
@@ -154,6 +163,10 @@ Player* SaveParser::extract_player(std::vector<std::string>& data) {
     return p;
 }
 
+
+/*
+    Parse et renvoie la carte lue dans data.
+*/
 Card* SaveParser::extract_card(std::vector<std::string>& data) {
     if (data.size() == 0) {
         return nullptr;
@@ -182,6 +195,10 @@ Card* SaveParser::extract_card(std::vector<std::string>& data) {
     return card;
 }
 
+
+/*
+    Parse et renvoie la créature lue dans data.
+*/
 Creature* SaveParser::extract_creature(std::vector<std::string>& data) {
     int token = extract_int(SaveParser::token, extract_line(SaveParser::token, data));
     if (token > Token::Count || token < 0)
@@ -238,6 +255,9 @@ Creature* SaveParser::extract_creature(std::vector<std::string>& data) {
     return c;    
 }
 
+/*
+    Parse et renvoie le terrain lu dans data.
+*/
 Land* SaveParser::extract_land(std::vector<std::string>& data) {
     int token = extract_int(SaveParser::token, extract_line(SaveParser::token, data));
     if (token > Token::Count || token < 0)
@@ -279,6 +299,9 @@ Land* SaveParser::extract_land(std::vector<std::string>& data) {
     return l;
 }
 
+/*
+    Parse et renvoie le rituel lu dans data.
+*/
 Ritual* SaveParser::extract_ritual(std::vector<std::string>& data) {
     int token = extract_int(SaveParser::token, extract_line(SaveParser::token, data));
     if (token > Token::Count || token < 0)
@@ -300,6 +323,9 @@ Ritual* SaveParser::extract_ritual(std::vector<std::string>& data) {
     return r;
 }
 
+/*
+    Parse et renvoie l'enchantement lu dans data.
+*/
 Enchantment* SaveParser::extract_enchantment(std::vector<std::string>& data) {
     int token = extract_int(SaveParser::token, extract_line(SaveParser::token, data));
     if (token > Token::Count || token < 0)
@@ -320,6 +346,9 @@ Enchantment* SaveParser::extract_enchantment(std::vector<std::string>& data) {
     return e;
 }
 
+/*
+    Parse et renvoie une liste de cartes lue dans data.
+*/
 std::vector<Card*> SaveParser::extract_cards(std::vector<std::string>& data) {
     std::vector<Card*> v{};
     
@@ -338,6 +367,9 @@ std::vector<Card*> SaveParser::extract_cards(std::vector<std::string>& data) {
     return v;
 }
 
+/*
+    Parse et renvoie le champ de bataille lu dans data.
+*/
 Battlefield* SaveParser::extract_battlefield(std::vector<std::string>& data) {
     auto cropped_data = crop(SaveParser::begin_card_list, SaveParser::end_card_list, data);
     std::vector<Card*> cards = extract_cards(cropped_data);
@@ -370,6 +402,9 @@ Battlefield* SaveParser::extract_battlefield(std::vector<std::string>& data) {
     return new Battlefield(cards, enchantments);
 }
 
+/*
+    Parse et renvoie la partie lu dans data.
+*/
 Game* SaveParser::extract_game(std::vector<std::string>& data) {
     if (data.size() == 0)
         throw std::invalid_argument("Lecture de Game vide.");
@@ -405,6 +440,10 @@ Game* SaveParser::extract_game(std::vector<std::string>& data) {
     return g;
 }
 
+
+/*
+    Parse et renvoie la partie lu dans s.
+*/
 Game* SaveParser::load(std::string& s) {
     auto data = CardParser::get_line_data(s);
     CardParser::clean_data(data);
