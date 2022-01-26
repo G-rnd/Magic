@@ -152,6 +152,11 @@ void Player::add_hand(Card* c) {
     m_hand.push_back(c);
 }
 
+/**
+ * @brief Remove a card of the battlefield of the player
+ * 
+ * @param c : Card of the battlefield
+ */
 void Player::remove_battlefield(Card* c) {
     if (c->is_class(Card_class::ENCHANTEMENT)) {
         m_battlefield->remove_enchantment(dynamic_cast<Enchantment*>(c));
@@ -160,6 +165,10 @@ void Player::remove_battlefield(Card* c) {
     }
 }
 
+/**
+ * @brief Sort the hand of the player : Land, Creature, Enchantment, Ritual
+ * 
+ */
 void Player::sort_hand(){
 
     std::vector<Card*> sort_card;
@@ -183,6 +192,10 @@ void Player::sort_hand(){
     set_hand(sort_card);
 }
 
+/**
+ * @brief The player draw a card of its library
+ * 
+ */
 void Player::draw_card() {
     if (m_library.empty()) {
         m_looser = true;
@@ -192,15 +205,29 @@ void Player::draw_card() {
     }
 }
 
+/**
+ * @brief The player discard a card of its hand
+ * 
+ * @param c 
+ */
 void Player::discard_card(Card* c) {
     remove(c, m_hand);
     m_graveyard.push_back(c);
 }
 
+/**
+ * @brief Shuffle the libraryof the player
+ * 
+ */
 void Player::shuffle_library() {
     std::random_shuffle(m_library.begin(), m_library.end());
 }
 
+/**
+ * @brief The player play a card of its hand to the battlefield
+ * 
+ * @param c : Card of its hand
+ */
 void Player::play_card(Card* c) {
 
     if(c->get_token() == Token::White){
@@ -246,7 +273,11 @@ void Player::disengage_card(BasicCard* bc) {
     bc->set_engaged(false);
 }
 
-// TODO : double initiative s'il n'y a pas de defenseurs
+/**
+ * @brief The player choose his opponents to attack
+ * 
+ * @return std::vector<Creature*> : Opponent's creatures
+ */
 std::vector<Creature*> Player::attack() {
 
     int i = 0;
@@ -368,12 +399,11 @@ std::vector<Creature*> Player::attack() {
     return returned_creatures;
 }
 
-/*
-- Flight
-- Scope
-- Threat
-*/
-
+/**
+ * @brief The defender choose his defenders to defend the opponents
+ * 
+ * @param opponents : opponents chosen by the opponent player
+ */
 void Player::choose_defenders(std::vector<Creature*> opponents) {
 
     for (auto opponent : opponents) {
@@ -391,6 +421,7 @@ void Player::choose_defenders(std::vector<Creature*> opponents) {
         bool threat_opponent = false;
         bool flight_opponent = false;
         bool unblockable_opponent = false;
+        bool double_initiative_opponent = false;
 
         for (auto ability_opponent : opponent->get_abilities()) {
             if (ability_opponent == Ability::Flight) {
@@ -399,6 +430,8 @@ void Player::choose_defenders(std::vector<Creature*> opponents) {
                 threat_opponent = true;
             } else if (ability_opponent == Ability::Unblockable){
                 unblockable_opponent = true;
+            } else if (ability_opponent == Ability::Double_initiative){
+                double_initiative_opponent = true;
             }
         }
 
@@ -473,6 +506,11 @@ void Player::choose_defenders(std::vector<Creature*> opponents) {
                         this->deflect_attack(opponent, chosen_defenders);
                     } else {
                         std::vector<int> v = opponent->get_abilities();
+                        if(double_initiative_opponent){
+                            if (!std::all_of(v.begin(), v.end(), [] (auto i) { return i != Ability::Life_link;}))
+                            get_opponent()->set_hp(get_opponent()->get_hp() + opponent->get_power_current());
+                            set_hp(m_hp - opponent->get_power_current());
+                        }
                         if (!std::all_of(v.begin(), v.end(), [] (auto i) { return i != Ability::Life_link;}))
                             get_opponent()->set_hp(get_opponent()->get_hp() + opponent->get_power_current());
                         set_hp(m_hp - opponent->get_power_current());
@@ -505,7 +543,13 @@ void Player::choose_defenders(std::vector<Creature*> opponents) {
     }
 }
 
-// l'attaquant choisi l'ordre du blocage
+/**
+ * @brief The opponent player choose the order of the defenders
+ * 
+ * @param defenders 
+ * @param opponent 
+ * @return std::vector<Creature*> 
+ */
 std::vector<Creature*> Player::choose_defenders_orders(std::vector<Creature*> defenders, Creature* opponent){
 
     std::vector<std::pair<std::string, std::string> > print_creatures = {};
@@ -582,6 +626,12 @@ std::vector<Creature*> Player::choose_defenders_orders(std::vector<Creature*> de
 
 }
 
+/**
+ * @brief The defender player deflect the attack with numerous defenders
+ * 
+ * @param opponent 
+ * @param defenders 
+ */
 void Player::deflect_attack(Creature* opponent, std::vector<Creature*> defenders) {
 
     for (auto defender : defenders) {
@@ -592,14 +642,12 @@ void Player::deflect_attack(Creature* opponent, std::vector<Creature*> defenders
     }
 }
 
-/*
-- Touch_of_death
-- Initiative
-- Double initiative
-- Trampling
-- Life link
-*/
-// this est le joueur ayant joué defender
+/**
+ * @brief The defender player call battle_creature to fight
+ * 
+ * @param opponent 
+ * @param defender 
+ */
 void Player::battle_creature(Creature* opponent, Creature* defender) {
 
     bool opponent_dead = false;
@@ -748,6 +796,11 @@ void Player::battle_creature(Creature* opponent, Creature* defender) {
     }
 }
 
+/**
+ * @brief Put a card of a battlefield on the graveyard
+ * 
+ * @param c : Card
+ */
 void Player::destroy_card(Card* c) {
 
     // If c is a BasicCard, we deplace it into the graveyard
@@ -791,6 +844,11 @@ void Player::destroy_card(Card* c) {
     }
 }
 
+/**
+ * @brief Play a ritual and apply its effects
+ * 
+ * @param r : Ritual
+ */
 void Player::play_ritual(Ritual* r) {
 
     switch (r->get_token()) {
@@ -1488,6 +1546,11 @@ void Player::play_ritual(Ritual* r) {
     destroy_card(r);
 }
 
+/**
+ * @brief Play an enchantment and apply its effects
+ * 
+ * @param e : Enchantment
+ */
 void Player::play_enchantment(Enchantment* e){
     
     switch (e->get_token()) {
@@ -1770,7 +1833,10 @@ void Player::play_enchantment(Enchantment* e){
     }
 }
 
-
+/**
+ * @brief Print the two battlefields and the hand of the player
+ * 
+ */
 void Player::print() {
     std::cout << std::endl;
     std::cout << m_opponent->get_name() << " : " << m_opponent->get_hp() << " PV" << std::endl;
@@ -1793,6 +1859,10 @@ void Player::print() {
     std::cout << "Nb de cartes restantes dans ma bibliothèque : " << m_library.size() << std::endl;
 }
 
+/**
+ * @brief Print the hand of the player
+ * 
+ */
 void Player::print_hand(){
 
     sort_hand();
