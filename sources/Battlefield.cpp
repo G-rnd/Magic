@@ -273,9 +273,17 @@ void Battlefield::print() {
 
             num_card = i*8 + j;
 
+            bool haste = false;
+            if(m_basic_cards[num_card]->is_class(Card_class::CREATURE)){
+                Creature* creature = dynamic_cast<Creature*>(m_basic_cards[num_card]);
+                for (auto ability : creature->get_abilities()){
+                    if(ability == Ability::Haste) haste = true;
+                }
+            }
+
             if (m_basic_cards[num_card]->get_enchantments().empty()) {
                 if(m_basic_cards[num_card]->get_engaged() || (m_basic_cards[num_card]->is_class(Card_class::CREATURE)
-                && dynamic_cast<Creature*>(m_basic_cards[num_card])->get_is_first_turn())){
+                && dynamic_cast<Creature*>(m_basic_cards[num_card])->get_is_first_turn() && !haste) ){
                     cards_states.push_back(State::Engaged);
                 } else {
                     cards_states.push_back(State::Normal);
